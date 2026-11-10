@@ -841,3 +841,70 @@ footer {
         gap: 8px;
     }
 }
+
+
+/* =========================================
+   AJUSTES DA VERSÃO CONSOLIDADA
+   ========================================= */
+
+.tabela-tabuada {
+    width: min(100%, 440px);
+    margin: 15px auto;
+    border: 1px solid var(--borda);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.linha-tabuada {
+    padding: 13px;
+    text-align: center;
+    font-size: 19px;
+    font-weight: 500;
+    background: white;
+    border-bottom: 1px solid var(--borda);
+}
+
+.linha-tabuada:nth-child(even) {
+    background: var(--azul-claro);
+}
+
+.linha-tabuada:last-child {
+    border-bottom: none;
+}
+
+.conta-armada > .linha-resposta {
+    margin-bottom: 15px;
+}
+
+.conta-armada > .area-reservas {
+    margin-bottom: 20px;
+}
+
+.conta-armada .secao-parcial {
+    padding-top: 15px;
+}
+
+.linha-parcial {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.campo-digito {
+    min-width: 0;
+    width: 100%;
+}
+
+@media (max-width: 600px) {
+    .linha-tabuada {
+        font-size: 17px;
+        padding: 11px;
+    }
+
+    .conta-armada {
+        width: 100%;
+    }
+
+    .campo-digito {
+        height: 42px;
+        font-size: 19px;
+    }
+}
