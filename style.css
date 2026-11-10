@@ -19,6 +19,7 @@
     --cinza: #8993a1;
     --fundo: #f4f7fb;
     --texto: #263449;
+    --borda: #dce2eb;
 }
 
 body {
@@ -34,14 +35,20 @@ button, input, select {
 
 button {
     cursor: pointer;
-    border: none;
     transition: .2s;
 }
 
 button:hover {
-    transform: translateY(-2px);
-    filter: brightness(.97);
+    filter: brightness(.96);
 }
+
+.escondida {
+    display: none !important;
+}
+
+/* =========================================
+   CABEÇALHO
+   ========================================= */
 
 .topo {
     background: var(--azul);
@@ -62,13 +69,17 @@ button:hover {
     opacity: .9;
 }
 
-.topo button {
+.botao-topo {
     padding: 10px 18px;
     border-radius: 8px;
     background: white;
     color: var(--azul);
     font-weight: bold;
 }
+
+/* =========================================
+   CONTAINER E TELAS
+   ========================================= */
 
 .container {
     width: min(100% - 30px, 950px);
@@ -79,20 +90,21 @@ button:hover {
     animation: aparecer .25s ease;
 }
 
-.escondida {
-    display: none !important;
-}
-
 @keyframes aparecer {
     from {
         opacity: 0;
         transform: translateY(8px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
     }
 }
+
+/* =========================================
+   PÁGINA INICIAL
+   ========================================= */
 
 .boas-vindas {
     text-align: center;
@@ -142,7 +154,12 @@ button:hover {
     background: #397ac2;
 }
 
-.painel, .arvore {
+/* =========================================
+   PAINEL DE DESEMPENHO
+   ========================================= */
+
+.painel,
+.arvore {
     background: white;
     padding: 24px;
     margin-top: 25px;
@@ -150,7 +167,8 @@ button:hover {
     box-shadow: 0 3px 12px #0000000c;
 }
 
-.painel h2, .arvore h2 {
+.painel h2,
+.arvore h2 {
     margin-bottom: 18px;
     color: var(--azul);
 }
@@ -209,6 +227,10 @@ button:hover {
     color: var(--cinza);
 }
 
+/* =========================================
+   ÁRVORE DO CONHECIMENTO
+   ========================================= */
+
 .arvore {
     text-align: center;
 }
@@ -227,6 +249,10 @@ button:hover {
     font-size: 26px;
 }
 
+/* =========================================
+   BOTÕES GERAIS
+   ========================================= */
+
 .voltar {
     background: #e5eaf2;
     color: var(--texto);
@@ -234,6 +260,28 @@ button:hover {
     padding: 10px 15px;
     margin-bottom: 20px;
 }
+
+.botao-principal,
+.botao-secundario {
+    padding: 12px 20px;
+    border-radius: 9px;
+    font-weight: bold;
+    margin: 8px 5px 0 0;
+}
+
+.botao-principal {
+    background: var(--azul);
+    color: white;
+}
+
+.botao-secundario {
+    background: #e5eaf2;
+    color: var(--texto);
+}
+
+/* =========================================
+   MODALIDADES
+   ========================================= */
 
 #tituloOperacao {
     color: var(--azul);
@@ -267,6 +315,10 @@ button:hover {
     color: var(--azul);
 }
 
+/* =========================================
+   CONFIGURAÇÃO DAS ATIVIDADES
+   ========================================= */
+
 .configuracao {
     background: white;
     border-radius: 14px;
@@ -295,6 +347,7 @@ button:hover {
 .configuracao input[type="checkbox"] {
     width: 17px;
     height: 17px;
+    accent-color: var(--azul);
 }
 
 .configuracao select {
@@ -305,125 +358,294 @@ button:hover {
     margin: 8px 0 15px;
 }
 
-.number-options {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
+/* =========================================
+   NOVA SELEÇÃO EM DUAS COLUNAS
+   ========================================= */
+
+.selecao-dupla {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin: 18px 0;
 }
 
-.number-options label {
-    background: #f0f3f8;
-    border-radius: 8px;
-    padding: 8px 10px;
-    margin: 0;
+.coluna-selecao {
+    border: 1px solid var(--borda);
+    border-radius: 10px;
+    overflow: hidden;
+    background: white;
 }
 
-.botao-principal, .botao-secundario {
-    padding: 12px 20px;
-    border-radius: 9px;
-    font-weight: bold;
-    margin: 8px 5px 0 0;
-}
-
-.botao-principal {
-    background: var(--azul);
-    color: white;
-}
-
-.botao-secundario {
-    background: #e5eaf2;
-    color: var(--texto);
-}
-
-.cabecalho-estudo {
-    display: flex;
-    justify-content: space-between;
-    margin: 10px 0;
-    font-weight: bold;
-}
-
-#cronometro {
+.titulo-coluna {
+    background: var(--azul-claro);
     color: var(--azul);
-}
-
-#instrucaoQuestao {
+    font-weight: bold;
+    padding: 13px 12px;
+    border-bottom: 1px solid var(--borda);
     text-align: center;
-    margin: 25px 0;
-    color: var(--azul);
 }
+
+.opcao-selecao {
+    display: flex !important;
+    align-items: center;
+    gap: 9px !important;
+    padding: 12px;
+    margin: 0 !important;
+    border-bottom: 1px solid var(--borda);
+    min-height: 45px;
+    cursor: pointer;
+}
+
+.opcao-selecao:last-child {
+    border-bottom: none;
+}
+
+.opcao-selecao input {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+}
+
+.opcao-selecao:has(input:checked) {
+    background: #edf4ff;
+    color: var(--azul);
+    font-weight: bold;
+}
+
+/* =========================================
+   CONTA ARMADA
+   ========================================= */
 
 .area-questao {
     background: white;
+    border: 1px solid var(--borda);
     border-radius: 14px;
-    padding: 25px;
-    text-align: center;
-    font-size: 28px;
-    font-weight: bold;
-    min-height: 100px;
+    padding: 20px;
+    margin: 18px 0;
     box-shadow: 0 3px 12px #0000000c;
 }
 
-.math-question {
-    display: inline-block;
-    min-width: 150px;
-    text-align: right;
-    line-height: 1.6;
+.conta-armada {
+    width: min(100%, 460px);
+    margin: auto;
 }
 
-.math-line {
-    border-top: 2px solid var(--texto);
-    margin-top: 4px;
+.titulo-conta {
+    text-align: center;
+    font-size: 19px;
+    font-weight: bold;
+    margin-bottom: 18px;
 }
 
-.area-resposta {
+.cabecalho-casas,
+.linha-conta,
+.linha-resposta,
+.linha-reserva {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 5px;
+    text-align: center;
+}
+
+.cabecalho-casas {
+    color: #69758a;
+    font-weight: bold;
+    font-size: 13px;
+    margin-bottom: 7px;
+}
+
+.celula-numero {
+    min-width: 0;
+    min-height: 42px;
     display: flex;
     justify-content: center;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin: 20px 0;
+    align-items: center;
+    font-size: 23px;
+    font-weight: bold;
 }
 
-.area-resposta input {
-    width: 150px;
+.linha-conta {
+    margin: 4px 0;
+}
+
+.sinal-conta {
+    text-align: left;
+    font-size: 22px;
+    font-weight: bold;
+    margin: 5px 0;
+}
+
+.linha-resposta {
+    border-top: 2px solid var(--texto);
+    padding-top: 9px;
+    margin-top: 8px;
+}
+
+.campo-digito {
+    width: 100%;
+    min-width: 0;
+    height: 49px;
+    border: 1px solid #d4dce7;
+    border-radius: 7px;
+    background: #f3f5f8;
+    text-align: center;
+    font-size: 23px;
+    font-weight: bold;
+    color: var(--texto);
+}
+
+.campo-digito:focus {
+    outline: 2px solid var(--azul);
+    background: white;
+}
+
+.campo-digito.correto {
+    border-color: var(--verde);
+    background: #e9f7ee;
+}
+
+.campo-digito.incorreto {
+    border-color: var(--vermelho);
+    background: #fff0f0;
+}
+
+.campo-vazio {
+    visibility: hidden;
+    pointer-events: none;
+}
+
+/* =========================================
+   ÁREA DE RESERVAS
+   ========================================= */
+
+.area-reservas {
+    margin-top: 18px;
     padding: 13px;
-    border: 2px solid #ccd4df;
+    border: 1px solid var(--borda);
+    border-radius: 10px;
+    background: #fafbfd;
+}
+
+.cabecalho-reservas {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    font-weight: bold;
+}
+
+.botao-limpar-reservas {
+    background: transparent;
+    border: 1px solid var(--vermelho);
+    color: var(--vermelho);
+    padding: 7px 12px;
+    border-radius: 20px;
+    font-weight: bold;
+}
+
+.botao-limpar-reservas:hover {
+    background: #fff0f0;
+}
+
+.campo-reserva {
+    width: 100%;
+    min-width: 0;
+    height: 43px;
+    border: 1px solid #d4dce7;
+    border-radius: 7px;
+    text-align: center;
+    background: white;
+    font-size: 19px;
+}
+
+.campo-reserva:focus {
+    outline: 2px solid var(--azul);
+}
+
+.nota-conta {
+    color: #718096;
+    font-size: 13px;
+    margin-top: 12px;
+    text-align: center;
+}
+
+/* =========================================
+   MULTIPLICAÇÃO - PRODUTOS PARCIAIS
+   ========================================= */
+
+.secao-parcial {
+    border-top: 1px solid var(--borda);
+    margin-top: 20px;
+    padding-top: 16px;
+}
+
+.titulo-parcial {
+    color: #657184;
+    font-size: 15px;
+    margin-bottom: 10px;
+}
+
+.linha-parcial {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 5px;
+}
+
+.linha-parcial .campo-digito {
+    background: #f3f5f8;
+}
+
+.secao-resultado {
+    border-top: 2px solid var(--borda);
+    margin-top: 20px;
+    padding-top: 18px;
+}
+
+/* =========================================
+   DIVISÃO COM RESTO
+   ========================================= */
+
+.divisao-resultado {
+    width: min(100%, 430px);
+    margin: auto;
+}
+
+.campos-divisao {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.grupo-resposta {
+    text-align: center;
+}
+
+.grupo-resposta label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.campo-divisao {
+    width: 100%;
+    height: 55px;
+    border: 2px solid var(--borda);
     border-radius: 9px;
     text-align: center;
-    font-size: 22px;
+    font-size: 24px;
+    font-weight: bold;
 }
 
-.area-resposta input:focus {
+.campo-divisao:focus {
     outline: 2px solid var(--azul);
     border-color: var(--azul);
 }
 
-.feedback {
-    min-height: 30px;
-    text-align: center;
-    font-weight: bold;
-    margin: 12px;
-}
-
-.acoes-questao {
-    text-align: center;
-}
-
-.teclado {
-    width: min(100%, 270px);
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-    margin: 22px auto;
-}
-
-.teclado button {
-    background: white;
-    border: 1px solid #dce2eb;
-    border-radius: 9px;
-    padding: 15px;
-    font-size: 20px;
-    font-weight: bold;
-}
+/* =========================================
+   SEQUÊNCIAS
+   ========================================= */
 
 .sequence-grid {
     display: grid;
@@ -456,6 +678,63 @@ button:hover {
     font-size: 18px;
 }
 
+/* =========================================
+   ÁREA DE RESPOSTA
+   ========================================= */
+
+.area-resposta {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 20px 0;
+}
+
+.feedback {
+    min-height: 30px;
+    text-align: center;
+    font-weight: bold;
+    margin: 12px;
+}
+
+.acoes-questao {
+    text-align: center;
+}
+
+/* =========================================
+   TECLADO VIRTUAL
+   ========================================= */
+
+.teclado {
+    width: min(100%, 270px);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin: 22px auto;
+}
+
+.teclado button {
+    background: white;
+    border: 1px solid #dce2eb;
+    border-radius: 9px;
+    padding: 15px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.teclado button:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+}
+
+.teclado button:active {
+    background: var(--azul-claro);
+}
+
+/* =========================================
+   RESULTADO
+   ========================================= */
+
 .resultado-destaque {
     background: var(--azul-claro);
     border-radius: 15px;
@@ -481,6 +760,10 @@ button:hover {
     margin-top: 20px;
 }
 
+/* =========================================
+   RODAPÉ
+   ========================================= */
+
 footer {
     text-align: center;
     padding: 25px;
@@ -488,7 +771,12 @@ footer {
     font-size: 13px;
 }
 
+/* =========================================
+   CELULARES
+   ========================================= */
+
 @media (max-width: 600px) {
+
     .topo {
         padding: 15px;
     }
@@ -519,11 +807,37 @@ footer {
         flex-direction: column;
     }
 
+    .selecao-dupla {
+        gap: 8px;
+    }
+
+    .opcao-selecao {
+        padding: 11px 8px;
+        font-size: 13px;
+    }
+
+    .area-questao {
+        padding: 12px;
+    }
+
+    .campo-digito {
+        height: 43px;
+        font-size: 20px;
+    }
+
+    .cabecalho-casas {
+        font-size: 11px;
+    }
+
     .sequence-grid {
         gap: 5px;
     }
 
     .sequence-cell {
         padding: 7px 2px;
+    }
+
+    .campos-divisao {
+        gap: 8px;
     }
 }
