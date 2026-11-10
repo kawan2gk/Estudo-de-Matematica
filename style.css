@@ -29,16 +29,21 @@ button {
 .topo {
     background: var(--azul);
     color: white;
-    padding: 15px;
+    padding: 16px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 12px;
+    gap: 14px;
 }
 
 .topo h1 {
-    font-size: 20px;
+    font-size: 21px;
     margin: 0;
+}
+
+.topo p {
+    margin: 5px 0 0;
+    font-size: 13px;
+    opacity: .9;
 }
 
 .voltar {
@@ -49,9 +54,11 @@ button {
     width: 42px;
     height: 42px;
     font-size: 25px;
+    flex-shrink: 0;
 }
 
 .icone-topo {
+    margin-left: auto;
     font-size: 25px;
 }
 
@@ -87,33 +94,34 @@ h2 {
     line-height: 1.5;
 }
 
-.arvore-card {
-    background: var(--azul-claro);
-    padding: 20px;
-    border-radius: 15px;
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-.arvore {
-    font-size: 65px;
-    margin-bottom: 8px;
-}
-
-.recompensas {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+.botoes-operacoes {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: 10px;
-    font-size: 25px;
-    margin-top: 12px;
+    margin-bottom: 24px;
 }
 
-.desempenho {
+.botao-operacao {
+    padding: 17px 10px;
+    border: 1px solid var(--borda);
+    border-radius: 12px;
+    background: white;
+    color: var(--texto);
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.botao-operacao:active,
+.modalidade:active {
+    background: var(--azul-claro);
+}
+
+.desempenho,
+.arvore-card {
     padding: 18px;
     border: 1px solid var(--borda);
     border-radius: 15px;
-    margin-bottom: 24px;
+    margin-bottom: 20px;
 }
 
 .progresso-texto {
@@ -195,27 +203,21 @@ h2 {
     margin-bottom: 0;
 }
 
-.titulo-secao {
-    margin-bottom: 14px;
+.arvore-card {
+    text-align: center;
+    background: var(--azul-claro);
 }
 
-.botao-operacao {
-    width: 100%;
-    padding: 17px;
-    border: 1px solid var(--borda);
-    border-radius: 12px;
-    background: white;
-    color: var(--texto);
-    font-size: 18px;
-    font-weight: bold;
-    text-align: left;
-    margin: 6px 0;
+.arvore {
+    font-size: 65px;
+    margin: 10px;
 }
 
-.botao-operacao span {
-    display: inline-block;
-    width: 38px;
-    color: var(--azul);
+.recompensas {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
     font-size: 25px;
 }
 
@@ -246,10 +248,6 @@ h2 {
     margin-top: 18px;
 }
 
-.configuracao p {
-    font-weight: bold;
-}
-
 .configuracao select {
     width: 100%;
     padding: 13px;
@@ -261,7 +259,7 @@ h2 {
 .selecao-dupla {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 18px;
+    gap: 12px;
     margin: 20px 0;
 }
 
@@ -280,10 +278,11 @@ h2 {
 .opcao-selecao {
     display: flex;
     align-items: center;
-    gap: 9px;
-    padding: 12px;
+    gap: 8px;
+    padding: 12px 9px;
     border-top: 1px solid var(--borda);
     cursor: pointer;
+    font-size: 14px;
 }
 
 .opcao-selecao input,
@@ -291,6 +290,7 @@ h2 {
     width: 18px;
     height: 18px;
     accent-color: var(--azul);
+    flex-shrink: 0;
 }
 
 .number-options {
@@ -621,12 +621,12 @@ footer {
     }
 
     .selecao-dupla {
-        gap: 9px;
+        gap: 8px;
     }
 
     .opcao-selecao {
-        padding: 10px 7px;
-        font-size: 13px;
+        padding: 10px 6px;
+        font-size: 12px;
     }
 
     .cinco-colunas,
@@ -649,9 +649,5 @@ footer {
 
     .titulo-conta {
         font-size: 19px;
-    }
-
-    .cabecalho-reservas {
-        font-size: 14px;
     }
 }
