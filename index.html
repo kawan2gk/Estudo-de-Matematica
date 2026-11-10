@@ -4,56 +4,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#2457a6">
     <title>Curso de Matemática Básica</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
 <header class="topo">
     <div>
         <h1>Matemática com Detalhes</h1>
-        <p>Aprenda, pratique e evolua!</p>
+        <p>Curso Autodidata de Matemática Básica</p>
     </div>
-    <button onclick="irInicio()">Início</button>
+    <button class="botao-topo" onclick="irInicio()">Início</button>
 </header>
 
 <main class="container">
 
-    <!-- PÁGINA INICIAL -->
+    <!-- =====================================
+         INÍCIO
+    ====================================== -->
+
     <section id="inicio" class="tela">
+
         <div class="boas-vindas">
             <h2>Praticando as 4 operações</h2>
-            <p>Escolha uma operação e comece a estudar.</p>
+            <p>Escolha uma operação para começar seus estudos.</p>
         </div>
 
         <div class="operacoes">
-            <button class="operacao soma" onclick="abrirOperacao('soma')">
+
+            <button class="operacao soma"
+                onclick="abrirOperacao('soma')">
                 <span>＋</span>
                 SOMA
             </button>
 
-            <button class="operacao subtracao" onclick="abrirOperacao('subtracao')">
+            <button class="operacao subtracao"
+                onclick="abrirOperacao('subtracao')">
                 <span>−</span>
                 SUBTRAÇÃO
             </button>
 
-            <button class="operacao multiplicacao" onclick="abrirOperacao('multiplicacao')">
+            <button class="operacao multiplicacao"
+                onclick="abrirOperacao('multiplicacao')">
                 <span>×</span>
                 MULTIPLICAÇÃO
             </button>
 
-            <button class="operacao divisao" onclick="abrirOperacao('divisao')">
+            <button class="operacao divisao"
+                onclick="abrirOperacao('divisao')">
                 <span>÷</span>
                 DIVISÃO
             </button>
+
         </div>
+
+        <!-- PAINEL DO ALUNO -->
 
         <section class="painel">
             <h2>Meu desempenho</h2>
 
             <div class="progresso-texto">
                 <strong id="percentualGeral">0%</strong>
-                <span id="textoProgresso">0 de 14 modalidades dominadas</span>
+                <span id="textoProgresso">
+                    0 de 14 modalidades dominadas
+                </span>
             </div>
 
             <div class="barra">
@@ -61,99 +77,191 @@
             </div>
 
             <div class="legenda">
-                <span class="verde">Verdes: <b id="qtdVerdes">0</b></span>
-                <span class="amarelo">Amarelas: <b id="qtdAmarelas">0</b></span>
-                <span class="vermelho">Vermelhas: <b id="qtdVermelhas">0</b></span>
-                <span class="cinza">Não iniciadas: <b id="qtdNaoIniciadas">14</b></span>
+                <span class="verde">
+                    Verdes: <b id="qtdVerdes">0</b>
+                </span>
+
+                <span class="amarelo">
+                    Amarelas: <b id="qtdAmarelas">0</b>
+                </span>
+
+                <span class="vermelho">
+                    Vermelhas: <b id="qtdVermelhas">0</b>
+                </span>
+
+                <span class="cinza">
+                    Não iniciadas: <b id="qtdNaoIniciadas">14</b>
+                </span>
             </div>
 
-            <p id="faltam">Faltam 14 modalidades para dominar tudo.</p>
+            <p id="faltam">
+                Faltam 14 modalidades para dominar tudo.
+            </p>
         </section>
+
+        <!-- ÁRVORE DO CONHECIMENTO -->
 
         <section class="arvore">
             <h2>🌳 Árvore do Conhecimento</h2>
+
             <div id="arvoreVisual" class="arvore-visual">
                 🌱
             </div>
-            <p id="mensagemArvore">Sua árvore crescerá conforme você aprender.</p>
+
+            <p id="mensagemArvore">
+                Sua árvore crescerá conforme você aprender.
+            </p>
+
             <div id="recompensas" class="recompensas"></div>
         </section>
+
     </section>
 
-    <!-- ESCOLHA DA MODALIDADE -->
+
+    <!-- =====================================
+         ESCOLHA DA OPERAÇÃO E MODALIDADE
+    ====================================== -->
+
     <section id="operacao" class="tela escondida">
-        <button class="voltar" onclick="irInicio()">← Voltar</button>
+
+        <button class="voltar" onclick="irInicio()">
+            ← Voltar
+        </button>
 
         <h2 id="tituloOperacao">Operação</h2>
+
         <p id="descricaoOperacao"></p>
 
-        <h3>Escolha uma modalidade</h3>
+        <h3>Escolha uma modalidade de estudo</h3>
+
         <div id="listaModalidades" class="modalidades"></div>
 
-        <div id="configuracao" class="configuracao escondida">
-            <h3 id="tituloConfiguracao">Configurar atividade</h3>
+        <!-- CONFIGURAÇÃO -->
+
+        <section id="configuracao" class="configuracao escondida">
+
+            <h3 id="tituloConfiguracao">
+                Configurar atividade
+            </h3>
+
             <div id="opcoesConfiguracao"></div>
-            <button class="botao-principal" onclick="iniciarAtividade()">
+
+            <button
+                id="botaoIniciar"
+                class="botao-principal"
+                onclick="iniciarAtividade()">
                 Iniciar estudo
             </button>
-        </div>
+
+        </section>
+
     </section>
 
-    <!-- TELA DE ESTUDO -->
+
+    <!-- =====================================
+         TELA DE ESTUDO
+    ====================================== -->
+
     <section id="estudo" class="tela escondida">
-        <button class="voltar" onclick="confirmarSaida()">← Sair do estudo</button>
+
+        <button class="voltar" onclick="confirmarSaida()">
+            ← Sair do estudo
+        </button>
 
         <div class="cabecalho-estudo">
-            <span id="numeroQuestao">Questão 1</span>
-            <span>⏱ <strong id="cronometro">00:00</strong></span>
+
+            <span id="numeroQuestao">
+                Questão 1
+            </span>
+
+            <span>
+                ⏱ <strong id="cronometro">00:00</strong>
+            </span>
+
         </div>
 
         <div class="barra">
             <div id="barraQuestao"></div>
         </div>
 
-        <h2 id="instrucaoQuestao">Resolva a questão:</h2>
+        <h2 id="instrucaoQuestao">
+            Resolva a questão:
+        </h2>
+
+        <!-- CONTA OU SEQUÊNCIA -->
 
         <div id="areaQuestao" class="area-questao"></div>
 
+        <!-- CAMPOS DE RESPOSTA -->
+
         <div id="areaResposta" class="area-resposta"></div>
+
+        <!-- TECLADO -->
+
+        <div id="teclado" class="teclado"></div>
+
+        <!-- MENSAGEM -->
 
         <div id="feedback" class="feedback"></div>
 
+        <!-- BOTÕES -->
+
         <div id="acoesQuestao" class="acoes-questao">
-            <button class="botao-principal" onclick="conferirResposta()">
+
+            <button class="botao-principal"
+                onclick="conferirResposta()">
                 Conferir resposta
             </button>
-            <button class="botao-secundario" onclick="pularQuestao()">
+
+            <button class="botao-secundario"
+                onclick="pularQuestao()">
                 Pular questão
             </button>
+
         </div>
 
-        <div id="teclado" class="teclado"></div>
     </section>
 
-    <!-- RESULTADO -->
+
+    <!-- =====================================
+         RESULTADO
+    ====================================== -->
+
     <section id="resultado" class="tela escondida">
+
         <h2>Estudo concluído! 🎉</h2>
 
         <div class="resultado-destaque">
+
             <strong id="resultadoPercentual">0%</strong>
+
             <span>de aproveitamento</span>
+
         </div>
 
-        <div id="detalhesResultado" class="detalhes-resultado"></div>
+        <div id="detalhesResultado"
+            class="detalhes-resultado">
+        </div>
 
         <div class="botoes-resultado">
-            <button class="botao-principal" onclick="revisarAtividade()">
+
+            <button class="botao-principal"
+                onclick="revisarAtividade()">
                 Revisar novamente
             </button>
-            <button class="botao-secundario" onclick="novoEstudo()">
+
+            <button class="botao-secundario"
+                onclick="novoEstudo()">
                 Novo estudo
             </button>
-            <button class="voltar" onclick="irInicio()">
+
+            <button class="voltar"
+                onclick="irInicio()">
                 Página inicial
             </button>
+
         </div>
+
     </section>
 
 </main>
@@ -163,5 +271,6 @@
 </footer>
 
 <script src="script.js"></script>
+
 </body>
 </html>
