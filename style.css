@@ -651,3 +651,32 @@ footer {
         font-size: 19px;
     }
 }
+
+/* Botão OK abaixo da resposta e acima do teclado */
+
+.area-botao-ok {
+    display: flex;
+    justify-content: center;
+    margin: 10px 0 12px;
+    padding: 0;
+}
+
+.botao-ok-resposta {
+    width: 100%;
+    max-width: 220px;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 10px;
+    background: #198754;
+    color: white;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.botao-ok-resposta:active {
+    transform: scale(0.98);
+}
+
+
+
