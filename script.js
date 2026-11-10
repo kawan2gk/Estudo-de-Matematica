@@ -425,7 +425,6 @@ function gerarSequencial(op,o) {
         let a = numeroCasa(tipo);
 
         if (op === "soma") {
-            // O maior número sempre fica em cima.
             const maior = Math.max(a,b);
             const menor = Math.min(a,b);
 
@@ -475,7 +474,6 @@ function gerarDiversas(op,o) {
         let b = numeroCasa(tipoB);
 
         if (op === "soma") {
-            // Garante o maior número na primeira linha.
             [a,b] = [Math.max(a,b),Math.min(a,b)];
         }
 
@@ -512,7 +510,11 @@ function gerarMultiplicacao(o,sequencial) {
         centena: [100,999]
     };
 
-    for (let i=0; i<o.quantidade; i++) {
+    let tentativas = 0;
+
+    while (lista.length < o.quantidade &&
+        tentativas++ < o.quantidade * 1000) {
+
         let a,b,temDezena = false;
 
         if (sequencial) {
@@ -538,13 +540,26 @@ function gerarMultiplicacao(o,sequencial) {
             temDezena = tipoB === "dezena";
         }
 
+        const resultado = a*b;
+
+        // A atividade usa somente quatro casas: UM, C, D e U.
+        // Portanto, não serão gerados resultados acima de 9999.
+        if (resultado > 9999) continue;
+
         lista.push({
             primeiro: a,
             segundo: b,
-            resultado: a*b,
+            resultado,
             operacao: "multiplicacao",
             temDezenaEmbaixo: temDezena
         });
+    }
+
+    if (lista.length < o.quantidade) {
+        throw Error(
+            "Não foi possível gerar todas as questões com até quatro algarismos. " +
+            "Tente selecionar números menores."
+        );
     }
 
     return embaralhar(lista);
@@ -818,150 +833,151 @@ function montarConta(q) {
     `;
 }
 
-/* MULTIPLICAÇÃO COM CINCO COLUNAS */
-
-function cinco(numero,linha) {
-    const d = digitos(numero);
-
-    if (d.length > 5) {
-        throw Error("Número maior que cinco algarismos.");
-    }
-
-    return Array(5-d.length).fill("")
-        .map(() => `
-            <input class="campo-digito campo-vazio" disabled>
-        `)
-        .concat(d.map((n,i) => `
-            <input class="campo-digito"
-                data-resposta
-                data-linha="${linha}"
-                data-posicao="${5-d.length+i}"
-                maxlength="1"
-                inputmode="numeric">
-        `))
-        .join("");
-}
-
-function cincoNumero(numero) {
-    const d = digitos(numero);
-
-    return Array(5-d.length).fill("")
-        .concat(d)
-        .map(n => `<div class="celula-numero">${n}</div>`)
-        .join("");
-}
-
-/*
- * SEGUNDO PRODUTO PARCIAL:
- * A casa das unidades fica vazia.
- * O aluno não precisa digitar o zero final.
- *
- * Exemplo:
- * 123 x 20
- *
- * DM | UM | C | D | U
- *    |  2 | 4 | 6 |   <- resposta 246
- */
-
-function cincoParcialDezena(numero,linha) {
-    const d = digitos(numero);
-
-    if (d.length > 4) {
-        throw Error("Produto parcial maior que quatro algarismos.");
-    }
-
-    const campos = Array(4-d.length).fill("")
-        .map(() => `
-            <input class="campo-digito campo-vazio" disabled>
-        `)
-        .concat(d.map((n,i) => `
-            <input class="campo-digito"
-                data-resposta
-                data-linha="${linha}"
-                data-posicao="${4-d.length+i}"
-                maxlength="1"
-                inputmode="numeric">
-        `));
-
-    // A primeira casa (DM) e a última (U) ficam vazias.
-    return `
-        <input class="campo-digito campo-vazio" disabled>
-        ${campos.join("")}
-        <input class="campo-digito campo-vazio" disabled>
-    `;
-}
+/* MULTIPLICAÇÃO ARMADA — QUATRO COLUNAS */
 
 function montarMultiplicacao(q) {
-    const tem = q.temDezenaEmbaixo;
+    const temDezena = q.temDezenaEmbaixo;
 
     const unidade = q.segundo % 10;
-    const dezena = Math.floor(q.segundo/10);
+    const dezena = Math.floor(q.segundo / 10);
 
-    const p1 = q.primeiro * unidade;
-    const p2 = q.primeiro * dezena;
+    // Produtos parciais sem o deslocamento final de zero.
+    const primeiroParcial = q.primeiro * unidade;
+    const segundoParcial = q.primeiro * dezena;
 
     return `
         <div class="conta-armada">
+
             ${reservasHTML()}
 
             <div class="secao-parcial">
-                <h3 class="titulo-conta">Multiplicação armada</h3>
 
-                <div class="cabecalho-casas cinco-colunas">
-                    <div>DM</div><div>UM</div><div>C</div><div>D</div><div>U</div>
+                <h3 class="titulo-conta">
+                    Multiplicação armada
+                </h3>
+
+                <div class="cabecalho-casas">
+                    <div>UM</div>
+                    <div>C</div>
+                    <div>D</div>
+                    <div>U</div>
                 </div>
 
-                <div class="linha-conta cinco-colunas">
-                    ${cincoNumero(q.primeiro)}
+                <div class="linha-conta">
+                    ${linhaNumero(q.primeiro)}
                 </div>
 
                 <div class="sinal-conta">×</div>
 
-                <div class="linha-conta cinco-colunas">
-                    ${cincoNumero(q.segundo)}
+                <div class="linha-conta">
+                    ${linhaNumero(q.segundo)}
                 </div>
+
             </div>
 
-            ${tem ? `
+            ${temDezena ? `
+
                 <div class="secao-parcial">
+
                     <p class="titulo-parcial">
-                        1º produto parcial: ${q.primeiro} × ${unidade}
+                        1º produto parcial:
+                        ${q.primeiro} × ${unidade}
                     </p>
 
-                    <div class="linha-parcial cinco-colunas">
-                        ${cinco(p1,"parcial1")}
+                    <div class="linha-resposta">
+                        ${linhaResposta(primeiroParcial,"parcial1")}
                     </div>
+
                 </div>
 
                 <div class="secao-parcial">
+
                     <p class="titulo-parcial">
-                        2º produto parcial: ${q.primeiro} × ${dezena}
+                        2º produto parcial:
+                        ${q.primeiro} × ${dezena} dezenas
                     </p>
 
-                    <div class="linha-parcial cinco-colunas">
-                        ${cincoParcialDezena(p2,"parcial2")}
+                    <div class="linha-resposta">
+                        ${linhaParcialDezena(segundoParcial)}
                     </div>
+
                 </div>
 
                 <div class="secao-parcial">
+
                     <p class="titulo-parcial">
                         Soma dos produtos parciais
                     </p>
 
-                    <div class="linha-resposta cinco-colunas">
-                        ${cinco(q.resultado,"resultado")}
+                    <div class="linha-resposta">
+                        ${linhaResposta(q.resultado,"resultado")}
                     </div>
-                </div>
-            ` : `
-                <div class="secao-parcial">
-                    <p class="titulo-parcial">Resposta</p>
 
-                    <div class="linha-resposta cinco-colunas">
-                        ${cinco(q.resultado,"resultado")}
-                    </div>
                 </div>
+
+            ` : `
+
+                <div class="secao-parcial">
+
+                    <p class="titulo-parcial">
+                        Resposta
+                    </p>
+
+                    <div class="linha-resposta">
+                        ${linhaResposta(q.resultado,"resultado")}
+                    </div>
+
+                </div>
+
             `}
+
         </div>
+    `;
+}
+
+/*
+ * SEGUNDO PRODUTO PARCIAL
+ *
+ * São sempre quatro quadrinhos: UM, C, D e U.
+ * O quadrinho da unidade fica vazio porque o produto
+ * representa dezenas.
+ *
+ * Exemplo:
+ * 30 x 73
+ *
+ * Primeiro parcial: 90
+ * Segundo parcial: 210 (representa 2100)
+ * Soma final: 2190
+ *
+ * Os campos dos produtos parciais são livres.
+ * Somente a soma final será validada.
+ */
+
+function linhaParcialDezena(numero) {
+    const d = digitos(numero);
+
+    if (d.length > 3) {
+        throw Error(
+            "Produto parcial não cabe nas quatro colunas disponíveis."
+        );
+    }
+
+    const casasVazias = 3 - d.length;
+
+    return `
+        ${Array.from({length:casasVazias},() => `
+            <input class="campo-digito campo-vazio" disabled>
+        `).join("")}
+
+        ${d.map(() => `
+            <input class="campo-digito"
+                data-resposta
+                data-linha="parcial2"
+                maxlength="1"
+                inputmode="numeric">
+        `).join("")}
+
+        <input class="campo-digito campo-vazio" disabled>
     `;
 }
 
@@ -1117,12 +1133,10 @@ function prepararCampos() {
         c.addEventListener("input", () => {
             c.value = c.value.replace(/\D/g,"");
 
-            // Respostas de um algarismo avançam da direita para a esquerda.
             if (c.maxLength === 1 && c.value.length === 1) {
                 moverEsquerda(c);
             }
 
-            // Na divisão com resto, o quociente vem primeiro.
             if (c.dataset.divisao === "quociente" &&
                 c.value.length >= 1) {
                 $("campoResto")?.focus();
@@ -1130,7 +1144,6 @@ function prepararCampos() {
         });
     });
 
-    // Na divisão, começa sempre pelo quociente.
     const quociente = $("campoQuociente");
 
     if (quociente) {
@@ -1138,7 +1151,6 @@ function prepararCampos() {
         return;
     }
 
-    // Nas demais atividades, começa pelo campo mais à direita.
     if (campos.length) {
         campos[campos.length-1].focus();
     }
@@ -1221,21 +1233,6 @@ function lerLinha(linha) {
     return Number(campos.map(c => c.value).join(""));
 }
 
-/* CORREÇÃO DOS PRODUTOS PARCIAIS */
-
-function conferirParciais(q) {
-    if (!q.temDezenaEmbaixo) return true;
-
-    const esperado1 = q.primeiro * (q.segundo % 10);
-    const esperado2 = q.primeiro * Math.floor(q.segundo/10);
-
-    const parcial1 = lerLinha("parcial1");
-    const parcial2 = lerLinha("parcial2");
-
-    // O segundo produto parcial é informado sem o zero final.
-    return parcial1 === esperado1 && parcial2 === esperado2;
-}
-
 /* CONFERIR RESPOSTAS */
 
 function conferirResposta() {
@@ -1252,6 +1249,8 @@ function conferirResposta() {
             Number(resto) === q.resto;
 
     } else {
+        // Na multiplicação, somente o resultado final é validado.
+        // Os campos dos produtos parciais são apenas auxiliares.
         const resposta = lerLinha("resultado");
 
         if (resposta === null) {
@@ -1261,10 +1260,6 @@ function conferirResposta() {
         }
 
         correto = resposta === q.resultado;
-
-        if (q.operacao === "multiplicacao") {
-            correto = correto && conferirParciais(q);
-        }
     }
 
     if (correto) {
