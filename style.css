@@ -1,1080 +1,105 @@
 
-/* =========================================
-   CURSO DE MATEMÁTICA BÁSICA
-   Arquivo: style.css
-   ========================================= */
-
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
-:root {
-    --azul: #2457a6;
-    --azul-claro: #eaf2ff;
-    --verde: #269653;
-    --amarelo: #e6ad26;
-    --vermelho: #d94a4a;
-    --cinza: #8993a1;
-    --fundo: #f4f7fb;
-    --texto: #263449;
-    --borda: #dce2eb;
-}
-
-body {
-    font-family: Arial, sans-serif;
-    background: var(--fundo);
-    color: var(--texto);
-    min-height: 100vh;
-}
-
-button, input, select {
-    font: inherit;
-}
-
-button {
-    cursor: pointer;
-    transition: .2s;
-}
-
-button:hover {
-    filter: brightness(.96);
-}
-
-.escondida {
-    display: none !important;
-}
-
-/* =========================================
-   CABEÇALHO
-   ========================================= */
-
-.topo {
-    background: var(--azul);
-    color: white;
-    padding: 18px 6%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 15px;
-}
-
-.topo h1 {
-    font-size: 23px;
-}
-
-.topo p {
-    margin-top: 5px;
-    opacity: .9;
-}
-
-.botao-topo {
-    padding: 10px 18px;
-    border-radius: 8px;
-    background: white;
-    color: var(--azul);
-    font-weight: bold;
-}
-
-/* =========================================
-   CONTAINER E TELAS
-   ========================================= */
-
-.container {
-    width: min(100% - 30px, 950px);
-    margin: 30px auto;
-}
-
-.tela {
-    animation: aparecer .25s ease;
-}
-
-@keyframes aparecer {
-    from {
-        opacity: 0;
-        transform: translateY(8px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* =========================================
-   PÁGINA INICIAL
-   ========================================= */
-
-.boas-vindas {
-    text-align: center;
-    margin-bottom: 28px;
-}
-
-.boas-vindas h2 {
-    color: var(--azul);
-    font-size: 27px;
-    margin-bottom: 8px;
-}
-
-.operacoes {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
-}
-
-.operacao {
-    min-height: 135px;
-    border-radius: 15px;
-    color: white;
-    font-size: 18px;
-    font-weight: bold;
-    box-shadow: 0 4px 12px #00000012;
-}
-
-.operacao span {
-    display: block;
-    font-size: 42px;
-    margin-bottom: 8px;
-}
-
-.soma {
-    background: #269653;
-}
-
-.subtracao {
-    background: #d94a4a;
-}
-
-.multiplicacao {
-    background: #d99a22;
-}
-
-.divisao {
-    background: #397ac2;
-}
-
-/* =========================================
-   PAINEL DE DESEMPENHO
-   ========================================= */
-
-.painel,
-.arvore {
-    background: white;
-    padding: 24px;
-    margin-top: 25px;
-    border-radius: 14px;
-    box-shadow: 0 3px 12px #0000000c;
-}
-
-.painel h2,
-.arvore h2 {
-    margin-bottom: 18px;
-    color: var(--azul);
-}
-
-.progresso-texto {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    margin-bottom: 12px;
-}
-
-.progresso-texto strong {
-    font-size: 25px;
-    color: var(--verde);
-}
-
-.barra {
-    width: 100%;
-    height: 13px;
-    border-radius: 20px;
-    background: #e4e8ef;
-    overflow: hidden;
-    margin: 12px 0;
-}
-
-.barra div {
-    height: 100%;
-    width: 0;
-    background: var(--verde);
-    border-radius: inherit;
-    transition: width .4s;
-}
-
-.legenda {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px 20px;
-    margin: 20px 0;
-    font-size: 14px;
-}
-
-.verde {
-    color: var(--verde);
-}
-
-.amarelo {
-    color: #b78310;
-}
-
-.vermelho {
-    color: var(--vermelho);
-}
-
-.cinza {
-    color: var(--cinza);
-}
-
-/* =========================================
-   ÁRVORE DO CONHECIMENTO
-   ========================================= */
-
-.arvore {
-    text-align: center;
-}
-
-.arvore-visual {
-    font-size: 95px;
-    margin: 15px;
-}
-
-.recompensas {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-top: 15px;
-    font-size: 26px;
-}
-
-/* =========================================
-   BOTÕES GERAIS
-   ========================================= */
-
-.voltar {
-    background: #e5eaf2;
-    color: var(--texto);
-    border-radius: 8px;
-    padding: 10px 15px;
-    margin-bottom: 20px;
-}
-
-.botao-principal,
-.botao-secundario {
-    padding: 12px 20px;
-    border-radius: 9px;
-    font-weight: bold;
-    margin: 8px 5px 0 0;
-}
-
-.botao-principal {
-    background: var(--azul);
-    color: white;
-}
-
-.botao-secundario {
-    background: #e5eaf2;
-    color: var(--texto);
-}
-
-/* =========================================
-   MODALIDADES
-   ========================================= */
-
-#tituloOperacao {
-    color: var(--azul);
-    margin-bottom: 8px;
-}
-
-#descricaoOperacao {
-    margin-bottom: 25px;
-    color: #657184;
-}
-
-.modalidades {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-    margin: 15px 0 25px;
-}
-
-.modalidade {
-    background: white;
-    border: 2px solid #e1e7f0;
-    border-radius: 10px;
-    padding: 18px 12px;
-    color: var(--texto);
-    font-weight: bold;
-}
-
-.modalidade.selecionada {
-    border-color: var(--azul);
-    background: var(--azul-claro);
-    color: var(--azul);
-}
-
-/* =========================================
-   CONFIGURAÇÃO DAS ATIVIDADES
-   ========================================= */
-
-.configuracao {
-    background: white;
-    border-radius: 14px;
-    padding: 22px;
-    margin-top: 20px;
-    box-shadow: 0 3px 12px #0000000c;
-}
-
-.configuracao h3 {
-    color: var(--azul);
-    margin-bottom: 18px;
-}
-
-.configuracao p {
-    margin: 15px 0 8px;
-    font-weight: bold;
-}
-
-.configuracao label {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    margin: 6px 12px 6px 0;
-}
-
-.configuracao input[type="checkbox"] {
-    width: 17px;
-    height: 17px;
-    accent-color: var(--azul);
-}
-
-.configuracao select {
-    padding: 10px;
-    border: 1px solid #ccd4df;
-    border-radius: 8px;
-    background: white;
-    margin: 8px 0 15px;
-}
-
-/* =========================================
-   NOVA SELEÇÃO EM DUAS COLUNAS
-   ========================================= */
-
-.selecao-dupla {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 18px;
-    margin: 18px 0;
-}
-
-.coluna-selecao {
-    border: 1px solid var(--borda);
-    border-radius: 10px;
-    overflow: hidden;
-    background: white;
-}
-
-.titulo-coluna {
-    background: var(--azul-claro);
-    color: var(--azul);
-    font-weight: bold;
-    padding: 13px 12px;
-    border-bottom: 1px solid var(--borda);
-    text-align: center;
-}
-
-.opcao-selecao {
-    display: flex !important;
-    align-items: center;
-    gap: 9px !important;
-    padding: 12px;
-    margin: 0 !important;
-    border-bottom: 1px solid var(--borda);
-    min-height: 45px;
-    cursor: pointer;
-}
-
-.opcao-selecao:last-child {
-    border-bottom: none;
-}
-
-.opcao-selecao input {
-    width: 18px;
-    height: 18px;
-    flex-shrink: 0;
-}
-
-.opcao-selecao:has(input:checked) {
-    background: #edf4ff;
-    color: var(--azul);
-    font-weight: bold;
-}
-
-/* =========================================
-   CONTA ARMADA
-   ========================================= */
-
-.area-questao {
-    background: white;
-    border: 1px solid var(--borda);
-    border-radius: 14px;
-    padding: 20px;
-    margin: 18px 0;
-    box-shadow: 0 3px 12px #0000000c;
-}
-
-.conta-armada {
-    width: min(100%, 460px);
-    margin: auto;
-}
-
-.titulo-conta {
-    text-align: center;
-    font-size: 19px;
-    font-weight: bold;
-    margin-bottom: 18px;
-}
-
-.cabecalho-casas,
-.linha-conta,
-.linha-resposta,
-.linha-reserva {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 5px;
-    text-align: center;
-}
-
-.cabecalho-casas {
-    color: #69758a;
-    font-weight: bold;
-    font-size: 13px;
-    margin-bottom: 7px;
-}
-
-.celula-numero {
-    min-width: 0;
-    min-height: 42px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 23px;
-    font-weight: bold;
-}
-
-.linha-conta {
-    margin: 4px 0;
-}
-
-.sinal-conta {
-    text-align: left;
-    font-size: 22px;
-    font-weight: bold;
-    margin: 5px 0;
-}
-
-.linha-resposta {
-    border-top: 2px solid var(--texto);
-    padding-top: 9px;
-    margin-top: 8px;
-}
-
-.campo-digito {
-    width: 100%;
-    min-width: 0;
-    height: 49px;
-    border: 1px solid #d4dce7;
-    border-radius: 7px;
-    background: #f3f5f8;
-    text-align: center;
-    font-size: 23px;
-    font-weight: bold;
-    color: var(--texto);
-}
-
-.campo-digito:focus {
-    outline: 2px solid var(--azul);
-    background: white;
-}
-
-.campo-digito.correto {
-    border-color: var(--verde);
-    background: #e9f7ee;
-}
-
-.campo-digito.incorreto {
-    border-color: var(--vermelho);
-    background: #fff0f0;
-}
-
-.campo-vazio {
-    visibility: hidden;
-    pointer-events: none;
-}
-
-/* =========================================
-   ÁREA DE RESERVAS
-   ========================================= */
-
+/* ÁREA DE RESERVAS */
 .area-reservas {
-    margin-top: 18px;
-    padding: 13px;
-    border: 1px solid var(--borda);
-    border-radius: 10px;
-    background: #fafbfd;
+    margin-bottom: 22px;
+    padding: 15px;
+    border: 1px solid #d9e0e8;
+    border-radius: 12px;
 }
 
 .cabecalho-reservas {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 10px;
-    margin-bottom: 12px;
+    margin-bottom: 15px;
     font-weight: bold;
 }
 
-.botao-limpar-reservas {
-    background: transparent;
-    border: 1px solid var(--vermelho);
-    color: var(--vermelho);
-    padding: 7px 12px;
-    border-radius: 20px;
-    font-weight: bold;
-}
-
-.botao-limpar-reservas:hover {
-    background: #fff0f0;
-}
-
-.campo-reserva {
-    width: 100%;
-    min-width: 0;
-    height: 43px;
-    border: 1px solid #d4dce7;
-    border-radius: 7px;
-    text-align: center;
-    background: white;
-    font-size: 19px;
-}
-
-.campo-reserva:focus {
-    outline: 2px solid var(--azul);
-}
-
-.nota-conta {
-    color: #718096;
-    font-size: 13px;
-    margin-top: 12px;
-    text-align: center;
-}
-
-/* =========================================
-   MULTIPLICAÇÃO - PRODUTOS PARCIAIS
-   ========================================= */
-
-.secao-parcial {
-    border-top: 1px solid var(--borda);
-    margin-top: 20px;
-    padding-top: 16px;
-}
-
-.titulo-parcial {
-    color: #657184;
-    font-size: 15px;
-    margin-bottom: 10px;
-}
-
-.linha-parcial {
+.linha-reserva {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 5px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
 }
 
-.linha-parcial .campo-digito {
-    background: #f3f5f8;
-}
-
-.secao-resultado {
-    border-top: 2px solid var(--borda);
-    margin-top: 20px;
-    padding-top: 18px;
-}
-
-/* =========================================
-   DIVISÃO COM RESTO
-   ========================================= */
-
-.divisao-resultado {
-    width: min(100%, 430px);
-    margin: auto;
-}
-
-.campos-divisao {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-    margin-top: 20px;
-}
-
-.grupo-resposta {
-    text-align: center;
-}
-
-.grupo-resposta label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 8px;
-}
-
+.campo-reserva,
+.campo-digito,
 .campo-divisao {
     width: 100%;
-    height: 55px;
-    border: 2px solid var(--borda);
-    border-radius: 9px;
-    text-align: center;
-    font-size: 24px;
-    font-weight: bold;
-}
-
-.campo-divisao:focus {
-    outline: 2px solid var(--azul);
-    border-color: var(--azul);
-}
-
-/* =========================================
-   SEQUÊNCIAS
-   ========================================= */
-
-.sequence-grid {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 10px;
-}
-
-.sequence-cell {
-    background: #f0f4fa;
-    border-radius: 8px;
-    padding: 10px 5px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    align-items: center;
-}
-
-.sequence-cell span {
-    color: #738096;
-    font-size: 12px;
-}
-
-.sequence-cell input {
-    width: 100%;
     min-width: 0;
-    padding: 8px 2px;
-    text-align: center;
-    border: 1px solid #bdc9d9;
-    border-radius: 6px;
-    font-size: 18px;
-}
-
-/* =========================================
-   ÁREA DE RESPOSTA
-   ========================================= */
-
-.area-resposta {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin: 20px 0;
-}
-
-.feedback {
-    min-height: 30px;
-    text-align: center;
-    font-weight: bold;
-    margin: 12px;
-}
-
-.acoes-questao {
-    text-align: center;
-}
-
-/* =========================================
-   TECLADO VIRTUAL
-   ========================================= */
-
-.teclado {
-    width: min(100%, 270px);
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-    margin: 22px auto;
-}
-
-.teclado button {
-    background: white;
-    border: 1px solid #dce2eb;
-    border-radius: 9px;
-    padding: 15px;
-    font-size: 20px;
-    font-weight: bold;
-}
-
-.teclado button:disabled {
-    opacity: .5;
-    cursor: not-allowed;
-}
-
-.teclado button:active {
-    background: var(--azul-claro);
-}
-
-/* =========================================
-   RESULTADO
-   ========================================= */
-
-.resultado-destaque {
-    background: var(--azul-claro);
-    border-radius: 15px;
-    padding: 25px;
-    text-align: center;
-    margin: 20px 0;
-}
-
-.resultado-destaque strong {
-    display: block;
-    font-size: 48px;
-    color: var(--azul);
-}
-
-.detalhes-resultado {
-    background: white;
-    padding: 20px;
-    border-radius: 12px;
-    line-height: 2;
-}
-
-.botoes-resultado {
-    margin-top: 20px;
-}
-
-/* =========================================
-   RODAPÉ
-   ========================================= */
-
-footer {
-    text-align: center;
-    padding: 25px;
-    color: #788397;
-    font-size: 13px;
-}
-
-/* =========================================
-   CELULARES
-   ========================================= */
-
-@media (max-width: 600px) {
-
-    .topo {
-        padding: 15px;
-    }
-
-    .topo h1 {
-        font-size: 18px;
-    }
-
-    .operacoes {
-        gap: 10px;
-    }
-
-    .operacao {
-        min-height: 115px;
-        font-size: 14px;
-    }
-
-    .operacao span {
-        font-size: 34px;
-    }
-
-    .modalidades {
-        grid-template-columns: 1fr;
-    }
-
-    .progresso-texto {
-        align-items: flex-start;
-        flex-direction: column;
-    }
-
-    .selecao-dupla {
-        gap: 8px;
-    }
-
-    .opcao-selecao {
-        padding: 11px 8px;
-        font-size: 13px;
-    }
-
-    .area-questao {
-        padding: 12px;
-    }
-
-    .campo-digito {
-        height: 43px;
-        font-size: 20px;
-    }
-
-    .cabecalho-casas {
-        font-size: 11px;
-    }
-
-    .sequence-grid {
-        gap: 5px;
-    }
-
-    .sequence-cell {
-        padding: 7px 2px;
-    }
-
-    .campos-divisao {
-        gap: 8px;
-    }
-}
-
-
-/* =========================================
-   AJUSTES DA VERSÃO CONSOLIDADA
-   ========================================= */
-
-.tabela-tabuada {
-    width: min(100%, 440px);
-    margin: 15px auto;
-    border: 1px solid var(--borda);
+    box-sizing: border-box;
+    padding: 12px 4px;
+    border: 2px solid #d5dce5;
     border-radius: 10px;
-    overflow: hidden;
-}
-
-.linha-tabuada {
-    padding: 13px;
+    background: #f4f6fa;
     text-align: center;
-    font-size: 19px;
-    font-weight: 500;
+    font-size: 20px;
+}
+
+/* BOTÃO LIMPAR RESERVAS */
+.botao-limpar-reservas {
+    padding: 8px 14px;
+    border: 1px solid #dc5555;
+    border-radius: 25px;
+    color: #dc5555;
     background: white;
-    border-bottom: 1px solid var(--borda);
+    font-weight: bold;
 }
 
-.linha-tabuada:nth-child(even) {
-    background: var(--azul-claro);
+/* CONTA ARMADA */
+.conta-armada {
+    width: 100%;
 }
 
-.linha-tabuada:last-child {
-    border-bottom: none;
+.secao-parcial {
+    padding: 16px 0;
+    margin-bottom: 12px;
+    border-bottom: 1px solid #d9e0e8;
 }
 
-.conta-armada > .linha-resposta {
-    margin-bottom: 15px;
-}
-
-.conta-armada > .area-reservas {
+.titulo-conta {
+    text-align: center;
+    font-size: 22px;
     margin-bottom: 20px;
 }
 
-.conta-armada .secao-parcial {
-    padding-top: 15px;
-}
-
+.cabecalho-casas,
+.linha-conta,
+.linha-resposta,
 .linha-parcial {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-}
-
-.campo-digito {
-    min-width: 0;
-    width: 100%;
-}
-
-@media (max-width: 600px) {
-    .linha-tabuada {
-        font-size: 17px;
-        padding: 11px;
-    }
-
-    .conta-armada {
-        width: 100%;
-    }
-
-    .campo-digito {
-        height: 42px;
-        font-size: 19px;
-    }
-}
-
-/* =========================================
-   AJUSTES DE RESPOSTAS E RESERVAS
-   ========================================= */
-
-.tabela-tabuada {
-    width: min(100%, 440px);
-    margin: 15px auto;
-    border: 1px solid var(--borda);
-    border-radius: 10px;
-    overflow: hidden;
-}
-
-.linha-tabuada {
-    padding: 13px;
-    text-align: center;
-    font-size: 19px;
-    font-weight: 500;
-    background: white;
-    border-bottom: 1px solid var(--borda);
-}
-
-.linha-tabuada:nth-child(even) {
-    background: var(--azul-claro);
-}
-
-.linha-tabuada:last-child {
-    border-bottom: none;
-}
-
-/* Reservas ficam antes da operação */
-
-.conta-armada .area-reservas {
-    margin-bottom: 22px;
-}
-
-.conta-armada .secao-parcial {
-    padding-top: 15px;
-    margin-bottom: 18px;
-}
-
-/* Respostas ficam depois da operação */
-
-.conta-armada .linha-resposta {
-    margin-top: 12px;
-    margin-bottom: 15px;
-}
-
-.conta-armada .linha-parcial {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 6px;
-}
-
-.campo-digito {
-    min-width: 0;
-    width: 100%;
-    box-sizing: border-box;
+    gap: 8px;
     text-align: center;
 }
 
-.campo-vazio {
-    visibility: hidden;
+.cabecalho-casas {
+    color: #778294;
+    font-weight: bold;
+    margin-bottom: 12px;
 }
 
-@media (max-width: 600px) {
-    .linha-tabuada {
-        font-size: 17px;
-        padding: 11px;
-    }
-
-    .conta-armada {
-        width: 100%;
-    }
-
-    .campo-digito {
-        height: 42px;
-        font-size: 19px;
-    }
+.celula-numero {
+    min-height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 25px;
+    font-weight: bold;
 }
 
-/* =========================================
-   AJUSTES DE RESPOSTAS E RESERVAS
-   ========================================= */
-
-.tabela-tabuada {
-    width: min(100%, 440px);
-    margin: 15px auto;
-    border: 1px solid var(--borda);
-    border-radius: 10px;
-    overflow: hidden;
+.sinal-conta {
+    font-size: 26px;
+    font-weight: bold;
+    margin: 8px 0;
 }
 
-.linha-tabuada {
-    padding: 13px;
-    text-align: center;
-    font-size: 19px;
-    font-weight: 500;
-    background: white;
-    border-bottom: 1px solid var(--borda);
+.titulo-parcial {
+    margin-bottom: 12px;
+    color: #687386;
+    font-size: 17px;
 }
 
-.linha-tabuada:nth-child(even) {
-    background: var(--azul-claro);
-}
-
-.linha-tabuada:last-child {
-    border-bottom: none;
-}
-
-/* Reservas ficam antes da operação */
-
-.conta-armada .area-reservas {
-    margin-bottom: 22px;
-}
-
-.conta-armada .secao-parcial {
-    padding-top: 15px;
-    margin-bottom: 18px;
-}
-
-/* Respostas ficam depois da operação */
-
-.conta-armada .linha-resposta {
-    margin-top: 12px;
-    margin-bottom: 15px;
-}
-
-.conta-armada .linha-parcial {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 6px;
-}
-
-.campo-digito {
-    min-width: 0;
-    width: 100%;
-    box-sizing: border-box;
-    text-align: center;
-}
-
-.campo-vazio {
-    visibility: hidden;
-}
-
-@media (max-width: 600px) {
-    .linha-tabuada {
-        font-size: 17px;
-        padding: 11px;
-    }
-
-    .conta-armada {
-        width: 100%;
-    }
-
-    .campo-digito {
-        height: 42px;
-        font-size: 19px;
-    }
-}
-
-
-
-/* =========================================
-   MULTIPLICAÇÃO COM CINCO COLUNAS
-   ========================================= */
-
+/* MULTIPLICAÇÃO: CINCO COLUNAS */
 .cinco-colunas {
     display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -1084,84 +109,122 @@ footer {
 
 .cinco-colunas .campo-digito {
     width: 100%;
-    min-width: 0;
-    box-sizing: border-box;
-    text-align: center;
 }
 
-.cinco-colunas .celula-numero {
-    text-align: center;
-}
-
-.cinco-colunas .campo-vazio {
+.campo-vazio {
     visibility: hidden;
 }
 
-/* TABUADA PARA LEITURA */
+/* DIVISÃO */
+.campos-divisao {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin: 20px 0;
+}
 
+.grupo-resposta {
+    width: 45%;
+    text-align: center;
+}
+
+.conta-divisao {
+    text-align: center;
+    font-size: 30px;
+    font-weight: bold;
+    margin: 25px 0;
+}
+
+/* TECLADO VIRTUAL */
+#teclado {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    max-width: 420px;
+    margin: 25px auto;
+}
+
+#teclado button {
+    min-height: 65px;
+    border: 1px solid #d5dce5;
+    border-radius: 12px;
+    background: white;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+/* SEQUÊNCIAS */
+.sequence-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin: 20px 0;
+}
+
+.sequence-cell {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px;
+    border: 1px solid #d5dce5;
+    border-radius: 10px;
+}
+
+.sequence-cell input {
+    width: 75px;
+    padding: 10px;
+    text-align: center;
+}
+
+/* TABUADA */
 .tabela-tabuada {
-    width: min(100%, 440px);
+    max-width: 440px;
     margin: 15px auto;
-    border: 1px solid var(--borda);
+    border: 1px solid #d5dce5;
     border-radius: 10px;
     overflow: hidden;
 }
 
 .linha-tabuada {
-    padding: 13px;
+    padding: 12px;
     text-align: center;
     font-size: 19px;
-    font-weight: 500;
-    background: white;
-    border-bottom: 1px solid var(--borda);
+    border-bottom: 1px solid #d5dce5;
 }
 
 .linha-tabuada:nth-child(even) {
-    background: var(--azul-claro);
+    background: #edf3fc;
 }
 
-.linha-tabuada:last-child {
-    border-bottom: none;
+/* CELULAS DE RESPOSTA */
+.linha-resposta input:focus,
+.campo-digito:focus,
+.campo-reserva:focus {
+    outline: 2px solid #285da8;
+    border-color: #285da8;
 }
 
-/* POSIÇÃO DAS RESERVAS */
-
-.conta-armada .area-reservas {
-    margin-bottom: 22px;
-}
-
-/* RESPOSTAS ABAIXO DAS OPERAÇÕES */
-
-.conta-armada .secao-parcial {
-    padding-top: 15px;
-    margin-bottom: 18px;
-}
-
-.conta-armada .linha-resposta {
-    margin-top: 12px;
-    margin-bottom: 15px;
-}
-
+/* CELULAR */
 @media (max-width: 600px) {
-    .cinco-colunas {
+    .cinco-colunas,
+    .cabecalho-casas,
+    .linha-conta,
+    .linha-resposta,
+    .linha-parcial {
         gap: 4px;
     }
 
-    .cinco-colunas .campo-digito {
-        height: 42px;
+    .campo-digito,
+    .campo-reserva {
+        padding: 9px 2px;
         font-size: 17px;
-        padding: 2px;
     }
 
-    .linha-tabuada {
-        font-size: 17px;
-        padding: 11px;
+    #teclado button {
+        min-height: 55px;
+    }
+
+    .titulo-conta {
+        font-size: 19px;
     }
 }
-
-
-
-
-
-
-
