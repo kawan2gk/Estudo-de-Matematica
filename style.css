@@ -1,0 +1,529 @@
+
+/* =========================================
+   CURSO DE MATEMÁTICA BÁSICA
+   Arquivo: style.css
+   ========================================= */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --azul: #2457a6;
+    --azul-claro: #eaf2ff;
+    --verde: #269653;
+    --amarelo: #e6ad26;
+    --vermelho: #d94a4a;
+    --cinza: #8993a1;
+    --fundo: #f4f7fb;
+    --texto: #263449;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: var(--fundo);
+    color: var(--texto);
+    min-height: 100vh;
+}
+
+button, input, select {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+    border: none;
+    transition: .2s;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    filter: brightness(.97);
+}
+
+.topo {
+    background: var(--azul);
+    color: white;
+    padding: 18px 6%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+
+.topo h1 {
+    font-size: 23px;
+}
+
+.topo p {
+    margin-top: 5px;
+    opacity: .9;
+}
+
+.topo button {
+    padding: 10px 18px;
+    border-radius: 8px;
+    background: white;
+    color: var(--azul);
+    font-weight: bold;
+}
+
+.container {
+    width: min(100% - 30px, 950px);
+    margin: 30px auto;
+}
+
+.tela {
+    animation: aparecer .25s ease;
+}
+
+.escondida {
+    display: none !important;
+}
+
+@keyframes aparecer {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.boas-vindas {
+    text-align: center;
+    margin-bottom: 28px;
+}
+
+.boas-vindas h2 {
+    color: var(--azul);
+    font-size: 27px;
+    margin-bottom: 8px;
+}
+
+.operacoes {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+.operacao {
+    min-height: 135px;
+    border-radius: 15px;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    box-shadow: 0 4px 12px #00000012;
+}
+
+.operacao span {
+    display: block;
+    font-size: 42px;
+    margin-bottom: 8px;
+}
+
+.soma {
+    background: #269653;
+}
+
+.subtracao {
+    background: #d94a4a;
+}
+
+.multiplicacao {
+    background: #d99a22;
+}
+
+.divisao {
+    background: #397ac2;
+}
+
+.painel, .arvore {
+    background: white;
+    padding: 24px;
+    margin-top: 25px;
+    border-radius: 14px;
+    box-shadow: 0 3px 12px #0000000c;
+}
+
+.painel h2, .arvore h2 {
+    margin-bottom: 18px;
+    color: var(--azul);
+}
+
+.progresso-texto {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.progresso-texto strong {
+    font-size: 25px;
+    color: var(--verde);
+}
+
+.barra {
+    width: 100%;
+    height: 13px;
+    border-radius: 20px;
+    background: #e4e8ef;
+    overflow: hidden;
+    margin: 12px 0;
+}
+
+.barra div {
+    height: 100%;
+    width: 0;
+    background: var(--verde);
+    border-radius: inherit;
+    transition: width .4s;
+}
+
+.legenda {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 20px;
+    margin: 20px 0;
+    font-size: 14px;
+}
+
+.verde {
+    color: var(--verde);
+}
+
+.amarelo {
+    color: #b78310;
+}
+
+.vermelho {
+    color: var(--vermelho);
+}
+
+.cinza {
+    color: var(--cinza);
+}
+
+.arvore {
+    text-align: center;
+}
+
+.arvore-visual {
+    font-size: 95px;
+    margin: 15px;
+}
+
+.recompensas {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 15px;
+    font-size: 26px;
+}
+
+.voltar {
+    background: #e5eaf2;
+    color: var(--texto);
+    border-radius: 8px;
+    padding: 10px 15px;
+    margin-bottom: 20px;
+}
+
+#tituloOperacao {
+    color: var(--azul);
+    margin-bottom: 8px;
+}
+
+#descricaoOperacao {
+    margin-bottom: 25px;
+    color: #657184;
+}
+
+.modalidades {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin: 15px 0 25px;
+}
+
+.modalidade {
+    background: white;
+    border: 2px solid #e1e7f0;
+    border-radius: 10px;
+    padding: 18px 12px;
+    color: var(--texto);
+    font-weight: bold;
+}
+
+.modalidade.selecionada {
+    border-color: var(--azul);
+    background: var(--azul-claro);
+    color: var(--azul);
+}
+
+.configuracao {
+    background: white;
+    border-radius: 14px;
+    padding: 22px;
+    margin-top: 20px;
+    box-shadow: 0 3px 12px #0000000c;
+}
+
+.configuracao h3 {
+    color: var(--azul);
+    margin-bottom: 18px;
+}
+
+.configuracao p {
+    margin: 15px 0 8px;
+    font-weight: bold;
+}
+
+.configuracao label {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    margin: 6px 12px 6px 0;
+}
+
+.configuracao input[type="checkbox"] {
+    width: 17px;
+    height: 17px;
+}
+
+.configuracao select {
+    padding: 10px;
+    border: 1px solid #ccd4df;
+    border-radius: 8px;
+    background: white;
+    margin: 8px 0 15px;
+}
+
+.number-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.number-options label {
+    background: #f0f3f8;
+    border-radius: 8px;
+    padding: 8px 10px;
+    margin: 0;
+}
+
+.botao-principal, .botao-secundario {
+    padding: 12px 20px;
+    border-radius: 9px;
+    font-weight: bold;
+    margin: 8px 5px 0 0;
+}
+
+.botao-principal {
+    background: var(--azul);
+    color: white;
+}
+
+.botao-secundario {
+    background: #e5eaf2;
+    color: var(--texto);
+}
+
+.cabecalho-estudo {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px 0;
+    font-weight: bold;
+}
+
+#cronometro {
+    color: var(--azul);
+}
+
+#instrucaoQuestao {
+    text-align: center;
+    margin: 25px 0;
+    color: var(--azul);
+}
+
+.area-questao {
+    background: white;
+    border-radius: 14px;
+    padding: 25px;
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+    min-height: 100px;
+    box-shadow: 0 3px 12px #0000000c;
+}
+
+.math-question {
+    display: inline-block;
+    min-width: 150px;
+    text-align: right;
+    line-height: 1.6;
+}
+
+.math-line {
+    border-top: 2px solid var(--texto);
+    margin-top: 4px;
+}
+
+.area-resposta {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 20px 0;
+}
+
+.area-resposta input {
+    width: 150px;
+    padding: 13px;
+    border: 2px solid #ccd4df;
+    border-radius: 9px;
+    text-align: center;
+    font-size: 22px;
+}
+
+.area-resposta input:focus {
+    outline: 2px solid var(--azul);
+    border-color: var(--azul);
+}
+
+.feedback {
+    min-height: 30px;
+    text-align: center;
+    font-weight: bold;
+    margin: 12px;
+}
+
+.acoes-questao {
+    text-align: center;
+}
+
+.teclado {
+    width: min(100%, 270px);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin: 22px auto;
+}
+
+.teclado button {
+    background: white;
+    border: 1px solid #dce2eb;
+    border-radius: 9px;
+    padding: 15px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.sequence-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+}
+
+.sequence-cell {
+    background: #f0f4fa;
+    border-radius: 8px;
+    padding: 10px 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+}
+
+.sequence-cell span {
+    color: #738096;
+    font-size: 12px;
+}
+
+.sequence-cell input {
+    width: 100%;
+    min-width: 0;
+    padding: 8px 2px;
+    text-align: center;
+    border: 1px solid #bdc9d9;
+    border-radius: 6px;
+    font-size: 18px;
+}
+
+.resultado-destaque {
+    background: var(--azul-claro);
+    border-radius: 15px;
+    padding: 25px;
+    text-align: center;
+    margin: 20px 0;
+}
+
+.resultado-destaque strong {
+    display: block;
+    font-size: 48px;
+    color: var(--azul);
+}
+
+.detalhes-resultado {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    line-height: 2;
+}
+
+.botoes-resultado {
+    margin-top: 20px;
+}
+
+footer {
+    text-align: center;
+    padding: 25px;
+    color: #788397;
+    font-size: 13px;
+}
+
+@media (max-width: 600px) {
+    .topo {
+        padding: 15px;
+    }
+
+    .topo h1 {
+        font-size: 18px;
+    }
+
+    .operacoes {
+        gap: 10px;
+    }
+
+    .operacao {
+        min-height: 115px;
+        font-size: 14px;
+    }
+
+    .operacao span {
+        font-size: 34px;
+    }
+
+    .modalidades {
+        grid-template-columns: 1fr;
+    }
+
+    .progresso-texto {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .sequence-grid {
+        gap: 5px;
+    }
+
+    .sequence-cell {
+        padding: 7px 2px;
+    }
+}
