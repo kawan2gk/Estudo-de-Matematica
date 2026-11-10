@@ -3,36 +3,52 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#285da8">
-    <title>Curso de Matemática</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Matemática com Detalhes</title>
+
+    <link rel="stylesheet" href="./style.css?v=3">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f3f6fb;
+            color: #283548;
+        }
+        .escondida { display: none !important; }
+        .container { width: min(100% - 24px, 760px); margin: 20px auto; }
+        .tela { background: white; padding: 20px; border-radius: 16px; }
+        button { cursor: pointer; }
+    </style>
 </head>
 <body>
 
 <header class="topo">
-    <button class="voltar" id="voltar" onclick="voltar()">←</button>
-    <h1>Curso de Matemática</h1>
+    <button class="voltar" onclick="voltar()" aria-label="Voltar">←</button>
+    <div>
+        <h1>Matemática com Detalhes</h1>
+        <p>Curso Autodidata de Matemática Básica</p>
+    </div>
     <span class="icone-topo">📘</span>
 </header>
 
 <main class="container">
 
-    <!-- INÍCIO -->
     <section id="inicio" class="tela">
         <div class="boas-vindas">
-            <h2>Vamos aprender Matemática!</h2>
-            <p>Pratique, evolua e acompanhe seu desenvolvimento.</p>
+            <h2>Praticando as 4 operações</h2>
+            <p>Escolha uma operação para começar seus estudos.</p>
         </div>
 
-        <div class="arvore-card">
-            <div id="arvoreVisual" class="arvore">🌱</div>
-            <h3>Árvore do Conhecimento</h3>
-            <p id="mensagemArvore">Sua árvore está começando a crescer.</p>
-            <div id="recompensas" class="recompensas"></div>
+        <div class="botoes-operacoes">
+            <button class="botao-operacao" onclick="abrirOperacao('soma')">＋ SOMA</button>
+            <button class="botao-operacao" onclick="abrirOperacao('subtracao')">− SUBTRAÇÃO</button>
+            <button class="botao-operacao" onclick="abrirOperacao('multiplicacao')">× MULTIPLICAÇÃO</button>
+            <button class="botao-operacao" onclick="abrirOperacao('divisao')">÷ DIVISÃO</button>
         </div>
 
-        <div class="desempenho">
+        <section class="desempenho">
             <h2>Meu desempenho</h2>
             <div class="progresso-texto">
                 <strong id="percentualGeral">0%</strong>
@@ -41,59 +57,34 @@
             <div class="barra-fundo">
                 <div id="barraProgresso" class="barra"></div>
             </div>
-
             <div class="status-grid">
-                <div class="status verde">
-                    <strong id="qtdVerdes">0</strong>
-                    <span>Verdes</span>
-                </div>
-                <div class="status amarelo">
-                    <strong id="qtdAmarelas">0</strong>
-                    <span>Amarelas</span>
-                </div>
-                <div class="status vermelho">
-                    <strong id="qtdVermelhas">0</strong>
-                    <span>Vermelhas</span>
-                </div>
-                <div class="status cinza">
-                    <strong id="qtdNaoIniciadas">14</strong>
-                    <span>Não iniciadas</span>
-                </div>
+                <div class="status verde"><strong id="qtdVerdes">0</strong><span>Verdes</span></div>
+                <div class="status amarelo"><strong id="qtdAmarelas">0</strong><span>Amarelas</span></div>
+                <div class="status vermelho"><strong id="qtdVermelhas">0</strong><span>Vermelhas</span></div>
+                <div class="status cinza"><strong id="qtdNaoIniciadas">14</strong><span>Não iniciadas</span></div>
             </div>
             <p id="faltam" class="faltam">Faltam 14 modalidades para dominar tudo.</p>
-        </div>
+        </section>
 
-        <h2 class="titulo-secao">Iniciar o estudo</h2>
-        <button class="botao-operacao" onclick="abrirOperacao('soma')">
-            <span>＋</span> SOMA
-        </button>
-        <button class="botao-operacao" onclick="abrirOperacao('subtracao')">
-            <span>−</span> SUBTRAÇÃO
-        </button>
-        <button class="botao-operacao" onclick="abrirOperacao('multiplicacao')">
-            <span>×</span> MULTIPLICAÇÃO
-        </button>
-        <button class="botao-operacao" onclick="abrirOperacao('divisao')">
-            <span>÷</span> DIVISÃO
-        </button>
+        <section class="arvore-card">
+            <div id="arvoreVisual" class="arvore">🌱</div>
+            <h2>Árvore do Conhecimento</h2>
+            <p id="mensagemArvore">Sua árvore está começando a crescer.</p>
+            <div id="recompensas" class="recompensas"></div>
+        </section>
     </section>
 
-    <!-- ESCOLHA DA MODALIDADE -->
     <section id="operacao" class="tela escondida">
         <h2 id="tituloOperacao"></h2>
         <p id="descricaoOperacao"></p>
         <div id="listaModalidades" class="lista-modalidades"></div>
-
         <div id="configuracao" class="configuracao escondida">
             <h3 id="tituloConfiguracao"></h3>
             <div id="opcoesConfiguracao"></div>
-            <button class="botao-principal" onclick="iniciarAtividade()">
-                Iniciar estudo
-            </button>
+            <button class="botao-principal" onclick="iniciarAtividade()">Iniciar estudo</button>
         </div>
     </section>
 
-    <!-- ATIVIDADE -->
     <section id="estudo" class="tela escondida">
         <div class="cabecalho-estudo">
             <div>
@@ -108,41 +99,28 @@
         </div>
 
         <div id="areaQuestao" class="area-questao"></div>
-
         <div id="feedback" class="feedback"></div>
-
         <div id="teclado" class="teclado"></div>
-
         <div id="acoesQuestao" class="acoes"></div>
     </section>
 
-    <!-- RESULTADO -->
     <section id="resultado" class="tela escondida">
         <div class="resultado-card">
             <h2>Atividade concluída!</h2>
             <div id="resultadoPercentual" class="percentual-final">0%</div>
             <div id="detalhesResultado"></div>
-
-            <button class="botao-principal" onclick="revisarAtividade()">
-                Revisar novamente
-            </button>
-
-            <button class="botao-secundario" onclick="novoEstudo()">
-                Novo estudo
-            </button>
-
-            <button class="botao-texto" onclick="voltarInicio()">
-                Voltar ao início
-            </button>
+            <button class="botao-principal" onclick="revisarAtividade()">Revisar novamente</button>
+            <button class="botao-secundario" onclick="novoEstudo()">Novo estudo</button>
+            <button class="botao-texto" onclick="voltarInicio()">Voltar ao início</button>
         </div>
     </section>
 
 </main>
 
 <footer>
-    <p>Curso de Matemática Básica</p>
+    <p>Matemática com Detalhes | Curso de Matemática Básica</p>
 </footer>
 
-<script src="script.js"></script>
+<script src="./script.js?v=3"></script>
 </body>
 </html>
