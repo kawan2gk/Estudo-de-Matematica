@@ -1069,3 +1069,99 @@ footer {
     }
 }
 
+
+
+/* =========================================
+   MULTIPLICAÇÃO COM CINCO COLUNAS
+   ========================================= */
+
+.cinco-colunas {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 6px;
+    width: 100%;
+}
+
+.cinco-colunas .campo-digito {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.cinco-colunas .celula-numero {
+    text-align: center;
+}
+
+.cinco-colunas .campo-vazio {
+    visibility: hidden;
+}
+
+/* TABUADA PARA LEITURA */
+
+.tabela-tabuada {
+    width: min(100%, 440px);
+    margin: 15px auto;
+    border: 1px solid var(--borda);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.linha-tabuada {
+    padding: 13px;
+    text-align: center;
+    font-size: 19px;
+    font-weight: 500;
+    background: white;
+    border-bottom: 1px solid var(--borda);
+}
+
+.linha-tabuada:nth-child(even) {
+    background: var(--azul-claro);
+}
+
+.linha-tabuada:last-child {
+    border-bottom: none;
+}
+
+/* POSIÇÃO DAS RESERVAS */
+
+.conta-armada .area-reservas {
+    margin-bottom: 22px;
+}
+
+/* RESPOSTAS ABAIXO DAS OPERAÇÕES */
+
+.conta-armada .secao-parcial {
+    padding-top: 15px;
+    margin-bottom: 18px;
+}
+
+.conta-armada .linha-resposta {
+    margin-top: 12px;
+    margin-bottom: 15px;
+}
+
+@media (max-width: 600px) {
+    .cinco-colunas {
+        gap: 4px;
+    }
+
+    .cinco-colunas .campo-digito {
+        height: 42px;
+        font-size: 17px;
+        padding: 2px;
+    }
+
+    .linha-tabuada {
+        font-size: 17px;
+        padding: 11px;
+    }
+}
+
+
+
+
+
+
+
