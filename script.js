@@ -1,7 +1,8 @@
-/* =========================================================
+
+/* =====================================================
    CURSO DE MATEMÁTICA BÁSICA
-   SCRIPT COMPLETO
-   ========================================================= */
+   VERSÃO ATUALIZADA
+   ===================================================== */
 
 const $ = id => document.getElementById(id);
 
@@ -72,9 +73,9 @@ let estado = {
     aguardandoAvanco: false
 };
 
-/* =========================================================
-   FUNÇÕES BÁSICAS
-   ========================================================= */
+/* =====================================================
+   FUNÇÕES GERAIS
+   ===================================================== */
 
 function aleatorio(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -117,9 +118,9 @@ function irInicio() {
     atualizarDesempenho();
 }
 
-/* =========================================================
-   OPERAÇÕES E MODALIDADES
-   ========================================================= */
+/* =====================================================
+   OPERAÇÕES
+   ===================================================== */
 
 function abrirOperacao(nome) {
     pararCronometro();
@@ -159,9 +160,9 @@ function montarModalidades() {
     $("configuracao").classList.add("escondida");
 }
 
-/* =========================================================
-   SELEÇÃO DAS OPÇÕES
-   ========================================================= */
+/* =====================================================
+   OPÇÕES DE ESTUDO
+   ===================================================== */
 
 function casasNumericas() {
     return [
@@ -260,9 +261,9 @@ function opcoesReservaHTML() {
     `;
 }
 
-/* =========================================================
-   CONFIGURAÇÃO DE CADA MODALIDADE
-   ========================================================= */
+/* =====================================================
+   CONFIGURAÇÃO DAS MODALIDADES
+   ===================================================== */
 
 function selecionarModalidade(id, botao) {
     estado.modalidade = id;
@@ -280,7 +281,6 @@ function selecionarModalidade(id, botao) {
         html += quantidadeHTML();
     }
 
-    // SOMA SEQUENCIAL
     if (op === "soma" && id === "sequencial") {
         html += criarSelecaoDupla(
             "Coluna esquerda", "casas", casasNumericas(),
@@ -289,7 +289,6 @@ function selecionarModalidade(id, botao) {
         );
     }
 
-    // SOMAS DIVERSAS
     if (op === "soma" && id === "diversas") {
         html += criarSelecaoDupla(
             "Coluna esquerda", "primeiro", casasNumericas(),
@@ -297,7 +296,6 @@ function selecionarModalidade(id, botao) {
         );
     }
 
-    // SUBTRAÇÃO SEQUENCIAL
     if (op === "subtracao" && id === "sequencial") {
         const casas = [
             ...casasNumericas(),
@@ -313,7 +311,6 @@ function selecionarModalidade(id, botao) {
         html += opcoesReservaHTML();
     }
 
-    // SUBTRAÇÕES DIVERSAS
     if (op === "subtracao" && id === "diversas") {
         html += criarSelecaoDupla(
             "Coluna esquerda", "primeiro", casasNumericas(),
@@ -323,7 +320,6 @@ function selecionarModalidade(id, botao) {
         html += opcoesReservaHTML();
     }
 
-    // MULTIPLICAÇÃO SEQUENCIAL
     if (op === "multiplicacao" && id === "sequencial") {
         html += criarSelecaoDupla(
             "Coluna esquerda", "casas", casasNumericas(),
@@ -332,7 +328,6 @@ function selecionarModalidade(id, botao) {
         );
     }
 
-    // MULTIPLICAÇÕES DIVERSAS
     if (op === "multiplicacao" && id === "diversas") {
         const combinacoes = [
             { valor: "UU", texto: "Unidade × Unidade" },
@@ -348,7 +343,6 @@ function selecionarModalidade(id, botao) {
         );
     }
 
-    // SEQUÊNCIA DA MULTIPLICAÇÃO
     if (op === "multiplicacao" && id === "sequencia") {
         html += `
             <p>Escolha a sequência:</p>
@@ -358,7 +352,6 @@ function selecionarModalidade(id, botao) {
         `;
     }
 
-    // SEQUÊNCIA DA DIVISÃO
     if (op === "divisao" && id === "sequencia") {
         html += `
             <p>Escolha a sequência:</p>
@@ -368,7 +361,6 @@ function selecionarModalidade(id, botao) {
         `;
     }
 
-    // PRÁTICA DE DIVISÃO
     if (op === "divisao" && id === "pratica") {
         html += `
             <p>Escolha os divisores:</p>
@@ -384,7 +376,6 @@ function selecionarModalidade(id, botao) {
         `;
     }
 
-    // DIVISÃO COM RESTO
     if (op === "divisao" && id === "resto") {
         html += `
             <p>Escolha os divisores:</p>
@@ -400,7 +391,6 @@ function selecionarModalidade(id, botao) {
         `;
     }
 
-    // TABUADAS
     if (id === "tabuada") {
         html += `
             <p>Escolha a unidade:</p>
@@ -418,9 +408,9 @@ function selecionarModalidade(id, botao) {
     $("configuracao").classList.remove("escondida");
 }
 
-/* =========================================================
-   LEITURA E VALIDAÇÃO DAS ESCOLHAS
-   ========================================================= */
+/* =====================================================
+   LEITURA E VALIDAÇÃO
+   ===================================================== */
 
 function selecionados(grupo) {
     return [...document.querySelectorAll(
@@ -508,9 +498,9 @@ function validarOpcoes(o) {
     }
 }
 
-/* =========================================================
-   GERAÇÃO DE QUESTÕES
-   ========================================================= */
+/* =====================================================
+   GERAÇÃO DAS QUESTÕES
+   ===================================================== */
 
 function gerarNumeroCasa(casa) {
     if (casa === "unidade") return aleatorio(0, 9);
@@ -553,7 +543,8 @@ function gerarSequencial(op, o) {
     const lista = [];
     let tentativas = 0;
 
-    while (lista.length < o.quantidade && tentativas < o.quantidade * 100) {
+    while (lista.length < o.quantidade &&
+           tentativas < o.quantidade * 100) {
         tentativas++;
 
         const casa = o.casas[aleatorio(0, o.casas.length - 1)];
@@ -578,8 +569,8 @@ function gerarSequencial(op, o) {
 
     if (lista.length < o.quantidade) {
         throw new Error(
-            "Não foi possível gerar questões com essa combinação. " +
-            "Escolha também a outra opção de reserva."
+            "Não foi possível gerar todas as questões. " +
+            "Tente selecionar com e sem reserva."
         );
     }
 
@@ -590,7 +581,8 @@ function gerarDiversas(op, o) {
     const lista = [];
     let tentativas = 0;
 
-    while (lista.length < o.quantidade && tentativas < o.quantidade * 100) {
+    while (lista.length < o.quantidade &&
+           tentativas < o.quantidade * 100) {
         tentativas++;
 
         const casaA = o.primeiro[aleatorio(0, o.primeiro.length - 1)];
@@ -643,9 +635,6 @@ function gerarMultiplicacaoDiversa(o) {
 
         let a = gerarNumeroCasa(casaA);
         let b = gerarNumeroCasa(casaB);
-
-        // Mantém a conta dentro de quatro algarismos.
-        // Se ultrapassar, sorteia novamente.
         let tentativas = 0;
 
         while (a * b > 9999 && tentativas < 100) {
@@ -748,6 +737,10 @@ function gerarQuestoes() {
     return [];
 }
 
+/* =====================================================
+   TABUADA PARA LEITURA
+   ===================================================== */
+
 function gerarTabuada(op, unidades) {
     const lista = [];
 
@@ -774,9 +767,50 @@ function gerarTabuada(op, unidades) {
     return lista;
 }
 
-/* =========================================================
+function mostrarTabuadaLeitura() {
+    pararCronometro();
+
+    $("numeroQuestao").textContent = "Momento de leitura";
+    $("cronometro").textContent = "--:--";
+    $("barraQuestao").style.width = "100%";
+
+    $("instrucaoQuestao").textContent =
+        "Leia e estude a tabuada com atenção.";
+
+    $("teclado").innerHTML = "";
+    $("feedback").textContent = "";
+
+    let html = "";
+
+    estado.opcoes.unidades.forEach(unidade => {
+        html += `
+            <div class="area-questao">
+                <h3 class="titulo-conta">Tabuada do ${unidade}</h3>
+                <div class="tabela-tabuada">
+        `;
+
+        gerarTabuada(estado.operacao, [unidade]).forEach(linha => {
+            html += `<div class="linha-tabuada">${linha}</div>`;
+        });
+
+        html += `
+                </div>
+            </div>
+        `;
+    });
+
+    $("areaQuestao").innerHTML = html;
+
+    $("acoesQuestao").innerHTML = `
+        <button class="botao-principal" onclick="novoEstudo()">
+            Voltar às modalidades
+        </button>
+    `;
+}
+
+/* =====================================================
    INICIAR ATIVIDADE
-   ========================================================= */
+   ===================================================== */
 
 function iniciarAtividade() {
     try {
@@ -804,57 +838,9 @@ function iniciarAtividade() {
     }
 }
 
-/* =========================================================
-   TABUADA PARA LEITURA
-   ========================================================= */
-
-function mostrarTabuadaLeitura() {
-    pararCronometro();
-
-    $("numeroQuestao").textContent = "Momento de leitura";
-    $("cronometro").textContent = "--:--";
-    $("barraQuestao").style.width = "100%";
-
-    $("instrucaoQuestao").textContent =
-        "Leia e estude a tabuada com atenção.";
-
-    $("areaResposta").innerHTML = "";
-    $("teclado").innerHTML = "";
-    $("feedback").textContent = "";
-
-    let html = "";
-
-    estado.opcoes.unidades.forEach(unidade => {
-        html += `
-            <div class="area-questao">
-                <h3 class="titulo-conta">Tabuada do ${unidade}</h3>
-                <div class="tabela-tabuada">
-        `;
-
-        const linhas = gerarTabuada(estado.operacao, [unidade]);
-
-        linhas.forEach(linha => {
-            html += `<div class="linha-tabuada">${linha}</div>`;
-        });
-
-        html += `
-                </div>
-            </div>
-        `;
-    });
-
-    $("areaQuestao").innerHTML = html;
-
-    $("acoesQuestao").innerHTML = `
-        <button class="botao-principal" onclick="novoEstudo()">
-            Voltar às modalidades
-        </button>
-    `;
-}
-
-/* =========================================================
-   CONTA ARMADA E CAMPOS
-   ========================================================= */
+/* =====================================================
+   CONTA ARMADA
+   ===================================================== */
 
 function separarDigitos(numero) {
     return String(Math.abs(numero)).split("");
@@ -873,7 +859,12 @@ function cabecalhoCasas() {
 
 function criarLinhaNumero(numero) {
     const digitos = separarDigitos(numero);
-    const valores = Array(Math.max(0, 4 - digitos.length))
+
+    if (digitos.length > 4) {
+        throw new Error("O número ultrapassou quatro algarismos.");
+    }
+
+    const valores = Array(4 - digitos.length)
         .fill("")
         .concat(digitos);
 
@@ -914,11 +905,14 @@ function criarLinhaResposta(numero, linha) {
     return html;
 }
 
+/* RESERVAS: MANTIDAS ACIMA DA OPERAÇÃO */
+
 function criarReservas() {
     return `
         <div class="area-reservas">
             <div class="cabecalho-reservas">
                 <span>Área de reservas</span>
+
                 <button type="button"
                     class="botao-limpar-reservas"
                     onclick="limparReservas()">
@@ -945,17 +939,14 @@ function limparReservas() {
     });
 }
 
+/* SOMA E SUBTRAÇÃO:
+   OPERAÇÃO PRIMEIRO, RESPOSTA EMBAIXO. */
+
 function montarConta(q) {
     const sinal = q.operacao === "soma" ? "+" : "−";
 
     return `
         <div class="conta-armada">
-
-            <p class="titulo-parcial">Resposta direta</p>
-
-            <div class="linha-resposta">
-                ${criarLinhaResposta(q.resultado, "resultado")}
-            </div>
 
             ${criarReservas()}
 
@@ -973,9 +964,20 @@ function montarConta(q) {
                 </div>
             </div>
 
+            <div class="secao-parcial">
+                <p class="titulo-parcial">Resposta</p>
+
+                <div class="linha-resposta">
+                    ${criarLinhaResposta(q.resultado, "resultado")}
+                </div>
+            </div>
+
         </div>
     `;
 }
+
+/* MULTIPLICAÇÃO:
+   OPERAÇÃO, PRODUTOS PARCIAIS E RESPOSTA FINAL. */
 
 function montarMultiplicacao(q) {
     const algarismos = separarDigitos(q.segundo).reverse();
@@ -983,16 +985,10 @@ function montarMultiplicacao(q) {
     return `
         <div class="conta-armada">
 
-            <p class="titulo-parcial">Resposta direta</p>
-
-            <div class="linha-resposta">
-                ${criarLinhaResposta(q.resultado, "resultado")}
-            </div>
-
             ${criarReservas()}
 
             <div class="secao-parcial">
-                <div class="titulo-conta">Multiplicação armada</div>
+                <h3 class="titulo-conta">Multiplicação armada</h3>
 
                 ${cabecalhoCasas()}
 
@@ -1016,23 +1012,34 @@ function montarMultiplicacao(q) {
                         <p class="titulo-parcial">
                             ${i + 1}º produto parcial:
                             ${q.primeiro} × ${algarismo}
-                            ${i > 0 ? " (posição das dezenas)" : ""}
+                            ${i > 0 ? " (dezenas)" : ""}
                         </p>
 
                         <div class="linha-parcial">
-                            ${criarLinhaResposta(parcial, "parcial-" + i)}
+                            ${criarLinhaResposta(
+                                parcial,
+                                "parcial-" + i
+                            )}
                         </div>
                     </div>
                 `;
             }).join("")}
 
+            <div class="secao-parcial">
+                <p class="titulo-parcial">Resultado final</p>
+
+                <div class="linha-resposta">
+                    ${criarLinhaResposta(q.resultado, "resultado")}
+                </div>
+            </div>
+
         </div>
     `;
 }
 
-/* =========================================================
-   DIVISÃO E DIVISÃO COM RESTO
-   ========================================================= */
+/* =====================================================
+   DIVISÃO
+   ===================================================== */
 
 function montarDivisao(q) {
     const comResto = estado.modalidade === "resto";
@@ -1076,15 +1083,16 @@ function montarDivisao(q) {
     `;
 }
 
-/* =========================================================
+/* =====================================================
    SEQUÊNCIAS NUMÉRICAS
-   ========================================================= */
+   ===================================================== */
 
 function montarSequencia(q) {
     let html = `
         <div class="titulo-conta">
             Sequência de ${q.numero}
         </div>
+
         <div class="sequence-grid">
     `;
 
@@ -1092,6 +1100,7 @@ function montarSequencia(q) {
         html += `
             <div class="sequence-cell">
                 <span>${item.posicao + 1}</span>
+
                 ${
                     item.preenchida
                     ? `<strong>${item.valor}</strong>`
@@ -1109,9 +1118,9 @@ function montarSequencia(q) {
     return html + "</div>";
 }
 
-/* =========================================================
-   MOSTRAR QUESTÃO
-   ========================================================= */
+/* =====================================================
+   EXIBIÇÃO DA QUESTÃO
+   ===================================================== */
 
 function mostrarQuestao() {
     const q = estado.questoes[estado.indice];
@@ -1140,6 +1149,7 @@ function mostrarQuestao() {
         <button class="botao-principal" onclick="conferirResposta()">
             Conferir resposta
         </button>
+
         <button class="botao-secundario" onclick="pularQuestao()">
             Pular questão
         </button>
@@ -1178,9 +1188,9 @@ function mostrarQuestao() {
     montarTeclado();
 }
 
-/* =========================================================
-   CAMPOS ATIVOS E TECLADO VIRTUAL
-   ========================================================= */
+/* =====================================================
+   CAMPOS E TECLADO
+   ===================================================== */
 
 function prepararCampos() {
     const campos = [
@@ -1208,13 +1218,12 @@ function prepararCampos() {
     });
 
     if (campos.length) {
-        // Para contas armadas, começar pela casa das unidades.
-        const primeiraLinha = campos.filter(
+        const linhaResultado = campos.filter(
             campo => campo.dataset.linha === "resultado"
         );
 
-        const alvo = primeiraLinha.length
-            ? primeiraLinha[primeiraLinha.length - 1]
+        const alvo = linhaResultado.length
+            ? linhaResultado[linhaResultado.length - 1]
             : campos[0];
 
         alvo.focus();
@@ -1278,9 +1287,9 @@ function digitarTeclado(valor) {
     campo.value += String(valor);
 }
 
-/* =========================================================
-   LER RESPOSTAS
-   ========================================================= */
+/* =====================================================
+   LEITURA DOS CAMPOS
+   ===================================================== */
 
 function lerLinha(linha) {
     const campos = [
@@ -1300,9 +1309,9 @@ function lerResultado() {
     return lerLinha("resultado");
 }
 
-/* =========================================================
-   CONFERIR RESPOSTAS
-   ========================================================= */
+/* =====================================================
+   CONFERÊNCIA
+   ===================================================== */
 
 function conferirResposta() {
     if (estado.aguardandoAvanco) return;
@@ -1407,6 +1416,7 @@ function respostaIncorreta() {
         <button class="botao-principal" onclick="tentarNovamente()">
             Corrigir
         </button>
+
         <button class="botao-secundario" onclick="pularQuestao()">
             Pular questão
         </button>
@@ -1420,6 +1430,7 @@ function tentarNovamente() {
         <button class="botao-principal" onclick="conferirResposta()">
             Conferir resposta
         </button>
+
         <button class="botao-secundario" onclick="pularQuestao()">
             Pular questão
         </button>
@@ -1446,9 +1457,9 @@ function pularQuestao() {
     avancarQuestao();
 }
 
-/* =========================================================
-   CORREÇÃO DAS SEQUÊNCIAS
-   ========================================================= */
+/* =====================================================
+   SEQUÊNCIAS
+   ===================================================== */
 
 function conferirSequencia() {
     const q = estado.questoes[estado.indice];
@@ -1496,9 +1507,9 @@ function conferirSequencia() {
     }
 }
 
-/* =========================================================
+/* =====================================================
    CRONÔMETRO
-   ========================================================= */
+   ===================================================== */
 
 function iniciarCronometro() {
     pararCronometro();
@@ -1535,43 +1546,29 @@ function atualizarCronometro() {
         `${String(resto).padStart(2, "0")}`;
 }
 
-/* =========================================================
-   FINALIZAR ATIVIDADE E SALVAR
-   ========================================================= */
+/* =====================================================
+   RESULTADO FINAL
+   ===================================================== */
 
 function finalizarAtividade() {
     pararCronometro();
 
     const total = estado.questoes.length;
-
     let acertos;
     let corrigidas = 0;
     let percentual;
 
     if (estado.modalidade === "sequencia") {
-        acertos = estado.resultados.reduce(
-            (soma, item) => soma + (item.percentual || 0),
-            0
-        );
-
-        percentual = Math.round(
-            acertos / estado.resultados.length
-        );
-
-        // Para sequências, cada sequência vale 100 pontos.
-        const totalPontos = estado.resultados.length * 100;
-        const pontos = estado.resultados.reduce(
-            (soma, item) => soma + (item.percentual || 0),
-            0
-        );
-
-        percentual = totalPontos
-            ? Math.round(pontos / estado.resultados.length)
-            : 0;
-
         acertos = estado.resultados.filter(
             item => item.correto
         ).length;
+
+        percentual = Math.round(
+            estado.resultados.reduce(
+                (soma, item) => soma + item.percentual,
+                0
+            ) / estado.resultados.length
+        );
 
     } else {
         acertos = estado.resultados.filter(
@@ -1596,8 +1593,7 @@ function finalizarAtividade() {
         tempo: tempoDecorrido()
     };
 
-    const chave =
-        `${estado.operacao}_${estado.modalidade}`;
+    const chave = `${estado.operacao}_${estado.modalidade}`;
 
     salvarTentativa(chave, resultado);
 
@@ -1640,9 +1636,9 @@ function salvarTentativa(chave, resultado) {
     salvarProgresso();
 }
 
-/* =========================================================
+/* =====================================================
    DESEMPENHO
-   ========================================================= */
+   ===================================================== */
 
 function atualizarDesempenho() {
     const totalModalidades = 14;
@@ -1693,9 +1689,9 @@ function atualizarDesempenho() {
     atualizarArvore();
 }
 
-/* =========================================================
+/* =====================================================
    ÁRVORE DO CONHECIMENTO
-   ========================================================= */
+   ===================================================== */
 
 function atualizarArvore() {
     const total = Object.values(progresso).filter(
@@ -1745,9 +1741,9 @@ function atualizarArvore() {
     }
 }
 
-/* =========================================================
+/* =====================================================
    BOTÕES FINAIS
-   ========================================================= */
+   ===================================================== */
 
 function revisarAtividade() {
     iniciarAtividade();
@@ -1767,9 +1763,9 @@ function confirmarSaida() {
     }
 }
 
-/* =========================================================
+/* =====================================================
    INICIALIZAÇÃO
-   ========================================================= */
+   ===================================================== */
 
 atualizarDesempenho();
 mostrarTela("inicio");
