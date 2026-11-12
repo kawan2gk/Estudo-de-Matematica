@@ -7,7 +7,7 @@
     <meta name="theme-color" content="#285da8">
     <title>Matemática com Detalhes</title>
 
-    <link rel="stylesheet" href="./style.css?v=3">
+    <link rel="stylesheet" href="./style.css?v=4">
 
     <style>
         body {
@@ -16,82 +16,171 @@
             background: #f3f6fb;
             color: #283548;
         }
-        .escondida { display: none !important; }
-        .container { width: min(100% - 24px, 760px); margin: 20px auto; }
-        .tela { background: white; padding: 20px; border-radius: 16px; }
-        button { cursor: pointer; }
+
+        .escondida {
+            display: none !important;
+        }
+
+        .container {
+            width: min(100% - 24px, 760px);
+            margin: 20px auto;
+        }
+
+        .tela {
+            background: white;
+            padding: 20px;
+            border-radius: 16px;
+        }
+
+        button {
+            cursor: pointer;
+        }
     </style>
 </head>
+
 <body>
 
 <header class="topo">
     <button class="voltar" onclick="voltar()" aria-label="Voltar">←</button>
+
     <div>
         <h1>Matemática com Detalhes</h1>
         <p>Curso Autodidata de Matemática Básica</p>
     </div>
+
     <span class="icone-topo">📘</span>
 </header>
 
 <main class="container">
 
+    <!-- TELA INICIAL -->
     <section id="inicio" class="tela">
+
         <div class="boas-vindas">
-            <h2>Praticando as 4 operações</h2>
-            <p>Escolha uma operação para começar seus estudos.</p>
+            <h2>Escolha o que deseja estudar</h2>
+            <p>Pratique as operações e desenvolva suas habilidades matemáticas.</p>
         </div>
 
         <div class="botoes-operacoes">
-            <button class="botao-operacao" onclick="abrirOperacao('soma')">＋ SOMA</button>
-            <button class="botao-operacao" onclick="abrirOperacao('subtracao')">− SUBTRAÇÃO</button>
-            <button class="botao-operacao" onclick="abrirOperacao('multiplicacao')">× MULTIPLICAÇÃO</button>
-            <button class="botao-operacao" onclick="abrirOperacao('divisao')">÷ DIVISÃO</button>
+
+            <button class="botao-operacao" onclick="abrirOperacao('soma')">
+                ＋ SOMA
+            </button>
+
+            <button class="botao-operacao" onclick="abrirOperacao('subtracao')">
+                − SUBTRAÇÃO
+            </button>
+
+            <button class="botao-operacao" onclick="abrirOperacao('multiplicacao')">
+                × MULTIPLICAÇÃO
+            </button>
+
+            <button class="botao-operacao" onclick="abrirOperacao('divisao')">
+                ÷ DIVISÃO
+            </button>
+
+            <button class="botao-operacao" onclick="abrirOperacao('inteiros')">
+                ± NÚMEROS INTEIROS
+            </button>
+
         </div>
 
+        <!-- DESEMPENHO -->
         <section class="desempenho">
+
             <h2>Meu desempenho</h2>
+
             <div class="progresso-texto">
                 <strong id="percentualGeral">0%</strong>
-                <span id="textoProgresso">0 de 14 modalidades dominadas</span>
+                <span id="textoProgresso">0 de 25 modalidades dominadas</span>
             </div>
+
             <div class="barra-fundo">
                 <div id="barraProgresso" class="barra"></div>
             </div>
+
             <div class="status-grid">
-                <div class="status verde"><strong id="qtdVerdes">0</strong><span>Verdes</span></div>
-                <div class="status amarelo"><strong id="qtdAmarelas">0</strong><span>Amarelas</span></div>
-                <div class="status vermelho"><strong id="qtdVermelhas">0</strong><span>Vermelhas</span></div>
-                <div class="status cinza"><strong id="qtdNaoIniciadas">14</strong><span>Não iniciadas</span></div>
+
+                <div class="status verde">
+                    <strong id="qtdVerdes">0</strong>
+                    <span>Verdes</span>
+                </div>
+
+                <div class="status amarelo">
+                    <strong id="qtdAmarelas">0</strong>
+                    <span>Amarelas</span>
+                </div>
+
+                <div class="status vermelho">
+                    <strong id="qtdVermelhas">0</strong>
+                    <span>Vermelhas</span>
+                </div>
+
+                <div class="status cinza">
+                    <strong id="qtdNaoIniciadas">25</strong>
+                    <span>Não iniciadas</span>
+                </div>
+
             </div>
-            <p id="faltam" class="faltam">Faltam 14 modalidades para dominar tudo.</p>
+
+            <p id="faltam" class="faltam">
+                Faltam 25 modalidades para dominar tudo.
+            </p>
+
         </section>
 
+        <!-- ÁRVORE DO CONHECIMENTO -->
         <section class="arvore-card">
+
             <div id="arvoreVisual" class="arvore">🌱</div>
+
             <h2>Árvore do Conhecimento</h2>
-            <p id="mensagemArvore">Sua árvore está começando a crescer.</p>
+
+            <p id="mensagemArvore">
+                Sua árvore está começando a crescer.
+            </p>
+
             <div id="recompensas" class="recompensas"></div>
+
         </section>
+
     </section>
 
+    <!-- TELA DE OPERAÇÃO -->
     <section id="operacao" class="tela escondida">
+
         <h2 id="tituloOperacao"></h2>
+
         <p id="descricaoOperacao"></p>
+
         <div id="listaModalidades" class="lista-modalidades"></div>
+
         <div id="configuracao" class="configuracao escondida">
+
             <h3 id="tituloConfiguracao"></h3>
+
             <div id="opcoesConfiguracao"></div>
-            <button class="botao-principal" onclick="iniciarAtividade()">Iniciar estudo</button>
+
+            <button class="botao-principal" onclick="iniciarAtividade()">
+                Iniciar estudo
+            </button>
+
         </div>
+
     </section>
 
+    <!-- TELA DE ESTUDO -->
     <section id="estudo" class="tela escondida">
+
         <div class="cabecalho-estudo">
+
             <div>
                 <strong id="numeroQuestao">Questão 1</strong>
                 <p id="instrucaoQuestao">Resolva a questão:</p>
             </div>
+
             <div class="tempo" id="cronometro">00:00</div>
+
         </div>
 
         <div class="barra-fundo">
@@ -99,20 +188,42 @@
         </div>
 
         <div id="areaQuestao" class="area-questao"></div>
+
         <div id="feedback" class="feedback"></div>
+
         <div id="teclado" class="teclado"></div>
+
         <div id="acoesQuestao" class="acoes"></div>
+
     </section>
 
+    <!-- TELA DE RESULTADO -->
     <section id="resultado" class="tela escondida">
+
         <div class="resultado-card">
+
             <h2>Atividade concluída!</h2>
-            <div id="resultadoPercentual" class="percentual-final">0%</div>
+
+            <div id="resultadoPercentual" class="percentual-final">
+                0%
+            </div>
+
             <div id="detalhesResultado"></div>
-            <button class="botao-principal" onclick="revisarAtividade()">Revisar novamente</button>
-            <button class="botao-secundario" onclick="novoEstudo()">Novo estudo</button>
-            <button class="botao-texto" onclick="voltarInicio()">Voltar ao início</button>
+
+            <button class="botao-principal" onclick="revisarAtividade()">
+                Revisar novamente
+            </button>
+
+            <button class="botao-secundario" onclick="novoEstudo()">
+                Novo estudo
+            </button>
+
+            <button class="botao-texto" onclick="voltarInicio()">
+                Voltar ao início
+            </button>
+
         </div>
+
     </section>
 
 </main>
@@ -121,6 +232,9 @@
     <p>Matemática com Detalhes | Curso de Matemática Básica</p>
 </footer>
 
-<script src="./script.js?v=3"></script>
+<!-- ARQUIVOS JAVASCRIPT -->
+<script src="./script.js?v=4"></script>
+<script src="./inteiros.js?v=1"></script>
+
 </body>
 </html>
