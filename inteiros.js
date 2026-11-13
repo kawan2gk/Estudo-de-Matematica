@@ -70,7 +70,7 @@ const estiloReta = document.createElement("style");
 
 estiloReta.textContent = `
 .reta-container {
-    overflow-x: auto;
+    overflow-x: hidden;
     padding: 22px 12px;
     margin: 22px 0;
     background: #f7f9fc;
@@ -80,34 +80,35 @@ estiloReta.textContent = `
 
 .reta-numerica {
     position: relative;
-    min-width: 930px;
+    display: grid;
+    grid-template-columns: repeat(31, minmax(0, 1fr));
+    align-items: center;
+    width: 100%;
     height: 125px;
     padding: 0;
     margin: 0;
-    touch-action: pan-x;
+    touch-action: pan-y;
 }
 
 .reta-linha {
     position: absolute;
-    left: 0;
-    right: 0;
+    left: calc(100% / 62);
+    right: calc(100% / 62);
     top: 48px;
     height: 3px;
     background: #8794a5;
 }
 
 .reta-ponto {
-    position: absolute;
-    top: 39px;
+    position: relative;
     z-index: 1;
-    transform: translateX(-50%);
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: center;
     gap: 12px;
-    width: 30px;
-    min-width: 30px;
+    width: 100%;
+    min-width: 0;
     padding: 0;
     border: 0;
     background: transparent;
@@ -120,12 +121,12 @@ estiloReta.textContent = `
     content: "●";
     color: #64748b;
     font-size: 15px;
-    line-height: 18px;
+    line-height: 15px;
 }
 
 .reta-ponto.selecionado::before {
     color: #285da8;
-    font-size: 20px;
+    font-size: 19px;
 }
 
 .reta-ponto.origem::before {
@@ -137,17 +138,16 @@ estiloReta.textContent = `
     z-index: 5;
     top: 0;
     transform: translateX(-50%);
-    width: 48px;
-    height: 48px;
+    width: 44px;
+    height: 44px;
     padding: 0;
     border: 0;
     border-radius: 50%;
     background: transparent;
-    color: #000;
-    font-size: 43px;
-    line-height: 48px;
+    color: initial;
+    font-size: 34px;
+    line-height: 44px;
     text-align: center;
-    filter: grayscale(1) brightness(0.25);
     cursor: grab;
     touch-action: none;
     user-select: none;
@@ -298,6 +298,8 @@ function gerar(tipo, numeroQuestao = 1) {
     let a,b,op,r;
 
     switch(tipo) {
+
+        /* RETA NUMÉRICA */
 
         case "reta": {
             a = rand(-15,15);
@@ -507,15 +509,6 @@ function gerar(tipo, numeroQuestao = 1) {
                 }
 
                 else if (op === "+") {
-                    /*
-                       Erro comum:
-                       somar os módulos e ignorar
-                       que os sinais são diferentes.
-
-                       Exemplo:
-                       -6 + 4 = 10
-                    */
-
                     if (Math.sign(a) !== Math.sign(b)) {
                         apresentado = Math.abs(a) + Math.abs(b);
                     } else {
@@ -524,17 +517,6 @@ function gerar(tipo, numeroQuestao = 1) {
                 }
 
                 else {
-                    /*
-                       Erro comum:
-                       não trocar o sinal do segundo
-                       número ao transformar subtração
-                       em adição.
-
-                       Exemplo:
-                       6 - (-4) = 2
-                       em vez de 10.
-                    */
-
                     apresentado = a+b;
 
                     if (apresentado === r) {
@@ -760,7 +742,6 @@ function retaHTML(q) {
                     <button type="button"
                         class="reta-ponto ${n===q.a?"origem":""}"
                         data-valor="${n}"
-                        style="left:${((n+15)/30)*100}%"
                         onclick="selecionarPontoReta(${n})">
                         ${n}
                     </button>
@@ -782,6 +763,10 @@ function retaHTML(q) {
     `;
 }
 
+/* =====================================================
+   POSICIONAMENTO DO COELHO
+===================================================== */
+
 function atualizarReta(n) {
     destino = Math.max(-15,Math.min(15,n));
 
@@ -795,8 +780,10 @@ function atualizarReta(n) {
     const marcador = el("marcadorReta");
 
     if (marcador) {
+        const indice = destino + 15;
+
         marcador.style.left =
-            `${((destino+15)/30)*100}%`;
+            `${((indice + 0.5) / 31) * 100}%`;
     }
 
     if (el("destinoReta")) {
@@ -804,6 +791,10 @@ function atualizarReta(n) {
             `Posição escolhida: ${destino}`;
     }
 }
+
+/* =====================================================
+   ARRASTAR O COELHO
+===================================================== */
 
 function moverReta(e) {
     if (!arraste) return;
@@ -818,7 +809,11 @@ function moverReta(e) {
         Math.min(1,(e.clientX-r.left)/r.width)
     );
 
-    atualizarReta(Math.round(proporcao*30-15));
+    const indice = Math.round(proporcao*31-0.5);
+
+    atualizarReta(
+        Math.max(-15,Math.min(15,indice-15))
+    );
 }
 
 function pararArraste() {
@@ -845,7 +840,7 @@ function selecionarPontoReta(n) {
 
 /* =====================================================
    BOTÕES DE ALTERNATIVAS
-   ORDEM FIXA, SEM EMBARALHAR
+   ORDEM FIXA
 ===================================================== */
 
 function opcoesHTML(opcoes) {
