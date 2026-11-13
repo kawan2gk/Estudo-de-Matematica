@@ -28,20 +28,22 @@ const original = {
    MODALIDADES
 ===================================================== */
 
-const TOTAL = 25;
+// 14 modalidades originais + 12 de números inteiros = 26.
 
 const itens = [
     ["reta", "Estudando a reta numérica"],
     ["simples", "Operações simples com inteiros"],
+    ["somaSubtracao", "Soma e Subtração de Inteiros"],
     ["procedimento", "Como obter o resultado"],
     ["multiplicacao", "Multiplicação de inteiros"],
     ["divisao", "Divisão de inteiros"],
-    ["sinal", "Qual o sinal?"],
+    ["sinal", "Qual é o sinal?"],
     ["entendendo", "Entendendo operações com inteiros"],
     ["comparando", "Comparando números inteiros"],
     ["distancia", "Distância entre números"],
     ["falta", "Descubra o número que falta"],
-    ["corrija", "Corrija o erro"]
+    ["corrija", "Corrija o erro"],
+    ["determineSinal", "Determine o Sinal"]
 ];
 
 modalidades.inteiros = itens;
@@ -49,6 +51,7 @@ modalidades.inteiros = itens;
 Object.assign(premios, {
     inteiros_reta: "📏",
     inteiros_simples: "➕",
+    inteiros_somaSubtracao: "➖",
     inteiros_procedimento: "🧠",
     inteiros_multiplicacao: "✖️",
     inteiros_divisao: "➗",
@@ -57,7 +60,8 @@ Object.assign(premios, {
     inteiros_comparando: "⚖️",
     inteiros_distancia: "📍",
     inteiros_falta: "❓",
-    inteiros_corrija: "🎯"
+    inteiros_corrija: "🎯",
+    inteiros_determineSinal: "📝"
 });
 
 /* =====================================================
@@ -83,10 +87,6 @@ const shuffle = lista => {
     return copia;
 };
 
-// Número inteiro entre os limites, incluindo zero.
-const inteiro = (min,max) => rand(min,max);
-
-// Número entre -20 e 20, sem zero.
 const nz = () => {
     let n = 0;
 
@@ -97,24 +97,21 @@ const nz = () => {
     return n;
 };
 
-// Número entre -10 e 10, incluindo zero.
 const fatorPequeno = () => rand(-10,10);
-
-// Número entre -15 e 15, incluindo zero.
 const numeroFalta = () => rand(-15,15);
 
 /* =====================================================
-   PROCEDIMENTOS DAS OPERAÇÕES
+   PROCEDIMENTOS
 ===================================================== */
 
 const PROCEDIMENTOS = [
     "Somar e repetir o sinal negativo.",
     "Somar e repetir o sinal positivo.",
     "Subtrair e manter o sinal do número de maior valor absoluto positivo.",
-    "Subtrair e manter o sinal do número de maior valor absoluto negativo."
+    "Subtrair e manter o sinal do número de maior valor absoluto negativo.",
+    "Os números têm o mesmo valor absoluto e sinais opostos. O resultado é zero."
 ];
 
-// Exibe os números negativos entre parênteses.
 function formatar(a,op,b) {
     if (op === "+") {
         return `${a} + (${b})`;
@@ -127,15 +124,14 @@ function formatar(a,op,b) {
     return `${a} ${op} ${b}`;
 }
 
-// Na subtração, considera-se a soma do oposto.
 function classificar(a,b,op) {
     const segundo = op === "−" ? -b : b;
 
-    if (a === 0 || segundo === 0) {
-        if (a === 0 && segundo === 0) {
-            return PROCEDIMENTOS[1];
-        }
+    if (a === 0 && segundo === 0) {
+        return PROCEDIMENTOS[4];
+    }
 
+    if (a === 0 || segundo === 0) {
         const valor = a === 0 ? segundo : a;
 
         return valor < 0
@@ -149,19 +145,19 @@ function classificar(a,b,op) {
             : PROCEDIMENTOS[1];
     }
 
+    if (Math.abs(a) === Math.abs(segundo)) {
+        return PROCEDIMENTOS[4];
+    }
+
     if (Math.abs(a) > Math.abs(segundo)) {
         return a < 0
             ? PROCEDIMENTOS[3]
             : PROCEDIMENTOS[2];
     }
 
-    if (Math.abs(segundo) > Math.abs(a)) {
-        return segundo < 0
-            ? PROCEDIMENTOS[3]
-            : PROCEDIMENTOS[2];
-    }
-
-    return "Os números têm o mesmo valor absoluto e sinais opostos. O resultado é zero.";
+    return segundo < 0
+        ? PROCEDIMENTOS[3]
+        : PROCEDIMENTOS[2];
 }
 
 /* =====================================================
@@ -192,7 +188,25 @@ function gerar(tipo) {
             };
         }
 
-        case "simples":
+        /* Operações simples:
+           números apresentados sem parênteses. */
+
+        case "simples": {
+            a = rand(1,20);
+            b = rand(1,20);
+            op = pick(["+","−"]);
+
+            r = op === "+" ? a+b : a-b;
+
+            return {
+                tipo,a,b,op,
+                resposta:r
+            };
+        }
+
+        /* Soma e subtração com sinais explícitos. */
+
+        case "somaSubtracao":
         case "procedimento":
         case "entendendo": {
             op = pick(["+","−"]);
@@ -202,20 +216,20 @@ function gerar(tipo) {
             r = op === "+" ? a+b : a-b;
 
             return {
-                tipo,
-                a,b,op,
+                tipo,a,b,op,
                 resposta:r,
                 procedimento:classificar(a,b,op)
             };
         }
+
+        /* Multiplicação com sinais totalmente aleatórios. */
 
         case "multiplicacao": {
             a = fatorPequeno();
             b = fatorPequeno();
 
             return {
-                tipo,
-                a,b,
+                tipo,a,b,
                 resposta:a*b
             };
         }
@@ -226,10 +240,19 @@ function gerar(tipo) {
                 ...divisaoExata()
             };
 
+        /* Qual é o sinal?
+           De 2 a 5 fatores, com sinais aleatórios.
+           Pode começar com número negativo. */
+
         case "sinal": {
+            const quantidade = rand(2,5);
+
             const fatores = Array.from(
-                {length:Math.random()<0.5?2:3},
-                nz
+                {length:quantidade},
+                () => {
+                    const valor = rand(1,5);
+                    return Math.random() < 0.5 ? -valor : valor;
+                }
             );
 
             r = fatores.reduce((x,y)=>x*y,1);
@@ -247,8 +270,7 @@ function gerar(tipo) {
             b = nz();
 
             return {
-                tipo,
-                a,b,
+                tipo,a,b,
                 resposta:a>b?">":a<b?"<":"="
             };
         }
@@ -258,8 +280,7 @@ function gerar(tipo) {
             b = nz();
 
             return {
-                tipo,
-                a,b,
+                tipo,a,b,
                 resposta:Math.abs(a-b)
             };
         }
@@ -324,9 +345,7 @@ function gerar(tipo) {
             let apresentado = r;
 
             if (!correto) {
-                let diferenca = pick([-4,-3,-2,-1,1,2,3,4]);
-
-                apresentado = r+diferenca;
+                apresentado = r + pick([-4,-3,-2,-1,1,2,3,4]);
             }
 
             return {
@@ -337,11 +356,34 @@ function gerar(tipo) {
                 apresentado
             };
         }
+
+        /* Determine o Sinal:
+           O primeiro sinal pode ficar em branco.
+           O segundo sinal é obrigatório. */
+
+        case "determineSinal": {
+            a = rand(1,20);
+            b = rand(1,20);
+
+            const sinalA = Math.random() < 0.5 ? "+" : "-";
+            const sinalB = Math.random() < 0.5 ? "+" : "-";
+
+            const valorA = sinalA === "+" ? a : -a;
+            const valorB = sinalB === "+" ? b : -b;
+
+            return {
+                tipo,
+                a,b,
+                sinalA,
+                sinalB,
+                resposta:valorA+valorB
+            };
+        }
     }
 }
 
 /* =====================================================
-   DIVISÃO EXATA DA TABUADA DE 0 A 10
+   DIVISÃO EXATA
 ===================================================== */
 
 function divisaoExata() {
@@ -356,20 +398,15 @@ function divisaoExata() {
     const dividendo =
         divisorPositivo*quocientePositivo*sinalDividendo;
 
-    const resposta =
-        dividendo/divisor;
-
     return {
         dividendo,
         divisor,
-        resposta
+        resposta:dividendo/divisor
     };
 }
 
 /* =====================================================
    GERAÇÃO DA LISTA
-   A CADA CINCO QUESTÕES ALEATÓRIAS,
-   A SEXTA SERÁ UMA COMPARAÇÃO IGUAL.
 ===================================================== */
 
 function gerarLista(tipo,qtd) {
@@ -411,7 +448,6 @@ function abrirInteiros() {
         "Aprenda a trabalhar com números positivos e negativos. Escolha uma modalidade para começar.";
 
     el("configuracao").classList.add("escondida");
-
     el("menuQuatroOperacoes")?.classList.add("escondida");
 
     el("listaModalidades").classList.remove("escondida");
@@ -513,7 +549,6 @@ function retaHTML(q) {
 
         <div class="reta-container">
             <div class="reta-numerica" id="retaNumerica">
-
                 <div class="reta-linha"></div>
 
                 ${Array.from({length:41},(_,i)=>i-20).map(n=>`
@@ -532,7 +567,6 @@ function retaHTML(q) {
                     onpointerdown="iniciarArrasteReta(event)">
                     ●
                 </button>
-
             </div>
         </div>
 
@@ -568,7 +602,10 @@ function atualizarReta(n) {
 function moverReta(e) {
     if (!arraste) return;
 
-    const r = el("retaNumerica").getBoundingClientRect();
+    const faixa = el("retaNumerica");
+    if (!faixa) return;
+
+    const r = faixa.getBoundingClientRect();
 
     atualizarReta(
         Math.round(
@@ -620,6 +657,14 @@ function opcoesHTML(opcoes) {
    EXIBIÇÃO DAS QUESTÕES
 ===================================================== */
 
+function expressaoCorrigir(q) {
+    const operacao = q.op === "×"
+        ? `${q.a} × ${q.b}`
+        : `${q.a} ${q.op} ${q.b}`;
+
+    return `${operacao} = ${q.apresentado}`;
+}
+
 function renderizarInteiro(q) {
     let html = "";
 
@@ -633,13 +678,35 @@ function renderizarInteiro(q) {
     else if (q.tipo === "simples") {
         html = `
             <div class="expressao-inteiros">
-                ${formatar(q.a,q.op,q.b)}
+                ${q.a} ${q.op} ${q.b}
             </div>
 
             <input id="respostaInteiro"
                 class="resposta-inteiros"
                 inputmode="text"
                 placeholder="Sua resposta">
+        `;
+    }
+
+    else if (
+        q.tipo === "somaSubtracao" ||
+        q.tipo === "procedimento" ||
+        q.tipo === "entendendo"
+    ) {
+        html = `
+            <div class="expressao-inteiros">
+                ${formatar(q.a,q.op,q.b)}
+            </div>
+
+            ${q.tipo === "somaSubtracao" ? `
+                <input id="respostaInteiro"
+                    class="resposta-inteiros"
+                    inputmode="text"
+                    placeholder="Sua resposta">
+            ` : `
+                <p>Qual procedimento deve ser utilizado?</p>
+                ${opcoesHTML(PROCEDIMENTOS)}
+            `}
         `;
     }
 
@@ -674,22 +741,13 @@ function renderizarInteiro(q) {
             <div class="expressao-inteiros">
                 ${q.fatores.map(n=>`(${n})`).join(" × ")}
                 <br>
-                <small>Módulo do resultado: ${q.modulo}. Qual é o sinal?</small>
+                <small>
+                    Módulo do resultado: ${q.modulo}.
+                    Qual é o sinal?
+                </small>
             </div>
 
             ${opcoesHTML(["+","−"])}
-        `;
-    }
-
-    else if (q.tipo === "procedimento" || q.tipo === "entendendo") {
-        html = `
-            <div class="expressao-inteiros">
-                ${formatar(q.a,q.op,q.b)}
-            </div>
-
-            <p>Qual procedimento deve ser utilizado?</p>
-
-            ${opcoesHTML(PROCEDIMENTOS)}
         `;
     }
 
@@ -737,17 +795,50 @@ function renderizarInteiro(q) {
 
     else if (q.tipo === "corrija") {
         html = `
-            <div class="expressao-inteiros">
-                ${q.op==="×"
-                    ? `(${q.a}) × (${q.b})`
-                    : formatar(q.a,q.op,q.b)}
-                <br>
-                = ${q.apresentado}
+            <div class="expressao-inteiros"
+                style="white-space:nowrap; overflow-x:auto; font-size:clamp(20px,5vw,32px)">
+                ${expressaoCorrigir(q)}
             </div>
 
             <p>O resultado apresentado está correto?</p>
 
             ${opcoesHTML(["Correto","Incorreto"])}
+        `;
+    }
+
+    else if (q.tipo === "determineSinal") {
+        html = `
+            <div class="expressao-inteiros">
+                <div style="display:flex; justify-content:center; align-items:center; gap:8px; flex-wrap:wrap">
+
+                    <select id="sinalPrimeiro"
+                        aria-label="Sinal do primeiro número"
+                        style="width:65px; height:55px; font-size:25px; text-align:center; border:2px solid var(--azul); border-radius:10px; background:white">
+                        <option value=""> </option>
+                        <option value="+">+</option>
+                        <option value="-">−</option>
+                    </select>
+
+                    <span>${q.a}</span>
+
+                    <select id="sinalSegundo"
+                        aria-label="Sinal do segundo número"
+                        style="width:65px; height:55px; font-size:25px; text-align:center; border:2px solid var(--azul); border-radius:10px; background:white">
+                        <option value="">?</option>
+                        <option value="+">+</option>
+                        <option value="-">−</option>
+                    </select>
+
+                    <span>${q.b}</span>
+                    <span>= ${q.resposta}</span>
+                </div>
+            </div>
+
+            <p class="nota-conta" style="text-align:center">
+                Complete os sinais para que a igualdade fique correta.
+                O primeiro sinal pode ficar em branco quando for positivo.
+                O segundo sinal é obrigatório.
+            </p>
         `;
     }
 
@@ -804,7 +895,7 @@ function mostrarInteiros() {
 }
 
 /* =====================================================
-   TECLADO VIRTUAL COM SINAIS
+   TECLADO VIRTUAL
 ===================================================== */
 
 function montarTecladoInteiros() {
@@ -869,6 +960,14 @@ function tentarNovamenteInteiros() {
         el("respostaInteiro").value = "";
         el("respostaInteiro").focus();
     }
+
+    if (el("sinalPrimeiro")) {
+        el("sinalPrimeiro").value = "";
+    }
+
+    if (el("sinalSegundo")) {
+        el("sinalSegundo").value = "";
+    }
 }
 
 function incorreta() {
@@ -904,7 +1003,7 @@ function correta() {
     });
 
     document.querySelectorAll(
-        "#areaQuestao input, #areaQuestao .opcao-inteiro"
+        "#areaQuestao input, #areaQuestao select, #areaQuestao .opcao-inteiro"
     ).forEach(x=>x.disabled=true);
 
     const botao = document.querySelector(".botao-ok-resposta");
@@ -924,7 +1023,6 @@ function correta() {
 function conferirValor(v) {
     const q = estado.questoes[estado.indice];
 
-    // CORRIJA O ERRO
     if (q.tipo === "corrija") {
 
         if (etapa === "classificar") {
@@ -940,23 +1038,20 @@ function conferirValor(v) {
 
             etapa = "resultado";
 
-            const opcoes = [
+            const opcoes = shuffle([
                 q.resultado,
                 q.resultado+1,
                 q.resultado-1,
                 q.resultado+2
-            ];
+            ]);
 
             el("feedback").textContent =
                 "Muito bem! Agora escolha o resultado correto.";
 
             el("areaQuestao").innerHTML = `
-                <div class="expressao-inteiros">
-                    ${q.op==="×"
-                        ? `(${q.a}) × (${q.b})`
-                        : formatar(q.a,q.op,q.b)}
-                    <br>
-                    = ${q.apresentado}
+                <div class="expressao-inteiros"
+                    style="white-space:nowrap; overflow-x:auto; font-size:clamp(20px,5vw,32px)">
+                    ${expressaoCorrigir(q)}
                 </div>
 
                 <p>Qual é o resultado correto?</p>
@@ -983,7 +1078,6 @@ function conferirValor(v) {
         }
     }
 
-    // CORREÇÃO DA VALIDAÇÃO DE PROCEDIMENTOS
     if (
         q.tipo === "procedimento" ||
         q.tipo === "entendendo"
@@ -995,7 +1089,26 @@ function conferirValor(v) {
         return;
     }
 
-    // DEMAIS QUESTÕES
+    if (q.tipo === "determineSinal") {
+        const primeiro = el("sinalPrimeiro")?.value || "";
+        const segundo = el("sinalSegundo")?.value || "";
+
+        if (segundo !== "+" && segundo !== "-") {
+            el("feedback").textContent =
+                "Preencha obrigatoriamente o segundo sinal.";
+            return;
+        }
+
+        const valorA = primeiro === "-" ? -q.a : q.a;
+        const valorB = segundo === "-" ? -q.b : q.b;
+
+        valorA + valorB === q.resposta
+            ? correta()
+            : incorreta();
+
+        return;
+    }
+
     String(v) === String(q.resposta)
         ? correta()
         : incorreta();
@@ -1034,6 +1147,11 @@ function confirmarInteiros() {
         }
 
         responderInteiro(destino);
+        return;
+    }
+
+    if (q.tipo === "determineSinal") {
+        conferirValor(null);
         return;
     }
 
@@ -1103,11 +1221,6 @@ function revisarInteiros() {
 ===================================================== */
 
 function atualizarDesempenhoCompleto() {
-    // O script.js já calcula o desempenho usando
-    // todas as modalidades cadastradas.
-    // Como "inteiros" foi acrescentado ao objeto modalidades,
-    // o total passa automaticamente a ser 25.
-
     if (typeof window.atualizarDesempenho === "function") {
         window.atualizarDesempenho();
     }
@@ -1167,7 +1280,6 @@ window.selecionarPontoReta = selecionarPontoReta;
 window.iniciarArrasteReta = iniciarArrasteReta;
 window.tentarNovamenteInteiros = tentarNovamenteInteiros;
 
-// Atualiza o painel depois de cadastrar as 11 modalidades.
 atualizarDesempenhoCompleto();
 
 })();
