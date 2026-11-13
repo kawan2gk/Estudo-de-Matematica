@@ -63,7 +63,7 @@ Object.assign(premios, {
 });
 
 /* =====================================================
-   ESTILOS COMPLEMENTARES DA RETA
+   ESTILOS COMPLEMENTARES
 ===================================================== */
 
 const estiloReta = document.createElement("style");
@@ -80,34 +80,34 @@ estiloReta.textContent = `
 
 .reta-numerica {
     position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
     min-width: 930px;
     height: 125px;
-    padding: 0 10px;
+    padding: 0;
+    margin: 0;
     touch-action: pan-x;
 }
 
 .reta-linha {
     position: absolute;
-    left: 10px;
-    right: 10px;
+    left: 0;
+    right: 0;
     top: 48px;
     height: 3px;
     background: #8794a5;
 }
 
 .reta-ponto {
-    position: relative;
+    position: absolute;
+    top: 39px;
     z-index: 1;
+    transform: translateX(-50%);
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     gap: 12px;
-    width: 25px;
-    min-width: 25px;
+    width: 30px;
+    min-width: 30px;
     padding: 0;
     border: 0;
     background: transparent;
@@ -118,20 +118,14 @@ estiloReta.textContent = `
 
 .reta-ponto::before {
     content: "●";
-    width: auto;
-    height: auto;
-    background: transparent;
     color: #64748b;
     font-size: 15px;
-    line-height: 15px;
+    line-height: 18px;
 }
 
 .reta-ponto.selecionado::before {
-    width: auto;
-    height: auto;
-    background: transparent;
     color: #285da8;
-    font-size: 19px;
+    font-size: 20px;
 }
 
 .reta-ponto.origem::before {
@@ -143,13 +137,17 @@ estiloReta.textContent = `
     z-index: 5;
     top: 0;
     transform: translateX(-50%);
-    width: 44px;
-    height: 44px;
+    width: 48px;
+    height: 48px;
+    padding: 0;
     border: 0;
     border-radius: 50%;
     background: transparent;
-    font-size: 34px;
-    line-height: 44px;
+    color: #000;
+    font-size: 43px;
+    line-height: 48px;
+    text-align: center;
+    filter: grayscale(1) brightness(0.25);
     cursor: grab;
     touch-action: none;
     user-select: none;
@@ -200,12 +198,6 @@ estiloReta.textContent = `
     margin: 25px 0;
     padding: 8px 0;
 }
-
-@media (max-width:600px) {
-    .reta-numerica {
-        min-width: 930px;
-    }
-}
 `;
 
 document.head.appendChild(estiloReta);
@@ -222,17 +214,6 @@ const rand = (a,b) =>
 const pick = lista =>
     lista[rand(0,lista.length-1)];
 
-const shuffle = lista => {
-    const copia = [...lista];
-
-    for (let i=copia.length-1; i>0; i--) {
-        const j = rand(0,i);
-        [copia[i],copia[j]] = [copia[j],copia[i]];
-    }
-
-    return copia;
-};
-
 const nz = () => {
     let n = 0;
 
@@ -245,6 +226,9 @@ const nz = () => {
 
 const fatorPequeno = () => rand(-10,10);
 const numeroFalta = () => rand(-15,15);
+
+const formatarNumero = n =>
+    String(n).replace("-", "−");
 
 /* =====================================================
    FORMATAÇÃO E PROCEDIMENTOS
@@ -260,11 +244,11 @@ const PROCEDIMENTOS = [
 
 function formatar(a,op,b) {
     if (op === "+") {
-        return `${a} + (${b})`;
+        return `${formatarNumero(a)} + (${formatarNumero(b)})`;
     }
 
     if (op === "−" || op === "-") {
-        return `${a} − (${b})`;
+        return `${formatarNumero(a)} − (${formatarNumero(b)})`;
     }
 
     return `${a} ${op} ${b}`;
@@ -315,10 +299,7 @@ function gerar(tipo, numeroQuestao = 1) {
 
     switch(tipo) {
 
-        /* RETA NUMÉRICA */
-
         case "reta": {
-            // Posição inicial e destino sempre entre -15 e 15.
             a = rand(-15,15);
 
             const destinos = [];
@@ -341,16 +322,13 @@ function gerar(tipo, numeroQuestao = 1) {
         /* OPERAÇÕES SIMPLES */
 
         case "simples": {
-            // A cada seis questões, soma de números simétricos.
             if (numeroQuestao % 6 === 0) {
                 a = rand(1,20);
-                if (Math.random() < 0.5) a = -a;
-
-                b = -a;
-                op = "+";
+                b = a;
+                op = "−";
             } else {
-                a = rand(-20,20);
-                b = rand(-20,20);
+                a = rand(1,20);
+                b = rand(1,20);
                 op = pick(["+","−"]);
             }
 
@@ -362,7 +340,7 @@ function gerar(tipo, numeroQuestao = 1) {
             };
         }
 
-        /* SOMA E SUBTRAÇÃO COM SINAIS */
+        /* SOMA E SUBTRAÇÃO */
 
         case "somaSubtracao":
         case "procedimento":
@@ -391,8 +369,14 @@ function gerar(tipo, numeroQuestao = 1) {
         /* MULTIPLICAÇÃO */
 
         case "multiplicacao": {
-            a = fatorPequeno();
-            b = fatorPequeno();
+            const valorA = rand(1,10);
+            const valorB = rand(1,10);
+
+            const sinalA = Math.random() < 0.5 ? -1 : 1;
+            const sinalB = Math.random() < 0.5 ? -1 : 1;
+
+            a = valorA * sinalA;
+            b = valorB * sinalB;
 
             return {
                 tipo,a,b,
@@ -501,12 +485,11 @@ function gerar(tipo, numeroQuestao = 1) {
             op = pick(["+","−","×"]);
 
             if (op === "×") {
-                // Evita fatores zero para permitir erro de sinal.
                 a = pick([-10,-9,-8,-7,-6,-5,-4,-3,-2,-1,1,2,3,4,5,6,7,8,9,10]);
                 b = pick([-10,-9,-8,-7,-6,-5,-4,-3,-2,-1,1,2,3,4,5,6,7,8,9,10]);
             } else {
                 a = rand(-15,15);
-                b = rand(1,15);
+                b = rand(-15,15);
             }
 
             r = op === "+"
@@ -520,10 +503,47 @@ function gerar(tipo, numeroQuestao = 1) {
 
             if (!correto) {
                 if (op === "×") {
-                    // Na multiplicação, somente o sinal estará errado.
                     apresentado = -r;
-                } else {
-                    apresentado = r + pick([-8,-6,-4,-2,-1,1,2,4,6,8]);
+                }
+
+                else if (op === "+") {
+                    /*
+                       Erro comum:
+                       somar os módulos e ignorar
+                       que os sinais são diferentes.
+
+                       Exemplo:
+                       -6 + 4 = 10
+                    */
+
+                    if (Math.sign(a) !== Math.sign(b)) {
+                        apresentado = Math.abs(a) + Math.abs(b);
+                    } else {
+                        apresentado = -r;
+                    }
+                }
+
+                else {
+                    /*
+                       Erro comum:
+                       não trocar o sinal do segundo
+                       número ao transformar subtração
+                       em adição.
+
+                       Exemplo:
+                       6 - (-4) = 2
+                       em vez de 10.
+                    */
+
+                    apresentado = a+b;
+
+                    if (apresentado === r) {
+                        apresentado = -r;
+                    }
+                }
+
+                if (apresentado === r) {
+                    apresentado = r + (r >= 0 ? 3 : -3);
                 }
             }
 
@@ -564,7 +584,7 @@ function gerar(tipo, numeroQuestao = 1) {
 
 function divisaoExata() {
     const divisorPositivo = rand(1,10);
-    const quocientePositivo = rand(0,10);
+    const quocientePositivo = rand(1,10);
 
     const sinalDivisor = Math.random()<0.5 ? -1 : 1;
     const sinalDividendo = Math.random()<0.5 ? -1 : 1;
@@ -594,7 +614,6 @@ function gerarLista(tipo,qtd) {
         if (tipo === "comparando" &&
             (numero % 5 === 0 || numero % 8 === 0)) {
 
-            // Alterna igualdade com números negativos e positivos.
             const valor = numero % 8 === 0
                 ? rand(1,15)
                 : -rand(1,15);
@@ -741,6 +760,7 @@ function retaHTML(q) {
                     <button type="button"
                         class="reta-ponto ${n===q.a?"origem":""}"
                         data-valor="${n}"
+                        style="left:${((n+15)/30)*100}%"
                         onclick="selecionarPontoReta(${n})">
                         ${n}
                     </button>
@@ -773,11 +793,10 @@ function atualizarReta(n) {
     );
 
     const marcador = el("marcadorReta");
-    const faixa = el("retaNumerica");
 
-    if (marcador && faixa) {
+    if (marcador) {
         marcador.style.left =
-            `${10 + ((destino+15)/30)*80}%`;
+            `${((destino+15)/30)*100}%`;
     }
 
     if (el("destinoReta")) {
@@ -826,12 +845,13 @@ function selecionarPontoReta(n) {
 
 /* =====================================================
    BOTÕES DE ALTERNATIVAS
+   ORDEM FIXA, SEM EMBARALHAR
 ===================================================== */
 
 function opcoesHTML(opcoes) {
     return `
         <div class="opcoes-inteiros">
-            ${shuffle(opcoes).map(v=>`
+            ${opcoes.map(v=>`
                 <button type="button"
                     class="opcao-inteiro"
                     data-opcao="${String(v).replace(/"/g,"&quot;")}"
@@ -951,10 +971,9 @@ function renderizarInteiro(q) {
         html = `
             <div class="expressao-inteiros">
                 <div class="comparacao-selecao">
-                    <span>${q.a}</span>
+                    <span>${formatarNumero(q.a)}</span>
 
                     <select id="sinalComparacao"
-                        onchange="atualizarComparacao()"
                         aria-label="Escolha o sinal de comparação">
                         <option value="">?</option>
                         <option value="<">&lt;</option>
@@ -962,12 +981,7 @@ function renderizarInteiro(q) {
                         <option value=">">&gt;</option>
                     </select>
 
-                    <span>${q.b}</span>
-                </div>
-
-                <div id="visualComparacao"
-                    style="text-align:center; font-size:22px; font-weight:bold; color:var(--azul); min-height:32px">
-                    ${q.a} ___ ${q.b}
+                    <span>${formatarNumero(q.b)}</span>
                 </div>
             </div>
 
@@ -1087,20 +1101,6 @@ function renderizarInteiro(q) {
 }
 
 /* =====================================================
-   ATUALIZAR VISUAL DA COMPARAÇÃO
-===================================================== */
-
-function atualizarComparacao() {
-    const q = estado.questoes[estado.indice];
-    const sinal = el("sinalComparacao")?.value || "___";
-
-    if (el("visualComparacao")) {
-        el("visualComparacao").textContent =
-            `${q.a} ${sinal} ${q.b}`;
-    }
-}
-
-/* =====================================================
    MOSTRAR QUESTÃO
 ===================================================== */
 
@@ -1201,7 +1201,6 @@ function tentarNovamenteInteiros() {
 
     if (el("sinalComparacao")) {
         el("sinalComparacao").value = "";
-        atualizarComparacao();
     }
 }
 
@@ -1229,7 +1228,20 @@ function correta() {
 
     estado.respostaConferida = true;
 
-    el("feedback").textContent = "Resposta correta! ✅";
+    const q = estado.questoes[estado.indice];
+
+    if (q.tipo === "comparando") {
+        const palavras = {
+            "<":"é menor que",
+            "=":"é igual a",
+            ">":"é maior que"
+        };
+
+        el("feedback").textContent =
+            `${formatarNumero(q.a)} ${palavras[q.resposta]} ${formatarNumero(q.b)}. ✅`;
+    } else {
+        el("feedback").textContent = "Resposta correta! ✅";
+    }
 
     estado.resultados.push({
         correto:true,
@@ -1248,7 +1260,7 @@ function correta() {
     setTimeout(()=>{
         estado.indice++;
         mostrarInteiros();
-    },900);
+    },1800);
 }
 
 /* =====================================================
@@ -1275,12 +1287,12 @@ function conferirValor(v) {
 
             etapa = "resultado";
 
-            const opcoes = shuffle([
+            const opcoes = [
                 q.resultado,
                 q.resultado+1,
                 q.resultado-1,
                 q.resultado+2
-            ]);
+            ];
 
             el("feedback").textContent =
                 "Muito bem! Agora escolha o resultado correto.";
@@ -1390,15 +1402,22 @@ function confirmarInteiros() {
     const q = estado.questoes[estado.indice];
 
     if (
-        ["sinal","procedimento","entendendo","corrigindo"].includes(q.tipo) ||
-        (q.tipo === "corrija" && etapa === "classificar") ||
-        (q.tipo === "corrija" && etapa === "resultado")
+        ["sinal","procedimento","entendendo"].includes(q.tipo) ||
+        q.tipo === "corrija"
     ) {
         el("feedback").textContent = "Escolha uma das opções.";
         return;
     }
 
     if (q.tipo === "comparando") {
+        const sinal = el("sinalComparacao")?.value;
+
+        if (!sinal) {
+            el("feedback").textContent =
+                "Selecione o sinal de comparação.";
+            return;
+        }
+
         conferirValor(null);
         return;
     }
@@ -1544,7 +1563,6 @@ window.responderInteiro = responderInteiro;
 window.selecionarPontoReta = selecionarPontoReta;
 window.iniciarArrasteReta = iniciarArrasteReta;
 window.tentarNovamenteInteiros = tentarNovamenteInteiros;
-window.atualizarComparacao = atualizarComparacao;
 
 atualizarDesempenhoCompleto();
 
