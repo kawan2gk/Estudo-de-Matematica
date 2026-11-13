@@ -7,7 +7,7 @@
     <meta name="theme-color" content="#285da8">
     <title>Matemática com Detalhes</title>
 
-    <link rel="stylesheet" href="./style.css?v=4">
+    <link rel="stylesheet" href="./style.css?v=5">
 
     <style>
         body {
@@ -35,6 +35,89 @@
         button {
             cursor: pointer;
         }
+
+        /* QUADROS PRINCIPAIS */
+        .quadros-principais {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+            margin: 24px 0;
+        }
+
+        .quadro-principal {
+            min-height: 145px;
+            border: 2px solid #dce6f4;
+            border-radius: 16px;
+            padding: 18px 12px;
+            background: #f8faff;
+            color: #283548;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-align: center;
+            transition: 0.2s;
+        }
+
+        .quadro-principal:hover {
+            transform: translateY(-3px);
+            border-color: #285da8;
+            background: #edf4ff;
+        }
+
+        .icone-quadro {
+            font-size: 38px;
+        }
+
+        .titulo-quadro {
+            font-size: 17px;
+            font-weight: bold;
+            line-height: 1.3;
+        }
+
+        .descricao-quadro {
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        /* SUBMENU DAS QUATRO OPERAÇÕES */
+        .submenu-operacoes {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .submenu-operacoes .botao-operacao {
+            min-height: 85px;
+            font-size: 16px;
+        }
+
+        .titulo-submenu {
+            margin-top: 24px;
+            margin-bottom: 8px;
+            color: #285da8;
+        }
+
+        @media (max-width: 420px) {
+            .quadros-principais {
+                gap: 9px;
+            }
+
+            .quadro-principal {
+                min-height: 130px;
+                padding: 12px 8px;
+            }
+
+            .titulo-quadro {
+                font-size: 15px;
+            }
+
+            .icone-quadro {
+                font-size: 32px;
+            }
+        }
     </style>
 </head>
 
@@ -61,26 +144,39 @@
             <p>Pratique as operações e desenvolva suas habilidades matemáticas.</p>
         </div>
 
-        <div class="botoes-operacoes">
+        <!-- DOIS QUADROS PRINCIPAIS -->
+        <div class="quadros-principais">
 
-            <button class="botao-operacao" onclick="abrirOperacao('soma')">
-                ＋ SOMA
+            <button
+                class="quadro-principal"
+                onclick="abrirOperacao('quatro-operacoes')">
+
+                <span class="icone-quadro">🧮</span>
+
+                <span class="titulo-quadro">
+                    Praticar as 4 Operações
+                </span>
+
+                <span class="descricao-quadro">
+                    Soma, subtração, multiplicação e divisão
+                </span>
+
             </button>
 
-            <button class="botao-operacao" onclick="abrirOperacao('subtracao')">
-                − SUBTRAÇÃO
-            </button>
+            <button
+                class="quadro-principal"
+                onclick="abrirOperacao('inteiros')">
 
-            <button class="botao-operacao" onclick="abrirOperacao('multiplicacao')">
-                × MULTIPLICAÇÃO
-            </button>
+                <span class="icone-quadro">➕➖</span>
 
-            <button class="botao-operacao" onclick="abrirOperacao('divisao')">
-                ÷ DIVISÃO
-            </button>
+                <span class="titulo-quadro">
+                    Números Inteiros
+                </span>
 
-            <button class="botao-operacao" onclick="abrirOperacao('inteiros')">
-                ± NÚMEROS INTEIROS
+                <span class="descricao-quadro">
+                    Aprenda e pratique os números positivos e negativos
+                </span>
+
             </button>
 
         </div>
@@ -152,6 +248,39 @@
         <h2 id="tituloOperacao"></h2>
 
         <p id="descricaoOperacao"></p>
+
+        <!-- SUBMENU DAS QUATRO OPERAÇÕES -->
+        <div id="menuQuatroOperacoes" class="escondida">
+
+            <h3 class="titulo-submenu">
+                Escolha uma operação:
+            </h3>
+
+            <div class="submenu-operacoes">
+
+                <button class="botao-operacao"
+                    onclick="abrirOperacao('soma')">
+                    ＋ SOMA
+                </button>
+
+                <button class="botao-operacao"
+                    onclick="abrirOperacao('subtracao')">
+                    − SUBTRAÇÃO
+                </button>
+
+                <button class="botao-operacao"
+                    onclick="abrirOperacao('multiplicacao')">
+                    × MULTIPLICAÇÃO
+                </button>
+
+                <button class="botao-operacao"
+                    onclick="abrirOperacao('divisao')">
+                    ÷ DIVISÃO
+                </button>
+
+            </div>
+
+        </div>
 
         <div id="listaModalidades" class="lista-modalidades"></div>
 
@@ -233,8 +362,8 @@
 </footer>
 
 <!-- ARQUIVOS JAVASCRIPT -->
-<script src="./script.js?v=4"></script>
-<script src="./inteiros.js?v=1"></script>
+<script src="./script.js?v=5"></script>
+<script src="./inteiros.js?v=2"></script>
 
 </body>
 </html>
