@@ -69,22 +69,20 @@ let estado = {
 ===================================================== */
 
 function aleatorio(min, max) {
-    return Math.floor(
-        Math.random() * (max - min + 1)
-    ) + min;
+    return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 function embaralhar(lista) {
-    return [...lista].sort(
-        () => Math.random() - 0.5
-    );
+    return [...lista].sort(() => Math.random() - 0.5);
 }
 
 function salvar() {
-    localStorage.setItem(
-        CHAVE,
-        JSON.stringify(progresso)
-    );
+    localStorage.setItem(CHAVE, JSON.stringify(progresso));
+}
+
+function totalModalidades() {
+    return Object.values(modalidades)
+        .reduce((total, lista) => total + lista.length, 0);
 }
 
 function mostrarTela(id) {
@@ -112,12 +110,47 @@ function voltarInicio() {
     atualizarDesempenho();
 }
 
+/* =====================================================
+   NAVEGAÇÃO PRINCIPAL
+===================================================== */
+
 function abrirOperacao(op) {
     pararCronometro();
 
     estado.operacao = op;
     estado.modalidade = "";
 
+    const menuQuatro = $("menuQuatroOperacoes");
+    const lista = $("listaModalidades");
+
+    $("configuracao").classList.add("escondida");
+
+    // QUADRO PRINCIPAL: PRATICAR AS 4 OPERAÇÕES
+    if (op === "quatro-operacoes") {
+        $("tituloOperacao").textContent =
+            "Praticar as 4 Operações";
+
+        $("descricaoOperacao").textContent =
+            "Escolha qual operação deseja praticar.";
+
+        menuQuatro?.classList.remove("escondida");
+        lista.classList.add("escondida");
+        lista.innerHTML = "";
+
+        mostrarTela("operacao");
+        return;
+    }
+
+    // QUADRO PRINCIPAL: NÚMEROS INTEIROS
+    if (op === "inteiros") {
+        menuQuatro?.classList.add("escondida");
+        lista.classList.remove("escondida");
+
+        mostrarTela("operacao");
+        return;
+    }
+
+    // OPERAÇÕES INDIVIDUAIS
     const nomes = {
         soma: "Soma",
         subtracao: "Subtração",
@@ -125,20 +158,25 @@ function abrirOperacao(op) {
         divisao: "Divisão"
     };
 
+    if (!modalidades[op]) {
+        console.error("Operação não encontrada:", op);
+        return;
+    }
+
     $("tituloOperacao").textContent = nomes[op];
 
     $("descricaoOperacao").textContent =
         "Escolha uma modalidade para estudar.";
 
-    $("configuracao").classList.add("escondida");
+    menuQuatro?.classList.add("escondida");
+    lista.classList.remove("escondida");
 
-    $("listaModalidades").innerHTML =
-        modalidades[op].map(([id, nome]) => `
-            <button class="modalidade"
-                onclick="selecionarModalidade('${id}',this)">
-                ${nome}
-            </button>
-        `).join("");
+    lista.innerHTML = modalidades[op].map(([id, nome]) => `
+        <button class="modalidade"
+            onclick="selecionarModalidade('${id}',this)">
+            ${nome}
+        </button>
+    `).join("");
 
     mostrarTela("operacao");
 }
@@ -197,9 +235,7 @@ function quantidade() {
 
         <select id="quantidade">
             ${[10,20,30,40,50].map(n => `
-                <option value="${n}">
-                    ${n} questões
-                </option>
+                <option value="${n}">${n} questões</option>
             `).join("")}
         </select>
     `;
@@ -207,7 +243,6 @@ function quantidade() {
 
 /* =====================================================
    FAIXAS NUMÉRICAS
-   Ficam ocultas até o aluno marcar Dezena ou Centena.
 ===================================================== */
 
 function faixasHTML(grupo, tipo) {
@@ -262,11 +297,6 @@ function faixasHTML(grupo, tipo) {
     return "";
 }
 
-/*
- * Colunas de soma e multiplicação.
- * As faixas começam escondidas.
- */
-
 function colunaComFaixas(titulo, grupo, opcoes) {
     return `
         <div class="coluna-selecao">
@@ -296,25 +326,15 @@ function colunaComFaixas(titulo, grupo, opcoes) {
     `;
 }
 
-/*
- * Subtração: coluna esquerda.
- * Inclui a opção especial Subtraindo de 1000.
- */
-
 function colunaSubtracaoEsquerda() {
     const opcoes = [
         ...casas(),
-        {
-            valor: "mil",
-            texto: "Subtraindo de 1000"
-        }
+        { valor: "mil", texto: "Subtraindo de 1000" }
     ];
 
     return `
         <div class="coluna-selecao">
-            <div class="titulo-coluna">
-                Coluna esquerda
-            </div>
+            <div class="titulo-coluna">Coluna esquerda</div>
 
             ${opcoes.map(o => `
                 <label class="opcao-selecao">
@@ -328,9 +348,7 @@ function colunaSubtracaoEsquerda() {
                 </label>
 
                 ${o.valor === "centena" ? `
-                    <div class="escondida"
-                        id="primeiro_centena">
-
+                    <div class="escondida" id="primeiro_centena">
                         <div class="subopcoes-faixa">
                             <label class="opcao-selecao">
                                 <input type="checkbox"
@@ -339,7 +357,6 @@ function colunaSubtracaoEsquerda() {
                                 Dezena = 0
                             </label>
                         </div>
-
                     </div>
                 ` : ""}
             `).join("")}
@@ -347,17 +364,10 @@ function colunaSubtracaoEsquerda() {
     `;
 }
 
-/*
- * Subtração: coluna direita.
- * A opção Dezena = 0 é independente.
- */
-
 function colunaSubtracaoDireita() {
     return `
         <div class="coluna-selecao">
-            <div class="titulo-coluna">
-                Coluna direita
-            </div>
+            <div class="titulo-coluna">Coluna direita</div>
 
             ${casas().map(o => `
                 <label class="opcao-selecao">
@@ -371,9 +381,7 @@ function colunaSubtracaoDireita() {
                 </label>
 
                 ${o.valor === "centena" ? `
-                    <div class="escondida"
-                        id="segundo_centena">
-
+                    <div class="escondida" id="segundo_centena">
                         <div class="subopcoes-faixa">
                             <label class="opcao-selecao">
                                 <input type="checkbox"
@@ -382,7 +390,6 @@ function colunaSubtracaoDireita() {
                                 Dezena = 0
                             </label>
                         </div>
-
                     </div>
                 ` : ""}
             `).join("")}
@@ -390,33 +397,20 @@ function colunaSubtracaoDireita() {
     `;
 }
 
-/*
- * Controla a abertura e o fechamento das subopções.
- * Ao desmarcar a opção principal, limpa as subopções.
- */
-
 function prepararSubopcoesConfiguracao() {
     document.querySelectorAll(
         "#opcoesConfiguracao [data-expande]"
     ).forEach(campo => {
-
         campo.addEventListener("change", () => {
-            const id = campo.dataset.expande;
-            const painel = $(id);
-
+            const painel = $(campo.dataset.expande);
             if (!painel) return;
 
-            painel.classList.toggle(
-                "escondida",
-                !campo.checked
-            );
+            painel.classList.toggle("escondida", !campo.checked);
 
             if (!campo.checked) {
                 painel.querySelectorAll(
                     'input[type="checkbox"]'
-                ).forEach(sub => {
-                    sub.checked = false;
-                });
+                ).forEach(sub => sub.checked = false);
             }
         });
     });
@@ -442,50 +436,30 @@ function selecionarModalidade(id, botao) {
         html += quantidade();
     }
 
-    /* SOMA */
-
     if (op === "soma" && id === "sequencial") {
         html += dupla(
-            "Coluna esquerda",
-            "casas",
-            casas(),
-            "Coluna direita",
-            "valores",
-            numeros(1,10,"Somando +")
+            "Coluna esquerda", "casas", casas(),
+            "Coluna direita", "valores", numeros(1,10,"Somando +")
         );
     }
 
     if (op === "soma" && id === "diversas") {
         html += `
             <div class="selecao-dupla">
-                ${colunaComFaixas(
-                    "Coluna esquerda",
-                    "primeiro",
-                    casas()
-                )}
-
-                ${colunaComFaixas(
-                    "Coluna direita",
-                    "segundo",
-                    casas()
-                )}
+                ${colunaComFaixas("Coluna esquerda","primeiro",casas())}
+                ${colunaComFaixas("Coluna direita","segundo",casas())}
             </div>
         `;
     }
-
-    /* SUBTRAÇÃO */
 
     if (op === "subtracao" && id === "sequencial") {
         html += dupla(
             "Coluna esquerda",
             "casas",
-            [
-                ...casas(),
-                {
-                    valor: "dez_a_dezenove",
-                    texto: "Números de 10 a 19"
-                }
-            ],
+            [...casas(), {
+                valor: "dez_a_dezenove",
+                texto: "Números de 10 a 19"
+            }],
             "Coluna direita",
             "valores",
             numeros(1,10,"Subtraindo −")
@@ -505,41 +479,24 @@ function selecionarModalidade(id, botao) {
         html += opcoesReserva();
     }
 
-    /* MULTIPLICAÇÃO */
-
     if (op === "multiplicacao" && id === "sequencial") {
         html += dupla(
-            "Coluna esquerda",
-            "casas",
-            casas(),
-            "Coluna direita",
-            "valores",
-            numeros(0,9,"Multiplicando ×")
+            "Coluna esquerda", "casas", casas(),
+            "Coluna direita", "valores", numeros(0,9,"Multiplicando ×")
         );
     }
 
     if (op === "multiplicacao" && id === "diversas") {
         html += `
             <div class="selecao-dupla">
-                ${colunaComFaixas(
-                    "Coluna esquerda",
-                    "primeiro",
-                    casas()
-                )}
-
-                ${colunaComFaixas(
-                    "Coluna direita",
-                    "segundo",
-                    [
-                        { valor: "unidade", texto: "Unidade" },
-                        { valor: "dezena", texto: "Dezena" }
-                    ]
-                )}
+                ${colunaComFaixas("Coluna esquerda","primeiro",casas())}
+                ${colunaComFaixas("Coluna direita","segundo",[
+                    {valor:"unidade",texto:"Unidade"},
+                    {valor:"dezena",texto:"Dezena"}
+                ])}
             </div>
         `;
     }
-
-    /* SEQUÊNCIAS */
 
     if (id === "sequencia") {
         html += coluna(
@@ -549,12 +506,7 @@ function selecionarModalidade(id, botao) {
         );
     }
 
-    /* DIVISÃO */
-
-    if (
-        op === "divisao" &&
-        ["pratica","resto"].includes(id)
-    ) {
+    if (op === "divisao" && ["pratica","resto"].includes(id)) {
         html += coluna(
             "Divisores",
             "divisores",
@@ -571,8 +523,6 @@ function selecionarModalidade(id, botao) {
         `;
     }
 
-    /* TABUADAS */
-
     if (id === "tabuada") {
         html += coluna(
             "Tabuadas",
@@ -586,7 +536,6 @@ function selecionarModalidade(id, botao) {
 
     $("opcoesConfiguracao").innerHTML = html;
 
-    // Prepara os cliques das opções expansíveis.
     prepararSubopcoesConfiguracao();
 
     $("configuracao").classList.remove("escondida");
@@ -598,16 +547,12 @@ function opcoesReserva() {
 
         <div class="number-options">
             <label>
-                <input type="checkbox"
-                    name="reserva"
-                    value="com">
+                <input type="checkbox" name="reserva" value="com">
                 Com reserva
             </label>
 
             <label>
-                <input type="checkbox"
-                    name="reserva"
-                    value="sem">
+                <input type="checkbox" name="reserva" value="sem">
                 Sem reserva
             </label>
         </div>
@@ -631,9 +576,7 @@ function lerOpcoes() {
     const op = estado.operacao;
 
     const o = {
-        quantidade: Number(
-            $("quantidade")?.value || 10
-        )
+        quantidade: Number($("quantidade")?.value || 10)
     };
 
     if (id === "sequencial") {
@@ -644,12 +587,8 @@ function lerOpcoes() {
     if (id === "diversas") {
         o.primeiro = selecionados("primeiro");
         o.segundo = selecionados("segundo");
-
-        o.faixasPrimeiro =
-            selecionados("faixa_primeiro");
-
-        o.faixasSegundo =
-            selecionados("faixa_segundo");
+        o.faixasPrimeiro = selecionados("faixa_primeiro");
+        o.faixasSegundo = selecionados("faixa_segundo");
 
         o.dezenaZeroPrimeiro =
             selecionados("primeiro_dezena_zero").length > 0;
@@ -677,10 +616,7 @@ function lerOpcoes() {
         o.unidades = selecionados("unidades").map(Number);
     }
 
-    if (
-        op === "divisao" &&
-        ["pratica","resto"].includes(id)
-    ) {
+    if (op === "divisao" && ["pratica","resto"].includes(id)) {
         o.divisores = selecionados("divisores").map(Number);
     }
 
@@ -699,16 +635,12 @@ function validar(o) {
         id === "sequencial" &&
         (!o.casas.length || !o.valores.length)
     ) {
-        throw Error(
-            "Selecione pelo menos uma opção em cada coluna."
-        );
+        throw Error("Selecione pelo menos uma opção em cada coluna.");
     }
 
     if (id === "diversas") {
         if (!o.primeiro.length || !o.segundo.length) {
-            throw Error(
-                "Selecione pelo menos uma opção em cada coluna."
-            );
+            throw Error("Selecione pelo menos uma opção em cada coluna.");
         }
 
         if (
@@ -716,23 +648,15 @@ function validar(o) {
             o.primeiro.includes("mil") &&
             o.segundo.includes("mil")
         ) {
-            throw Error(
-                "Selecione os números que serão subtraídos de 1000 na coluna direita."
-            );
+            throw Error("Selecione os números que serão subtraídos de 1000 na coluna direita.");
         }
     }
 
-    if (
-        id === "sequencia" &&
-        !o.numeros.length
-    ) {
+    if (id === "sequencia" && !o.numeros.length) {
         throw Error("Selecione uma sequência.");
     }
 
-    if (
-        id === "tabuada" &&
-        !o.unidades.length
-    ) {
+    if (id === "tabuada" && !o.unidades.length) {
         throw Error("Selecione uma tabuada.");
     }
 
@@ -754,30 +678,18 @@ function sortearFaixa(faixas, intervalos) {
         .filter(f => intervalos[f])
         .map(f => intervalos[f]);
 
-    if (!disponiveis.length) {
-        return null;
-    }
+    if (!disponiveis.length) return null;
 
-    const faixa = disponiveis[
-        aleatorio(0,disponiveis.length-1)
-    ];
+    const faixa = disponiveis[aleatorio(0,disponiveis.length-1)];
 
     return aleatorio(faixa[0],faixa[1]);
 }
 
-function numeroCasa(
-    tipo,
-    faixas = [],
-    dezenaZero = false
-) {
-    if (tipo === "unidade") {
-        return aleatorio(0,9);
-    }
+function numeroCasa(tipo, faixas = [], dezenaZero = false) {
+    if (tipo === "unidade") return aleatorio(0,9);
 
     if (tipo === "dezena") {
-        if (!faixas.length) {
-            return aleatorio(10,99);
-        }
+        if (!faixas.length) return aleatorio(10,99);
 
         const intervalos = {
             menor30: [10,29],
@@ -786,23 +698,15 @@ function numeroCasa(
             maior70: [71,99]
         };
 
-        return sortearFaixa(
-            faixas,
-            intervalos
-        ) ?? aleatorio(10,99);
+        return sortearFaixa(faixas,intervalos) ?? aleatorio(10,99);
     }
 
     if (tipo === "centena") {
         if (dezenaZero) {
-            const centena = aleatorio(1,9);
-            const unidade = aleatorio(0,9);
-
-            return centena*100 + unidade;
+            return aleatorio(1,9)*100 + aleatorio(0,9);
         }
 
-        if (!faixas.length) {
-            return aleatorio(100,999);
-        }
+        if (!faixas.length) return aleatorio(100,999);
 
         const intervalos = {
             menor200: [100,199],
@@ -811,19 +715,11 @@ function numeroCasa(
             maior800: [801,999]
         };
 
-        return sortearFaixa(
-            faixas,
-            intervalos
-        ) ?? aleatorio(100,999);
+        return sortearFaixa(faixas,intervalos) ?? aleatorio(100,999);
     }
 
-    if (tipo === "dez_a_dezenove") {
-        return aleatorio(10,19);
-    }
-
-    if (tipo === "mil") {
-        return 1000;
-    }
+    if (tipo === "dez_a_dezenove") return aleatorio(10,19);
+    if (tipo === "mil") return 1000;
 
     return aleatorio(0,9);
 }
@@ -841,12 +737,7 @@ function temReserva(a,b) {
     for (let i = 0; i < A.length; i++) {
         const algA = (A[i] || 0) - emprestimo;
         const algB = B[i] || 0;
-
-        if (algA < algB) {
-            emprestimo = 1;
-        } else {
-            emprestimo = 0;
-        }
+        emprestimo = algA < algB ? 1 : 0;
     }
 
     return emprestimo > 0 ||
@@ -856,7 +747,6 @@ function temReserva(a,b) {
             for (let j = 0; j <= i; j++) {
                 const x = (A[j] || 0) - anterior;
                 const y = B[j] || 0;
-
                 anterior = x < y ? 1 : 0;
             }
 
@@ -867,19 +757,11 @@ function temReserva(a,b) {
 function reservaPermitida(o,a,b) {
     const reserva = temReserva(a,b);
 
-    if (
-        o.reservas.length === 1 &&
-        o.reservas[0] === "com" &&
-        !reserva
-    ) {
+    if (o.reservas.length === 1 && o.reservas[0] === "com" && !reserva) {
         return false;
     }
 
-    if (
-        o.reservas.length === 1 &&
-        o.reservas[0] === "sem" &&
-        reserva
-    ) {
+    if (o.reservas.length === 1 && o.reservas[0] === "sem" && reserva) {
         return false;
     }
 
@@ -907,44 +789,29 @@ function gerarSequencial(op,o) {
         lista.length < o.quantidade &&
         tentativas++ < o.quantidade*1000
     ) {
-        const tipo = o.casas[
-            aleatorio(0,o.casas.length-1)
-        ];
-
-        const b = o.valores[
-            aleatorio(0,o.valores.length-1)
-        ];
-
-        let a = numeroCasa(tipo);
+        const tipo = o.casas[aleatorio(0,o.casas.length-1)];
+        const b = o.valores[aleatorio(0,o.valores.length-1)];
+        const a = numeroCasa(tipo);
 
         if (op === "soma") {
-            lista.push(
-                criarQuestao(
-                    Math.max(a,b),
-                    Math.min(a,b),
-                    op
-                )
-            );
-
+            lista.push(criarQuestao(
+                Math.max(a,b),
+                Math.min(a,b),
+                op
+            ));
             continue;
         }
 
         const maior = Math.max(a,b);
         const menor = Math.min(a,b);
 
-        if (!reservaPermitida(o,maior,menor)) {
-            continue;
-        }
+        if (!reservaPermitida(o,maior,menor)) continue;
 
-        lista.push(
-            criarQuestao(maior,menor,op)
-        );
+        lista.push(criarQuestao(maior,menor,op));
     }
 
     if (lista.length < o.quantidade) {
-        throw Error(
-            "Não foi possível gerar questões com essa seleção. Tente combinar outras opções."
-        );
+        throw Error("Não foi possível gerar questões com essa seleção. Tente combinar outras opções.");
     }
 
     return embaralhar(lista);
@@ -962,79 +829,43 @@ function gerarDiversas(op,o) {
         lista.length < o.quantidade &&
         tentativas++ < o.quantidade*1500
     ) {
-        const tipoA = o.primeiro[
-            aleatorio(0,o.primeiro.length-1)
-        ];
-
-        const tipoB = o.segundo[
-            aleatorio(0,o.segundo.length-1)
-        ];
+        const tipoA = o.primeiro[aleatorio(0,o.primeiro.length-1)];
+        const tipoB = o.segundo[aleatorio(0,o.segundo.length-1)];
 
         let a = numeroCasa(
             tipoA,
             o.faixasPrimeiro || [],
-            op === "subtracao" &&
-            tipoA === "centena" &&
-            o.dezenaZeroPrimeiro
+            op === "subtracao" && tipoA === "centena" && o.dezenaZeroPrimeiro
         );
 
         let b = numeroCasa(
             tipoB,
             o.faixasSegundo || [],
-            op === "subtracao" &&
-            tipoB === "centena" &&
-            o.dezenaZeroSegundo
+            op === "subtracao" && tipoB === "centena" && o.dezenaZeroSegundo
         );
 
-        /*
-         * Subtraindo de 1000:
-         * o minuendo permanece 1000.
-         */
-
-        if (
-            op === "subtracao" &&
-            tipoA === "mil"
-        ) {
+        if (op === "subtracao" && tipoA === "mil") {
             a = 1000;
-
-            if (b >= 1000) {
-                continue;
-            }
+            if (b >= 1000) continue;
         }
 
         if (op === "soma") {
-            [a,b] = [
-                Math.max(a,b),
-                Math.min(a,b)
-            ];
+            [a,b] = [Math.max(a,b),Math.min(a,b)];
         }
 
         if (op === "subtracao") {
             if (tipoA !== "mil") {
-                [a,b] = [
-                    Math.max(a,b),
-                    Math.min(a,b)
-                ];
+                [a,b] = [Math.max(a,b),Math.min(a,b)];
             }
 
-            if (a < b) {
-                continue;
-            }
-
-            if (!reservaPermitida(o,a,b)) {
-                continue;
-            }
+            if (a < b || !reservaPermitida(o,a,b)) continue;
         }
 
-        lista.push(
-            criarQuestao(a,b,op)
-        );
+        lista.push(criarQuestao(a,b,op));
     }
 
     if (lista.length < o.quantidade) {
-        throw Error(
-            "Não foi possível gerar questões com essa seleção. Tente selecionar outras opções."
-        );
+        throw Error("Não foi possível gerar questões com essa seleção. Tente selecionar outras opções.");
     }
 
     return embaralhar(lista);
@@ -1051,39 +882,16 @@ function gerarMultiplicacao(o,sequencial) {
         let a,b;
 
         if (sequencial) {
-            a = numeroCasa(
-                o.casas[
-                    aleatorio(0,o.casas.length-1)
-                ]
-            );
-
-            b = o.valores[
-                aleatorio(0,o.valores.length-1)
-            ];
-
+            a = numeroCasa(o.casas[aleatorio(0,o.casas.length-1)]);
+            b = o.valores[aleatorio(0,o.valores.length-1)];
         } else {
-            const tipoA = o.primeiro[
-                aleatorio(0,o.primeiro.length-1)
-            ];
+            const tipoA = o.primeiro[aleatorio(0,o.primeiro.length-1)];
+            const tipoB = o.segundo[aleatorio(0,o.segundo.length-1)];
 
-            const tipoB = o.segundo[
-                aleatorio(0,o.segundo.length-1)
-            ];
+            a = numeroCasa(tipoA,o.faixasPrimeiro || []);
+            b = numeroCasa(tipoB,o.faixasSegundo || []);
 
-            a = numeroCasa(
-                tipoA,
-                o.faixasPrimeiro || []
-            );
-
-            b = numeroCasa(
-                tipoB,
-                o.faixasSegundo || []
-            );
-
-            // Maior fator sempre em cima.
-            if (b > a) {
-                [a,b] = [b,a];
-            }
+            if (b > a) [a,b] = [b,a];
         }
 
         lista.push({
@@ -1122,10 +930,7 @@ function gerarDivisao(o,resto) {
     }
 
     for (let i = 0; i < o.quantidade; i++) {
-        const d = o.divisores[
-            aleatorio(0,o.divisores.length-1)
-        ];
-
+        const d = o.divisores[aleatorio(0,o.divisores.length-1)];
         const n = aleatorio(0,d*10);
 
         lista.push({
@@ -1146,21 +951,15 @@ function gerarDivisao(o,resto) {
 
 function gerarSequencias(lista) {
     return embaralhar(lista.map(n => {
-        const vazias = embaralhar(
-            [0,1,2,3,4,5,6,7,8,9]
-        ).slice(0,6);
+        const vazias = embaralhar([0,1,2,3,4,5,6,7,8,9]).slice(0,6);
 
         return {
             numero: n,
-
-            itens: Array.from(
-                {length:10},
-                (_,i) => ({
-                    posicao: i,
-                    valor: n*(i+1),
-                    preenchida: !vazias.includes(i)
-                })
-            )
+            itens: Array.from({length:10},(_,i) => ({
+                posicao: i,
+                valor: n*(i+1),
+                preenchida: !vazias.includes(i)
+            }))
         };
     }));
 }
@@ -1174,31 +973,15 @@ function gerarQuestoes() {
     const op = estado.operacao;
     const id = estado.modalidade;
 
-    if (id === "sequencia") {
-        return gerarSequencias(o.numeros);
-    }
-
-    if (op === "divisao") {
-        return gerarDivisao(
-            o,
-            id === "resto"
-        );
-    }
+    if (id === "sequencia") return gerarSequencias(o.numeros);
+    if (op === "divisao") return gerarDivisao(o,id === "resto");
 
     if (op === "multiplicacao") {
-        return gerarMultiplicacao(
-            o,
-            id === "sequencial"
-        );
+        return gerarMultiplicacao(o,id === "sequencial");
     }
 
-    if (id === "sequencial") {
-        return gerarSequencial(op,o);
-    }
-
-    if (id === "diversas") {
-        return gerarDiversas(op,o);
-    }
+    if (id === "sequencial") return gerarSequencial(op,o);
+    if (id === "diversas") return gerarDiversas(op,o);
 
     return [];
 }
@@ -1210,15 +993,12 @@ function gerarQuestoes() {
 function iniciarAtividade() {
     try {
         estado.opcoes = lerOpcoes();
-
         validar(estado.opcoes);
 
         estado.ultimaConfiguracao = {
             operacao: estado.operacao,
             modalidade: estado.modalidade,
-            opcoes: JSON.parse(
-                JSON.stringify(estado.opcoes)
-            )
+            opcoes: JSON.parse(JSON.stringify(estado.opcoes))
         };
 
         if (estado.modalidade === "tabuada") {
@@ -1235,7 +1015,6 @@ function iniciarAtividade() {
         estado.sequenciaConferida = false;
 
         mostrarTela("estudo");
-
         iniciarCronometro();
         mostrarQuestao();
 
@@ -1251,12 +1030,8 @@ function iniciarAtividade() {
 function mostrarTabuada() {
     pararCronometro();
 
-    $("numeroQuestao").textContent =
-        "Momento de leitura";
-
-    $("instrucaoQuestao").textContent =
-        "Leia e estude a tabuada.";
-
+    $("numeroQuestao").textContent = "Momento de leitura";
+    $("instrucaoQuestao").textContent = "Leia e estude a tabuada.";
     $("cronometro").textContent = "--:--";
     $("barraQuestao").style.width = "100%";
     $("teclado").innerHTML = "";
@@ -1267,37 +1042,19 @@ function mostrarTabuada() {
 
     estado.opcoes.unidades.forEach(n => {
         html += `
-            <h3 class="titulo-conta">
-                Tabuada do ${n}
-            </h3>
-
+            <h3 class="titulo-conta">Tabuada do ${n}</h3>
             <div class="tabela-tabuada">
         `;
 
         for (let i = 0; i <= 10; i++) {
             let linha = "";
 
-            if (op === "soma") {
-                linha = `${n} + ${i} = ${n+i}`;
-            }
+            if (op === "soma") linha = `${n} + ${i} = ${n+i}`;
+            if (op === "subtracao") linha = `${n+i} − ${n} = ${i}`;
+            if (op === "multiplicacao") linha = `${n} × ${i} = ${n*i}`;
+            if (op === "divisao") linha = `${n*i} ÷ ${n} = ${i}`;
 
-            if (op === "subtracao") {
-                linha = `${n+i} − ${n} = ${i}`;
-            }
-
-            if (op === "multiplicacao") {
-                linha = `${n} × ${i} = ${n*i}`;
-            }
-
-            if (op === "divisao") {
-                linha = `${n*i} ÷ ${n} = ${i}`;
-            }
-
-            html += `
-                <div class="linha-tabuada">
-                    ${linha}
-                </div>
-            `;
+            html += `<div class="linha-tabuada">${linha}</div>`;
         }
 
         html += "</div>";
@@ -1306,8 +1063,7 @@ function mostrarTabuada() {
     $("areaQuestao").innerHTML = html;
 
     $("acoesQuestao").innerHTML = `
-        <button class="botao-principal"
-            onclick="novoEstudo()">
+        <button class="botao-principal" onclick="novoEstudo()">
             Voltar às modalidades
         </button>
     `;
@@ -1320,10 +1076,8 @@ function mostrarTabuada() {
 function reservasHTML() {
     return `
         <div class="area-reservas">
-
             <div class="cabecalho-reservas">
                 <span>Área de reservas</span>
-
                 <button type="button"
                     class="botao-limpar-reservas"
                     onclick="limparReservas()">
@@ -1339,7 +1093,6 @@ function reservasHTML() {
                         inputmode="numeric">
                 `).join("")}
             </div>
-
         </div>
     `;
 }
@@ -1361,34 +1114,21 @@ function digitos(numero) {
 function linhaNumero(numero) {
     const d = digitos(numero);
 
-    if (d.length > 4) {
-        throw Error(
-            "Número maior que quatro algarismos."
-        );
-    }
+    if (d.length > 4) throw Error("Número maior que quatro algarismos.");
 
     return Array(4-d.length).fill("")
         .concat(d)
-        .map(n => `
-            <div class="celula-numero">${n}</div>
-        `)
+        .map(n => `<div class="celula-numero">${n}</div>`)
         .join("");
 }
 
 function linhaResposta(numero,linha) {
     const d = digitos(numero);
 
-    if (d.length > 4) {
-        throw Error(
-            "Número maior que quatro algarismos."
-        );
-    }
+    if (d.length > 4) throw Error("Número maior que quatro algarismos.");
 
     return Array(4-d.length).fill("")
-        .map(() => `
-            <input class="campo-digito campo-vazio"
-                disabled>
-        `)
+        .map(() => `<input class="campo-digito campo-vazio" disabled>`)
         .concat(d.map((n,i) => `
             <input class="campo-digito"
                 data-resposta
@@ -1401,52 +1141,28 @@ function linhaResposta(numero,linha) {
 }
 
 function montarConta(q) {
-    const sinal =
-        q.operacao === "soma" ? "+" : "−";
+    const sinal = q.operacao === "soma" ? "+" : "−";
 
     return `
         <div class="conta-armada">
-
             ${reservasHTML()}
 
             <div class="secao-parcial">
-
                 <div class="cabecalho-casas">
-                    <div>UM</div>
-                    <div>C</div>
-                    <div>D</div>
-                    <div>U</div>
+                    <div>UM</div><div>C</div><div>D</div><div>U</div>
                 </div>
 
-                <div class="linha-conta">
-                    ${linhaNumero(q.primeiro)}
-                </div>
-
-                <div class="sinal-conta">
-                    ${sinal}
-                </div>
-
-                <div class="linha-conta">
-                    ${linhaNumero(q.segundo)}
-                </div>
-
+                <div class="linha-conta">${linhaNumero(q.primeiro)}</div>
+                <div class="sinal-conta">${sinal}</div>
+                <div class="linha-conta">${linhaNumero(q.segundo)}</div>
             </div>
 
             <div class="secao-parcial">
-
-                <p class="titulo-parcial">
-                    Resposta
-                </p>
-
+                <p class="titulo-parcial">Resposta</p>
                 <div class="linha-resposta">
-                    ${linhaResposta(
-                        q.resultado,
-                        "resultado"
-                    )}
+                    ${linhaResposta(q.resultado,"resultado")}
                 </div>
-
             </div>
-
         </div>
     `;
 }
@@ -1469,17 +1185,11 @@ function cinco(numero,linha) {
 function cincoNumero(numero) {
     const d = digitos(numero);
 
-    if (d.length > 5) {
-        throw Error(
-            "Número maior que cinco algarismos."
-        );
-    }
+    if (d.length > 5) throw Error("Número maior que cinco algarismos.");
 
     return Array(5-d.length).fill("")
         .concat(d)
-        .map(n => `
-            <div class="celula-numero">${n}</div>
-        `)
+        .map(n => `<div class="celula-numero">${n}</div>`)
         .join("");
 }
 
@@ -1496,30 +1206,20 @@ function cincoParcialDezena(numero,linha) {
 
 function montarMultiplicacao(q) {
     const tem = q.temDezenaEmbaixo;
-
     const unidade = q.segundo % 10;
     const dezena = Math.floor(q.segundo/10);
-
     const p1 = q.primeiro * unidade;
     const p2 = q.primeiro * dezena;
 
     return `
         <div class="conta-armada">
-
             ${reservasHTML()}
 
             <div class="secao-parcial">
-
-                <h3 class="titulo-conta">
-                    Multiplicação armada
-                </h3>
+                <h3 class="titulo-conta">Multiplicação armada</h3>
 
                 <div class="cabecalho-casas cinco-colunas">
-                    <div>DM</div>
-                    <div>UM</div>
-                    <div>C</div>
-                    <div>D</div>
-                    <div>U</div>
+                    <div>DM</div><div>UM</div><div>C</div><div>D</div><div>U</div>
                 </div>
 
                 <div class="linha-conta cinco-colunas">
@@ -1531,99 +1231,60 @@ function montarMultiplicacao(q) {
                 <div class="linha-conta cinco-colunas">
                     ${cincoNumero(q.segundo)}
                 </div>
-
             </div>
 
             ${tem ? `
                 <div class="secao-parcial">
-
                     <p class="titulo-parcial">
-                        1º produto parcial:
-                        ${q.primeiro} × ${unidade}
+                        1º produto parcial: ${q.primeiro} × ${unidade}
                     </p>
-
                     <div class="linha-parcial cinco-colunas">
                         ${cinco(p1,"parcial1")}
                     </div>
-
                 </div>
 
                 <div class="secao-parcial">
-
                     <p class="titulo-parcial">
-                        2º produto parcial:
-                        ${q.primeiro} × ${dezena}
+                        2º produto parcial: ${q.primeiro} × ${dezena}
                     </p>
-
                     <div class="linha-parcial cinco-colunas">
-                        ${cincoParcialDezena(
-                            p2,
-                            "parcial2"
-                        )}
+                        ${cincoParcialDezena(p2,"parcial2")}
                     </div>
-
                 </div>
 
                 <div class="secao-parcial">
-
-                    <p class="titulo-parcial">
-                        Soma dos produtos parciais
-                    </p>
-
+                    <p class="titulo-parcial">Soma dos produtos parciais</p>
                     <div class="linha-resposta cinco-colunas">
-                        ${cinco(
-                            q.resultado,
-                            "resultado"
-                        )}
+                        ${cinco(q.resultado,"resultado")}
                     </div>
-
                 </div>
-
             ` : `
                 <div class="secao-parcial">
-
-                    <p class="titulo-parcial">
-                        Resposta
-                    </p>
-
+                    <p class="titulo-parcial">Resposta</p>
                     <div class="linha-resposta cinco-colunas">
-                        ${cinco(
-                            q.resultado,
-                            "resultado"
-                        )}
+                        ${cinco(q.resultado,"resultado")}
                     </div>
-
                 </div>
             `}
-
         </div>
     `;
 }
 
 /* =====================================================
-   DIVISÃO: QUOCIENTE E RESTO
+   DIVISÃO
 ===================================================== */
 
 function montarDivisao(q) {
-    const comResto =
-        estado.modalidade === "resto";
+    const comResto = estado.modalidade === "resto";
 
     return `
-        <h3 class="titulo-conta">
-            Divisão
-        </h3>
-
-        <div class="conta-divisao">
-            ${q.dividendo} ÷ ${q.divisor}
-        </div>
+        <h3 class="titulo-conta">Divisão</h3>
+        <div class="conta-divisao">${q.dividendo} ÷ ${q.divisor}</div>
 
         <div class="campos-divisao">
-
             <div class="grupo-resposta">
                 <label>Quociente</label>
-
-                <input
-                    id="campoQuociente"
+                <input id="campoQuociente"
                     class="campo-divisao"
                     data-resposta
                     data-divisao="quociente"
@@ -1634,9 +1295,7 @@ function montarDivisao(q) {
             ${comResto ? `
                 <div class="grupo-resposta">
                     <label>Resto</label>
-
-                    <input
-                        id="campoResto"
+                    <input id="campoResto"
                         class="campo-divisao"
                         data-resposta
                         data-divisao="resto"
@@ -1644,7 +1303,6 @@ function montarDivisao(q) {
                         inputmode="numeric">
                 </div>
             ` : ""}
-
         </div>
 
         <p class="nota-conta">
@@ -1660,33 +1318,24 @@ function montarDivisao(q) {
 
 function montarSequencia(q) {
     return `
-        <h3 class="titulo-conta">
-            Sequência de ${q.numero}
-        </h3>
+        <h3 class="titulo-conta">Sequência de ${q.numero}</h3>
 
         <div class="sequence-grid">
-
             ${q.itens.map(item => `
                 <div class="sequence-cell">
-
                     <span>${item.posicao+1}</span>
 
                     ${item.preenchida
-                        ? `
-                            <strong>${item.valor}</strong>
-                        `
+                        ? `<strong>${item.valor}</strong>`
                         : `
-                            <input
-                                class="respostaSequencia"
+                            <input class="respostaSequencia"
                                 data-resposta
                                 data-posicao="${item.posicao}"
                                 inputmode="numeric">
                         `
                     }
-
                 </div>
             `).join("")}
-
         </div>
     `;
 }
@@ -1717,15 +1366,10 @@ function mostrarQuestao() {
         `${estado.indice/estado.questoes.length*100}%`;
 
     if (estado.modalidade === "sequencia") {
-        $("instrucaoQuestao").textContent =
-            "Complete os espaços da sequência.";
-
-        $("areaQuestao").innerHTML =
-            montarSequencia(q);
-
+        $("instrucaoQuestao").textContent = "Complete os espaços da sequência.";
+        $("areaQuestao").innerHTML = montarSequencia(q);
     } else {
-        $("instrucaoQuestao").textContent =
-            "Resolva a questão:";
+        $("instrucaoQuestao").textContent = "Resolva a questão:";
 
         $("areaQuestao").innerHTML =
             q.operacao === "divisao"
@@ -1735,23 +1379,18 @@ function mostrarQuestao() {
                     : montarConta(q);
     }
 
-    // Botão OK em todas as questões.
-    $("areaQuestao").insertAdjacentHTML(
-        "beforeend",
-        `
-            <div class="area-botao-ok">
-                <button type="button"
-                    class="botao-ok-resposta"
-                    onclick="confirmarAtividade()">
-                    OK ✅
-                </button>
-            </div>
-        `
-    );
+    $("areaQuestao").insertAdjacentHTML("beforeend", `
+        <div class="area-botao-ok">
+            <button type="button"
+                class="botao-ok-resposta"
+                onclick="confirmarAtividade()">
+                OK ✅
+            </button>
+        </div>
+    `);
 
     $("acoesQuestao").innerHTML = `
-        <button class="botao-secundario"
-            onclick="pularQuestao()">
+        <button class="botao-secundario" onclick="pularQuestao()">
             Pular questão
         </button>
     `;
@@ -1761,9 +1400,7 @@ function mostrarQuestao() {
 }
 
 function confirmarAtividade() {
-    if (estado.respostaConferida) {
-        return;
-    }
+    if (estado.respostaConferida) return;
 
     if (estado.modalidade === "sequencia") {
         conferirSequencia();
@@ -1778,9 +1415,7 @@ function confirmarAtividade() {
 
 function prepararCampos() {
     const campos = [
-        ...document.querySelectorAll(
-            "#areaQuestao [data-resposta]"
-        )
+        ...document.querySelectorAll("#areaQuestao [data-resposta]")
     ];
 
     campos.forEach(c => {
@@ -1791,10 +1426,7 @@ function prepararCampos() {
         c.addEventListener("input", () => {
             c.value = c.value.replace(/\D/g,"");
 
-            if (
-                c.maxLength === 1 &&
-                c.value.length === 1
-            ) {
+            if (c.maxLength === 1 && c.value.length === 1) {
                 moverEsquerda(c);
             }
 
@@ -1814,27 +1446,19 @@ function prepararCampos() {
         return;
     }
 
-    if (campos.length) {
-        campos[campos.length-1].focus();
-    }
+    if (campos.length) campos[campos.length-1].focus();
 }
 
 function moverEsquerda(atual) {
     const linha = atual.dataset.linha;
-
     if (!linha) return;
 
     const campos = [
-        ...document.querySelectorAll(
-            `#areaQuestao [data-linha="${linha}"]`
-        )
+        ...document.querySelectorAll(`#areaQuestao [data-linha="${linha}"]`)
     ];
 
     const i = campos.indexOf(atual);
-
-    if (i > 0) {
-        campos[i-1].focus();
-    }
+    if (i > 0) campos[i-1].focus();
 }
 
 /* =====================================================
@@ -1846,18 +1470,15 @@ function montarTeclado() {
 
     [1,2,3,4,5,6,7,8,9,"C",0,"⌫"].forEach(n => {
         const b = document.createElement("button");
-
         b.type = "button";
         b.textContent = n;
         b.onclick = () => digitar(n);
-
         $("teclado").appendChild(b);
     });
 }
 
 function digitar(n) {
     const c = estado.campoAtivo;
-
     if (!c || c.disabled) return;
 
     if (n === "C") {
@@ -1874,21 +1495,12 @@ function digitar(n) {
 
     if (c.maxLength === 1) {
         c.value = String(n);
-
-        c.dispatchEvent(
-            new Event("input",{bubbles:true})
-        );
-
+        c.dispatchEvent(new Event("input",{bubbles:true}));
         return;
     }
 
-    c.value = (
-        c.value + String(n)
-    ).slice(0,c.maxLength);
-
-    c.dispatchEvent(
-        new Event("input",{bubbles:true})
-    );
+    c.value = (c.value + String(n)).slice(0,c.maxLength);
+    c.dispatchEvent(new Event("input",{bubbles:true}));
 }
 
 /* =====================================================
@@ -1897,25 +1509,15 @@ function digitar(n) {
 
 function lerLinha(linha) {
     const campos = [
-        ...document.querySelectorAll(
-            `#areaQuestao [data-linha="${linha}"]`
-        )
+        ...document.querySelectorAll(`#areaQuestao [data-linha="${linha}"]`)
     ];
 
     if (!campos.length) return null;
 
-    const valores = campos.map(c =>
-        c.value.trim()
-    );
-
+    const valores = campos.map(c => c.value.trim());
     const texto = valores.join("");
 
-    if (!texto || !/^\d+$/.test(texto)) {
-        return null;
-    }
-
-    // Permite quadros iniciais vazios.
-    // Não permite espaços vazios entre algarismos.
+    if (!texto || !/^\d+$/.test(texto)) return null;
 
     let encontrouNumero = false;
 
@@ -1930,13 +1532,7 @@ function lerLinha(linha) {
     return Number(texto);
 }
 
-/* =====================================================
-   PRODUTOS PARCIAIS
-===================================================== */
-
 function conferirParciais(q) {
-    // Produtos parciais são apenas apoio visual.
-    // Somente o resultado final será validado.
     return true;
 }
 
@@ -1948,71 +1544,49 @@ function conferirResposta() {
     if (estado.respostaConferida) return;
 
     const q = estado.questoes[estado.indice];
-
     let correto = false;
 
     if (q.operacao === "divisao") {
-        const quociente =
-            $("campoQuociente")?.value || "";
-
-        const resto =
-            $("campoResto")?.value || "0";
+        const quociente = $("campoQuociente")?.value || "";
+        const resto = $("campoResto")?.value || "0";
 
         correto =
             quociente !== "" &&
             Number(quociente) === q.resultado &&
             Number(resto) === q.resto;
-
     } else {
         const resposta = lerLinha("resultado");
 
         if (resposta === null) {
             $("feedback").textContent =
                 "Preencha os algarismos da resposta, deixando vazios apenas os quadros iniciais.";
-
             return;
         }
 
         correto = resposta === q.resultado;
     }
 
-    if (correto) {
-        respostaCorreta();
-    } else {
-        respostaIncorreta();
-    }
+    if (correto) respostaCorreta();
+    else respostaIncorreta();
 }
-
-/* =====================================================
-   RESPOSTA CORRETA
-===================================================== */
 
 function respostaCorreta() {
     if (estado.respostaConferida) return;
 
     estado.respostaConferida = true;
-
-    $("feedback").textContent =
-        "Resposta Correta! ✅";
+    $("feedback").textContent = "Resposta Correta! ✅";
 
     estado.resultados.push({
         correto: true,
         corrigida: estado.errou
     });
 
-    document.querySelectorAll(
-        "#areaQuestao input"
-    ).forEach(c => {
+    document.querySelectorAll("#areaQuestao input").forEach(c => {
         c.disabled = true;
     });
 
-    const botaoOK = document.querySelector(
-        ".botao-ok-resposta"
-    );
-
-    if (botaoOK) {
-        botaoOK.disabled = true;
-    }
+    const botaoOK = document.querySelector(".botao-ok-resposta");
+    if (botaoOK) botaoOK.disabled = true;
 
     setTimeout(() => {
         estado.indice++;
@@ -2020,26 +1594,16 @@ function respostaCorreta() {
     },1500);
 }
 
-/* =====================================================
-   RESPOSTA INCORRETA
-===================================================== */
-
 function respostaIncorreta() {
     estado.errou = true;
-
-    $("feedback").textContent =
-        "Resposta Incorreta! ❌";
-
-    // O botão OK permanece no mesmo lugar.
+    $("feedback").textContent = "Resposta Incorreta! ❌";
 
     $("acoesQuestao").innerHTML = `
-        <button class="botao-principal"
-            onclick="tentarNovamente()">
+        <button class="botao-principal" onclick="tentarNovamente()">
             Corrigir
         </button>
 
-        <button class="botao-secundario"
-            onclick="pularQuestao()">
+        <button class="botao-secundario" onclick="pularQuestao()">
             Pular questão
         </button>
     `;
@@ -2049,29 +1613,18 @@ function tentarNovamente() {
     $("feedback").textContent = "";
 
     $("acoesQuestao").innerHTML = `
-        <button class="botao-secundario"
-            onclick="pularQuestao()">
+        <button class="botao-secundario" onclick="pularQuestao()">
             Pular questão
         </button>
     `;
 
     const campos = [
-        ...document.querySelectorAll(
-            "#areaQuestao [data-resposta]"
-        )
+        ...document.querySelectorAll("#areaQuestao [data-resposta]")
     ];
 
-    const primeiroDisponivel =
-        campos.find(c => !c.disabled);
-
-    if (primeiroDisponivel) {
-        primeiroDisponivel.focus();
-    }
+    const primeiroDisponivel = campos.find(c => !c.disabled);
+    if (primeiroDisponivel) primeiroDisponivel.focus();
 }
-
-/* =====================================================
-   PULAR QUESTÃO
-===================================================== */
 
 function pularQuestao() {
     if (estado.respostaConferida) return;
@@ -2096,17 +1649,11 @@ function conferirSequencia() {
     const q = estado.questoes[estado.indice];
 
     const campos = [
-        ...document.querySelectorAll(
-            ".respostaSequencia"
-        )
+        ...document.querySelectorAll(".respostaSequencia")
     ];
 
-    if (campos.some(c =>
-        c.value.trim() === ""
-    )) {
-        $("feedback").textContent =
-            "Preencha todos os espaços.";
-
+    if (campos.some(c => c.value.trim() === "")) {
+        $("feedback").textContent = "Preencha todos os espaços.";
         return;
     }
 
@@ -2115,12 +1662,7 @@ function conferirSequencia() {
     campos.forEach(c => {
         const pos = Number(c.dataset.posicao);
 
-        if (
-            Number(c.value) ===
-            q.itens[pos].valor
-        ) {
-            acertos++;
-        }
+        if (Number(c.value) === q.itens[pos].valor) acertos++;
 
         c.disabled = true;
     });
@@ -2134,20 +1676,13 @@ function conferirSequencia() {
         percentual: Math.round(acertos/6*100)
     });
 
-    $("feedback").textContent =
-        `${acertos} de 6 espaços corretos.`;
+    $("feedback").textContent = `${acertos} de 6 espaços corretos.`;
 
-    const botaoOK = document.querySelector(
-        ".botao-ok-resposta"
-    );
-
-    if (botaoOK) {
-        botaoOK.disabled = true;
-    }
+    const botaoOK = document.querySelector(".botao-ok-resposta");
+    if (botaoOK) botaoOK.disabled = true;
 
     $("acoesQuestao").innerHTML = `
-        <button class="botao-principal"
-            onclick="proximaSequencia()">
+        <button class="botao-principal" onclick="proximaSequencia()">
             Próxima sequência
         </button>
     `;
@@ -2164,29 +1699,18 @@ function proximaSequencia() {
 
 function iniciarCronometro() {
     pararCronometro();
-
     estado.inicio = Date.now();
-
     atualizarCronometro();
-
-    estado.intervalo = setInterval(
-        atualizarCronometro,
-        1000
-    );
+    estado.intervalo = setInterval(atualizarCronometro,1000);
 }
 
 function pararCronometro() {
-    if (estado.intervalo) {
-        clearInterval(estado.intervalo);
-    }
-
+    if (estado.intervalo) clearInterval(estado.intervalo);
     estado.intervalo = null;
 }
 
 function tempoDecorrido() {
-    return Math.floor(
-        (Date.now()-estado.inicio)/1000
-    );
+    return Math.floor((Date.now()-estado.inicio)/1000);
 }
 
 function atualizarCronometro() {
@@ -2205,14 +1729,9 @@ function finalizarAtividade() {
     pararCronometro();
 
     const total = estado.questoes.length;
+    const sequencia = estado.modalidade === "sequencia";
 
-    const sequencia =
-        estado.modalidade === "sequencia";
-
-    const acertos = estado.resultados.filter(
-        r => r.correto
-    ).length;
-
+    const acertos = estado.resultados.filter(r => r.correto).length;
     const corrigidas = estado.resultados.filter(
         r => r.correto && r.corrigida
     ).length;
@@ -2229,9 +1748,7 @@ function finalizarAtividade() {
         : Math.round(acertos/total*100);
 
     const erros = total - diretos - corrigidas;
-
-    const chave =
-        `${estado.operacao}_${estado.modalidade}`;
+    const chave = `${estado.operacao}_${estado.modalidade}`;
 
     if (!progresso[chave]) {
         progresso[chave] = {
@@ -2253,36 +1770,14 @@ function finalizarAtividade() {
 
     const tempo = tempoDecorrido();
 
-    $("resultadoPercentual").textContent =
-        `${percentual}%`;
+    $("resultadoPercentual").textContent = `${percentual}%`;
 
     $("detalhesResultado").innerHTML = `
-        <p>
-            Questões:
-            <strong>${total}</strong>
-        </p>
-
-        <p>
-            Acertos diretos:
-            <strong>${diretos}</strong>
-        </p>
-
-        <p>
-            Corrigidas:
-            <strong>${corrigidas}</strong>
-        </p>
-
-        <p>
-            Erros ou puladas:
-            <strong>${erros}</strong>
-        </p>
-
-        <p>
-            Tempo:
-            <strong>
-                ${Math.floor(tempo/60)} min ${tempo%60} s
-            </strong>
-        </p>
+        <p>Questões: <strong>${total}</strong></p>
+        <p>Acertos diretos: <strong>${diretos}</strong></p>
+        <p>Corrigidas: <strong>${corrigidas}</strong></p>
+        <p>Erros ou puladas: <strong>${erros}</strong></p>
+        <p>Tempo: <strong>${Math.floor(tempo/60)} min ${tempo%60} s</strong></p>
     `;
 
     mostrarTela("resultado");
@@ -2291,58 +1786,52 @@ function finalizarAtividade() {
 
 /* =====================================================
    PAINEL DE DESEMPENHO
+   CONSIDERA TODAS AS MODALIDADES REGISTRADAS
 ===================================================== */
 
 function atualizarDesempenho() {
-    const itens = Object.entries(progresso);
+    const chaves = Object.keys(modalidades).flatMap(op =>
+        modalidades[op].map(([id]) => `${op}_${id}`)
+    );
 
-    const verdes = itens.filter(
-        ([,v]) => v.verdeConquistado
+    const verdes = chaves.filter(
+        k => progresso[k]?.verdeConquistado
     ).length;
 
-    const amarelas = itens.filter(([,v]) => {
-        const ultima = v.tentativas.at(-1);
+    const amarelas = chaves.filter(k => {
+        const v = progresso[k];
+        const ultima = v?.tentativas?.at(-1);
 
-        return !v.verdeConquistado &&
-            ultima &&
-            ultima.percentual > 50;
+        return v && !v.verdeConquistado &&
+            ultima && ultima.percentual > 50;
     }).length;
 
-    const vermelhas = itens.filter(([,v]) => {
-        const ultima = v.tentativas.at(-1);
+    const vermelhas = chaves.filter(k => {
+        const v = progresso[k];
+        const ultima = v?.tentativas?.at(-1);
 
-        return !v.verdeConquistado &&
-            ultima &&
-            ultima.percentual <= 50;
+        return v && !v.verdeConquistado &&
+            ultima && ultima.percentual <= 50;
     }).length;
 
-    const naoIniciadas = Math.max(
-        0,
-        14-itens.length
-    );
+    const iniciadas = chaves.filter(k => progresso[k]).length;
+    const naoIniciadas = chaves.length - iniciadas;
+    const percentual = Math.round(verdes/chaves.length*100);
 
-    const percentual = Math.round(
-        verdes/14*100
-    );
-
-    $("percentualGeral").textContent =
-        `${percentual}%`;
+    $("percentualGeral").textContent = `${percentual}%`;
 
     $("textoProgresso").textContent =
-        `${verdes} de 14 modalidades dominadas`;
+        `${verdes} de ${chaves.length} modalidades dominadas`;
 
-    $("barraProgresso").style.width =
-        `${percentual}%`;
+    $("barraProgresso").style.width = `${percentual}%`;
 
     $("qtdVerdes").textContent = verdes;
     $("qtdAmarelas").textContent = amarelas;
     $("qtdVermelhas").textContent = vermelhas;
-
-    $("qtdNaoIniciadas").textContent =
-        naoIniciadas;
+    $("qtdNaoIniciadas").textContent = naoIniciadas;
 
     $("faltam").textContent =
-        `Faltam ${14-verdes} modalidades para dominar tudo.`;
+        `Faltam ${chaves.length-verdes} modalidades para dominar tudo.`;
 
     atualizarArvore();
 }
@@ -2352,36 +1841,35 @@ function atualizarDesempenho() {
 ===================================================== */
 
 function atualizarArvore() {
-    const total = Object.values(progresso).filter(
-        v => v.verdeConquistado
+    const chaves = Object.keys(modalidades).flatMap(op =>
+        modalidades[op].map(([id]) => `${op}_${id}`)
+    );
+
+    const total = chaves.filter(
+        k => progresso[k]?.verdeConquistado
     ).length;
 
     let arvore = "🌱";
-    let mensagem =
-        "Sua árvore está começando a crescer.";
+    let mensagem = "Sua árvore está começando a crescer.";
 
-    if (total >= 3) {
+    if (total >= 5) {
         arvore = "🌿";
-        mensagem =
-            "Sua árvore está criando novos ramos!";
-    }
-
-    if (total >= 6) {
-        arvore = "🌳";
-        mensagem =
-            "Sua árvore está ficando forte!";
+        mensagem = "Sua árvore está criando novos ramos!";
     }
 
     if (total >= 10) {
-        arvore = "🌳✨";
-        mensagem =
-            "Sua árvore está cheia de conhecimento!";
+        arvore = "🌳";
+        mensagem = "Sua árvore está ficando forte!";
     }
 
-    if (total >= 14) {
+    if (total >= 18) {
+        arvore = "🌳✨";
+        mensagem = "Sua árvore está cheia de conhecimento!";
+    }
+
+    if (total >= chaves.length) {
         arvore = "🌟🌳🌟";
-        mensagem =
-            "Você dominou as quatro operações!";
+        mensagem = "Você dominou as quatro operações e os números inteiros!";
     }
 
     $("arvoreVisual").textContent = arvore;
@@ -2389,12 +1877,8 @@ function atualizarArvore() {
 
     $("recompensas").innerHTML =
         Object.entries(premios)
-            .filter(([chave]) =>
-                progresso[chave]?.verdeConquistado
-            )
-            .map(([,simbolo]) =>
-                `<span>${simbolo}</span>`
-            )
+            .filter(([chave]) => progresso[chave]?.verdeConquistado)
+            .map(([,simbolo]) => `<span>${simbolo}</span>`)
             .join("");
 }
 
@@ -2407,16 +1891,11 @@ function revisarAtividade() {
         return novoEstudo();
     }
 
-    estado.operacao =
-        estado.ultimaConfiguracao.operacao;
-
-    estado.modalidade =
-        estado.ultimaConfiguracao.modalidade;
+    estado.operacao = estado.ultimaConfiguracao.operacao;
+    estado.modalidade = estado.ultimaConfiguracao.modalidade;
 
     estado.opcoes = JSON.parse(
-        JSON.stringify(
-            estado.ultimaConfiguracao.opcoes
-        )
+        JSON.stringify(estado.ultimaConfiguracao.opcoes)
     );
 
     estado.questoes = gerarQuestoes();
@@ -2427,7 +1906,6 @@ function revisarAtividade() {
     estado.sequenciaConferida = false;
 
     mostrarTela("estudo");
-
     iniciarCronometro();
     mostrarQuestao();
 }
