@@ -1,568 +1,540 @@
+/* =========================================================
+   MATEMÁTICA COM DETALHES — MÓDULO DE POTENCIAÇÃO
+   Arquivo: potencias-radicais.js
+   Este arquivo é carregado depois de script.js e inteiros.js.
+   Não altera a chave de armazenamento do curso.
+========================================================= */
 
-/* MATEMÁTICA COM DETALHES — POTENCIAÇÃO
-   Módulo independente. Preparado para receber Radicais futuramente.
-*/
+(() => {
+    "use strict";
 
-const rand = (a, b) => Math.floor(Math.random() * (b - a + 1)) + a;
-const pick = a => a[rand(0, a.length - 1)];
-const shuffle = a => [...a].sort(() => Math.random() - 0.5);
-const terms = ["a", "x", "y"];
-
-const esc = s => String(s).replace(/[&<>"']/g, c => ({
-  "&": "&amp;", "<": "&lt;", ">": "&gt;",
-  '"': "&quot;", "'": "&#39;"
-}[c]));
-
-function choices(title, values, correct, explanation) {
-  return {
-    kind: "pot-choice",
-    title,
-    values: shuffle(values.map(String)),
-    answer: String(correct),
-    explanation
-  };
-}
-
-function input(title, answer, explanation, placeholder = "Digite sua resposta") {
-  return {
-    kind: "pot-input",
-    title,
-    answer: String(answer),
-    explanation,
-    placeholder
-  };
-}
-
-function lesson(title, html) {
-  return { kind: "pot-lesson", title, html };
-}
-
-function power(base, exp) {
-  return Math.pow(base, exp);
-}
-
-function modeQuestions(mode, cfg) {
-  const out = [];
-
-  if (mode === "conceito") {
-    out.push(lesson("O que é potência?", `
-      <p>Potenciação é uma forma abreviada de representar uma multiplicação de fatores iguais.</p>
-      <div class="pot-visual">
-        <div>
-          <div class="pot-square"></div>
-          <b>Quadrado: 3²</b>
-          <p>3 × 3 = 9</p>
-        </div>
-        <div>
-          <div class="pot-cube">▧</div>
-          <b>Cubo: 2³</b>
-          <p>2 × 2 × 2 = 8</p>
-        </div>
-      </div>
-      <p><b>Exemplos:</b></p>
-      <p>3² = 3 × 3 = 9</p>
-      <p>5² = 5 × 5 = 25</p>
-      <p>2³ = 2 × 2 × 2 = 8</p>
-      <p>4³ = 4 × 4 × 4 = 64</p>
-    `));
-
-    out.push(lesson("Base e expoente", `
-      <p>Observe a potência <b>5²</b>.</p>
-      <div class="pot-highlight">5<sup>2</sup></div>
-      <p><b>Base:</b> é o número que será multiplicado por ele mesmo. Neste exemplo, a base é 5.</p>
-      <p><b>Expoente:</b> indica quantas vezes a base aparece como fator. Neste exemplo, o expoente é 2.</p>
-    `));
-
-    for (let i = 0; i < 2; i++) {
-      const a = rand(0, 9);
-      const b = rand(0, 9);
-
-      out.push(choices(
-        `Na potência ${a}<sup>${b}</sup>, identifique a base.`,
-        [a, b, rand(0, 9), rand(0, 9)],
-        a,
-        `A base é ${a}: é o número que aparece elevado ao expoente.`
-      ));
-
-      out.push(choices(
-        `Na potência ${a}<sup>${b}</sup>, identifique o expoente.`,
-        [a, b, rand(0, 9), rand(0, 9)],
-        b,
-        `O expoente é ${b}: ele indica quantas vezes a base aparece como fator.`
-      ));
-    }
-
-    for (let i = 0; i < 2; i++) {
-      const a = rand(1, 9);
-      out.push(input(
-        `Complete: ${a}² = ${a} × ${a} =`,
-        a * a,
-        `${a}² significa ${a} × ${a}, que é igual a ${a * a}.`
-      ));
-    }
-
-    for (let i = 0; i < 2; i++) {
-      const b = rand(1, 4);
-      out.push(input(
-        `Complete: ${b}³ = ${b} × ${b} × ${b} =`,
-        b * b * b,
-        `${b}³ significa ${b} × ${b} × ${b}, que é igual a ${b * b * b}.`
-      ));
-    }
-
-    out.push(lesson("Casos especiais: base 1 e expoente zero", `
-      <p>Quando a base é 1, qualquer expoente natural resulta em 1:</p>
-      <p class="pot-formula">1⁴ = 1 × 1 × 1 × 1 = 1</p>
-      <p>Quando a base é diferente de zero e o expoente é zero, o resultado é 1:</p>
-      <p class="pot-formula">7⁰ = 1 &nbsp; e &nbsp; 25⁰ = 1</p>
-      <p><b>Atenção:</b> nesta regra, a base não pode ser zero.</p>
-    `));
-
-    return out;
-  }
-
-  if (mode === "naturais") {
-    const exp = Number(cfg.expoente || 0);
-    const limit = exp === 0 || exp === 1
-      ? 99
-      : exp === 2
-        ? (Number(cfg.limite) || 12) - 1
-        : 5;
-
-    for (let i = 0; i < 10; i++) {
-      const b = rand(exp === 3 ? 0 : 1, limit);
-      out.push(input(
-        `${b}<sup>${exp}</sup> =`,
-        power(b, exp),
-        `${b} elevado a ${exp} é ${power(b, exp)}.`
-      ));
-    }
-    return out;
-  }
-
-  if (mode === "sinais") {
-    out.push(lesson("Potência com base negativa", `
-      <p>Quando a base negativa está entre parênteses, o sinal depende da paridade do expoente.</p>
-      <p class="pot-formula">(−3)² = (−3) × (−3) = +9</p>
-      <p class="pot-formula">(−3)³ = (−3) × (−3) × (−3) = −27</p>
-      <p>Expoente <b>par</b>: resultado positivo.</p>
-      <p>Expoente <b>ímpar</b>: resultado negativo.</p>
-      <p>Se o sinal de menos estiver fora dos parênteses:</p>
-      <p class="pot-formula">−(−3)² = −9</p>
-      <p class="pot-formula">−(−3)³ = +27</p>
-      <p>Sem parênteses envolvendo a base, em −5², calculamos primeiro a potência:</p>
-      <p class="pot-formula">−5² = −(5 × 5) = −25</p>
-    `));
-
-    for (const exp of [2, 3]) {
-      for (const prefix of ["paren", "minus", "plus", "bare"]) {
-        const a = rand(3, 9);
-        const base = prefix === "bare" ? a : -a;
-        let ans = power(Math.abs(base), exp);
-
-        if (prefix === "paren" && base < 0 && exp % 2) ans = -ans;
-        if (prefix === "minus") ans = -power(a, exp);
-        if (prefix === "plus") ans = exp % 2 ? -power(a, exp) : power(a, exp);
-        if (prefix === "bare") ans = -power(a, exp);
-
-        const label = prefix === "paren"
-          ? `(−${a})${exp === 2 ? "²" : "³"}`
-          : prefix === "minus"
-            ? `−(−${a})${exp === 2 ? "²" : "³"}`
-            : prefix === "plus"
-              ? `+(−${a})${exp === 2 ? "²" : "³"}`
-              : `−${a}${exp === 2 ? "²" : "³"}`;
-
-        out.push(choices(
-          `${label} =`,
-          [`+${Math.abs(ans)}`, `−${Math.abs(ans)}`, `+${Math.abs(ans) + 1}`, `−${Math.abs(ans) + 1}`],
-          ans > 0 ? `+${ans}` : `${ans}`,
-          `O resultado é ${ans}. ${exp % 2 === 0
-            ? "Expoente par: o produto de fatores negativos é positivo."
-            : "Expoente ímpar: permanece um fator negativo no produto."}`
-        ));
-      }
-    }
-    return out;
-  }
-
-  if (mode === "praticar-sinais") {
-    const tipos = cfg.tipos?.length ? cfg.tipos : ["2", "3", "1"];
-
-    for (let i = 0; i < 20; i++) {
-      let exp = Number(pick(tipos));
-
-      if (tipos.includes("1") && (i % 4 === 3 || i % 7 === 6)) {
-        exp = rand(0, 99);
-      } else if (exp === 1) {
-        exp = rand(0, 99);
-      }
-
-      const base = exp === 1
-        ? (Math.random() < 0.5 ? 1 : -1)
-        : (Math.random() < 0.5 ? rand(2, 9) : -rand(2, 9));
-
-      let value = power(base, exp);
-      const outside = Math.random() < 0.25;
-      if (outside) value = -value;
-
-      const label = `${outside ? "−" : ""}${base < 0 ? `(${base})` : base}<sup>${exp}</sup>`;
-
-      out.push(choices(
-        `${label} = ?`,
-        [`+${Math.abs(value)}`, `−${Math.abs(value)}`],
-        value >= 0 ? `+${value}` : `−${Math.abs(value)}`,
-        `O expoente é ${exp}. ${outside
-          ? "Há um sinal de menos fora da potência, que troca o sinal do resultado."
-          : exp === 0
-            ? "Toda base não nula elevada a zero resulta em 1."
-            : exp % 2 === 0
-              ? "Expoente par: o resultado de uma base negativa entre parênteses é positivo."
-              : "Expoente ímpar: o resultado de uma base negativa entre parênteses é negativo."}`
-      ));
-    }
-    return out;
-  }
-
-  if (mode === "negativos") {
-    out.push(lesson("Expoente negativo", `
-      <p>Um expoente negativo indica que devemos inverter a fração e tornar o expoente positivo.</p>
-      <p class="pot-formula">(a/b)<sup>−n</sup> = (b/a)<sup>n</sup></p>
-      <p>Exemplo:</p>
-      <p class="pot-formula">(3/7)<sup>−2</sup> = (7/3)² = 49/9</p>
-      <p>O numerador e o denominador trocam de posição. Depois, elevamos os dois à potência indicada.</p>
-    `));
-
-    for (let i = 0; i < 10; i++) {
-      let a = rand(1, 9);
-      let b = rand(1, 9);
-
-      while ((function gcd(x, y) {
-        return y ? gcd(y, x % y) : x;
-      })(a, b) !== 1) {
-        a = rand(1, 9);
-        b = rand(1, 9);
-      }
-
-      const e = rand(1, 2);
-
-      out.push(input(
-        `(${a}/${b})<sup>−${e}</sup> = ? (responda como numerador/denominador)`,
-        `${b ** e}/${a ** e}`,
-        `Invertemos a fração: (${b}/${a})${e === 1 ? "" : "²"} = ${b ** e}/${a ** e}.`,
-        "Ex.: 49/9"
-      ));
-    }
-    return out;
-  }
-
-  if (mode === "propriedades" || mode === "propriedades-inteiros") {
-    const signed = mode === "propriedades-inteiros";
-
-    out.push(lesson(
-      signed ? "Propriedades com expoentes inteiros" : "Propriedades de potências de bases iguais",
-      `
-        <p>Vamos estudar três propriedades.</p>
-        <p><b>Multiplicação:</b> conservamos a base e somamos os expoentes.</p>
-        <p><b>Divisão:</b> conservamos a base e subtraímos o expoente do denominador do expoente do numerador.</p>
-        <p><b>Potência de potência:</b> conservamos a base e multiplicamos os expoentes.</p>
-        <p>${signed
-          ? "Nesta etapa, os expoentes também podem ser negativos."
-          : "Nesta etapa, trabalharemos com expoentes naturais."}</p>
-      `
-    ));
-
-    const min = signed ? -12 : 1;
-    const max = 8;
-
-    for (const prop of ["mul", "div", "pot"]) {
-      const a = pick(terms);
-      let e1 = rand(min, max);
-      let e2 = rand(min, max);
-
-      if (signed && prop === "pot") {
-        while (Math.abs(e1 * e2) >= 20) {
-          e1 = rand(min, max);
-          e2 = rand(min, max);
-        }
-      }
-
-      let result, label, explain;
-
-      if (prop === "mul") {
-        result = e1 + e2;
-        label = `${a}<sup>${e1}</sup> · ${a}<sup>${e2}</sup> = ${a}<sup>?</sup>`;
-        explain = `Somamos os expoentes: ${e1} + (${e2}) = ${result}.`;
-      }
-
-      if (prop === "div") {
-        result = e1 - e2;
-        label = `${a}<sup>${e1}</sup> / ${a}<sup>${e2}</sup> = ${a}<sup>?</sup>`;
-        explain = `Subtraímos os expoentes: ${e1} − (${e2}) = ${result}.`;
-      }
-
-      if (prop === "pot") {
-        result = e1 * e2;
-        label = `(${a}<sup>${e1}</sup>)<sup>${e2}</sup> = ${a}<sup>?</sup>`;
-        explain = `Multiplicamos os expoentes: ${e1} × (${e2}) = ${result}.`;
-      }
-
-      out.push(input(label, result, explain));
-      out.push(input(`Resolva novamente: ${label}`, result, explain));
-    }
-    return out;
-  }
-
-  if (mode === "base10") {
-    out.push(lesson("Potências de base 10", `
-      <p>Nas potências de base 10, o expoente indica quantas vezes o fator 10 aparece.</p>
-      <p class="pot-formula">10¹ = 10</p>
-      <p class="pot-formula">10² = 10 × 10 = 100</p>
-      <p class="pot-formula">10³ = 1.000</p>
-      <p class="pot-formula">10⁴ = 10.000</p>
-      <p>Para expoentes naturais positivos, o resultado é 1 seguido de tantos zeros quanto indica o expoente.</p>
-    `));
-
-    for (let i = 0; i < 10; i++) {
-      const e = rand(1, 5);
-      out.push(input(
-        `10<sup>${e}</sup> =`,
-        10 ** e,
-        `10 elevado a ${e} é 1 seguido de ${e} zero(s): ${10 ** e}.`
-      ));
-    }
-    return out;
-  }
-
-  if (mode === "comparacao") {
-    out.push(lesson("Comparando potências", `
-      <p>Para comparar potências, podemos calcular cada uma e depois comparar os resultados.</p>
-      <p>Use os sinais:</p>
-      <p class="pot-formula">&gt; maior que &nbsp;&nbsp; &lt; menor que &nbsp;&nbsp; = igual a</p>
-      <p>Exemplo: 2⁴ = 16 e 4² = 16. Portanto, 2⁴ = 4².</p>
-    `));
-
-    const pairs = [
-      [2, 4, 4, 2], [3, 4, 9, 2], [2, 5, 4, 3],
-      [3, 3, 2, 4], [5, 2, 2, 5], [2, 3, 3, 2],
-      [4, 2, 2, 3], [3, 2, 2, 3], [2, 4, 8, 2],
-      [3, 2, 9, 1]
+    const MODOS_POTENCIAS = [
+        ["conceito", "1. Conceito de potenciação"],
+        ["naturais", "2. Potências com números naturais"],
+        ["sinais", "3. Sinais com números inteiros"],
+        ["pratica-sinais", "4. Prática de sinais"],
+        ["expoentes-negativos", "5. Expoentes negativos"],
+        ["bases-iguais", "6. Propriedades: bases iguais"],
+        ["expoentes-inteiros", "7. Propriedades com expoentes inteiros"],
+        ["base-dez", "8. Potências de base 10"],
+        ["comparacao", "9. Comparação de potências"],
+        ["area-volume", "10. Potenciação na geometria"]
     ];
 
-    for (let i = 0; i < 15; i++) {
-      let [a, e, b, f] = i < pairs.length
-        ? pairs[i]
-        : [rand(2, 5), rand(2, 4), rand(2, 5), rand(2, 4)];
+    const abrirOperacaoOriginal = window.abrirOperacao;
+    const selecionarModalidadeOriginal = window.selecionarModalidade;
+    const iniciarAtividadeOriginal = window.iniciarAtividade;
+    const mostrarQuestaoOriginal = window.mostrarQuestao;
+    const confirmarAtividadeOriginal = window.confirmarAtividade;
+    const revisarAtividadeOriginal = window.revisarAtividade;
+    const novoEstudoOriginal = window.novoEstudo;
 
-      const x = a ** e;
-      const y = b ** f;
+    // Acrescenta Potenciação ao mesmo sistema de desempenho do curso.
+    modalidades.potencias = MODOS_POTENCIAS;
+    premios.potencias_conceito = "⚡";
+    premios.potencias_naturais = "🔢";
+    premios.potencias_sinais = "➕";
+    premios.potencias_pratica_sinais = "🎯";
+    premios.potencias_expoentes_negativos = "➖";
+    premios.potencias_bases_iguais = "🧩";
+    premios.potencias_expoentes_inteiros = "🧠";
+    premios.potencias_base_dez = "🔟";
+    premios.potencias_comparacao = "🏆";
+    premios.potencias_area_volume = "📐";
 
-      if (Math.max(x, y) > 10000) {
-        i--;
-        continue;
-      }
-
-      const answer = x > y ? ">" : x < y ? "<" : "=";
-
-      out.push(choices(
-        `${a}<sup>${e}</sup> ___ ${b}<sup>${f}</sup>`,
-        [">", "<", "="],
-        answer,
-        `${a} elevado a ${e} é ${x}; ${b} elevado a ${f} é ${y}. Portanto, o sinal correto é ${answer}.`
-      ));
-    }
-    return out;
-  }
-
-  if (mode === "area-volume") {
-    out.push(lesson("Área do quadrado", `
-      <p>A área mede a superfície de uma figura.</p>
-      <p>No quadrado, multiplicamos a medida do lado por ela mesma.</p>
-      <p class="pot-formula">Área = lado × lado = lado²</p>
-      <p>Se o lado mede 3 cm: A = 3 × 3 = 9 cm².</p>
-      <p>Observe que a unidade também fica elevada ao quadrado.</p>
-    `));
-
-    for (let i = 0; i < 5; i++) {
-      const l = rand(1, 10);
-      const u = pick(["m", "cm", "dm"]);
-
-      out.push(input(
-        `Qual é a área de um quadrado com lados medindo ${l} ${u}? Responda em ${u}².`,
-        l * l,
-        `Área = lado × lado = ${l} × ${l} = ${l * l} ${u}².`
-      ));
-    }
-
-    out.push(lesson("Volume do cubo", `
-      <p>O volume mede o espaço ocupado por um sólido.</p>
-      <p>No cubo, multiplicamos a medida da aresta três vezes.</p>
-      <p class="pot-formula">Volume = lado × lado × lado = lado³</p>
-      <p>Se o lado mede 3 cm: V = 3 × 3 × 3 = 27 cm³.</p>
-      <p>A unidade fica elevada ao cubo.</p>
-    `));
-
-    for (let i = 0; i < 5; i++) {
-      const l = rand(1, 5);
-      const u = pick(["m", "cm", "dm"]);
-
-      out.push(input(
-        `Qual é o volume de um cubo com lados medindo ${l} ${u}? Responda em ${u}³.`,
-        l * l * l,
-        `Volume = lado × lado × lado = ${l} × ${l} × ${l} = ${l * l * l} ${u}³.`
-      ));
-    }
-    return out;
-  }
-
-  return out;
-}
-
-let filaPotencias = [];
-
-export const potencias = {
-  title: "Potenciação",
-  description: "Compreenda as potências, pratique as propriedades e aplique seus conhecimentos.",
-
-  modes: [
-    ["conceito", "Conceito de potência", "Base, expoente e leitura"],
-    ["naturais", "Potência de números naturais", "Expoentes 0, 1, 2 e 3"],
-    ["sinais", "Sinais de potências com inteiros", "Parênteses e regra de sinais"],
-    ["praticar-sinais", "Praticar sinais com inteiros", "Escolha positivo ou negativo"],
-    ["negativos", "Potências com expoentes negativos", "Inversão de frações"],
-    ["propriedades", "Propriedades de bases iguais", "Expoentes naturais"],
-    ["propriedades-inteiros", "Propriedades com expoentes inteiros", "Expoentes positivos e negativos"],
-    ["base10", "Potências de base 10", "Relação entre expoente e zeros"],
-    ["comparacao", "Comparação de potências", "Maior, menor ou igual"],
-    ["area-volume", "Calculando área e volume", "Quadrado e cubo"]
-  ],
-
-  configure(mode) {
-    if (mode === "naturais") {
-      return {
-        html: `
-          <div class="field-group">
-            <span class="field-title">Escolha o expoente</span>
-            <div class="choice-list">
-              ${[0, 1, 2, 3].map(n => `
-                <label class="choice">
-                  <input type="radio" name="pot-exp" value="${n}" ${n === 0 ? "checked" : ""}> ${n}
-                </label>
-              `).join("")}
-            </div>
-          </div>
-
-          <div class="field-group">
-            <span class="field-title">Limite da base (para expoente 2)</span>
-            <div class="choice-list">
-              <label class="choice"><input type="radio" name="pot-limit" value="12" checked> Bases menores que 12</label>
-              <label class="choice"><input type="radio" name="pot-limit" value="15"> Bases menores que 15</label>
-              <label class="choice"><input type="radio" name="pot-limit" value="20"> Bases menores que 20</label>
-            </div>
-            <p class="inline-note">Para expoente 0 ou 1, as bases vão de 1 a 99. Para expoente 3, de 1 a 5.</p>
-          </div>
-        `,
-        read: () => ({
-          expoente: document.querySelector('[name="pot-exp"]:checked')?.value || "0",
-          limite: document.querySelector('[name="pot-limit"]:checked')?.value || "12"
-        })
-      };
-    }
-
-    if (mode === "praticar-sinais") {
-      return {
-        html: `
-          <div class="field-group">
-            <span class="field-title">Escolha os tipos de potência</span>
-            <div class="choice-list">
-              ${[
-                ["2", "Potência de 2"],
-                ["3", "Potência de 3"],
-                ["1", "Base 1 e −1"]
-              ].map(([v, l]) => `
-                <label class="choice">
-                  <input type="checkbox" name="pot-sign" value="${v}" checked> ${l}
-                </label>
-              `).join("")}
-            </div>
-            <p class="inline-note">Se nenhuma opção for alterada, serão praticados os três tipos.</p>
-          </div>
-        `,
-        read: () => ({
-          tipos: [...document.querySelectorAll('[name="pot-sign"]:checked')].map(x => x.value)
-        })
-      };
-    }
-
-    return {
-      html: '<p class="inline-note">A atividade apresentará explicações e questões em sequência.</p>',
-      read: () => ({})
+    const explicacoes = {
+        conceito: `
+            <div class="pot-aula">
+                <h3>O que é potenciação?</h3>
+                <p>Potenciação é uma forma abreviada de escrever uma multiplicação de fatores iguais.</p>
+                <div class="pot-exemplo">3<sup>4</sup> = 3 × 3 × 3 × 3 = 81</div>
+                <p><strong>Base:</strong> número que será multiplicado.</p>
+                <p><strong>Expoente:</strong> quantidade de vezes que a base aparece como fator.</p>
+                <p><strong>Potência:</strong> resultado da operação.</p>
+                <p>Exemplo: em 5<sup>3</sup>, a base é 5 e o expoente é 3.</p>
+            </div>`,
+        naturais: `
+            <div class="pot-aula">
+                <h3>Potências com números naturais</h3>
+                <p>Para calcular uma potência, repetimos a base como fator tantas vezes quanto indica o expoente.</p>
+                <div class="pot-exemplo">2<sup>4</sup> = 2 × 2 × 2 × 2 = 16</div>
+                <p>Todo número natural diferente de zero elevado a zero é igual a 1.</p>
+                <div class="pot-exemplo">7<sup>0</sup> = 1</div>
+                <p>Quando a base é 1, qualquer expoente natural produz resultado 1.</p>
+            </div>`,
+        sinais: `
+            <div class="pot-aula">
+                <h3>Potenciação com base negativa</h3>
+                <p>Quando a base negativa está entre parênteses, o sinal faz parte da base.</p>
+                <div class="pot-exemplo">(−2)<sup>2</sup> = (−2) × (−2) = 4</div>
+                <div class="pot-exemplo">(−2)<sup>3</sup> = (−2) × (−2) × (−2) = −8</div>
+                <p>Expoente par: resultado positivo. Expoente ímpar: resultado negativo.</p>
+                <p>Atenção: −2<sup>2</sup> = −(2 × 2) = −4. Sem parênteses, a potência é calculada antes do sinal de menos.</p>
+            </div>`,
+        "expoentes-negativos": `
+            <div class="pot-aula">
+                <h3>Expoente negativo</h3>
+                <p>Uma potência com expoente negativo corresponde ao inverso da potência com expoente positivo, desde que a base seja diferente de zero.</p>
+                <div class="pot-exemplo">2<sup>−3</sup> = 1 ÷ 2<sup>3</sup> = 1/8</div>
+                <p>Para base fracionária, invertemos a fração:</p>
+                <div class="pot-exemplo">(2/3)<sup>−2</sup> = (3/2)<sup>2</sup> = 9/4</div>
+            </div>`,
+        "bases-iguais": `
+            <div class="pot-aula">
+                <h3>Multiplicação e divisão de potências de mesma base</h3>
+                <p><strong>Multiplicação:</strong> conservamos a base e somamos os expoentes.</p>
+                <div class="pot-exemplo">a<sup>m</sup> × a<sup>n</sup> = a<sup>m+n</sup></div>
+                <p><strong>Divisão:</strong> conservamos a base e subtraímos os expoentes (base diferente de zero).</p>
+                <div class="pot-exemplo">a<sup>m</sup> ÷ a<sup>n</sup> = a<sup>m−n</sup></div>
+            </div>`,
+        "expoentes-inteiros": `
+            <div class="pot-aula">
+                <h3>Potência de potência</h3>
+                <p>Conservamos a base e multiplicamos os expoentes.</p>
+                <div class="pot-exemplo">(a<sup>m</sup>)<sup>n</sup> = a<sup>m×n</sup></div>
+                <p>Exemplo: (2<sup>3</sup>)<sup>2</sup> = 2<sup>6</sup> = 64.</p>
+            </div>`,
+        "base-dez": `
+            <div class="pot-aula">
+                <h3>Potências de base 10</h3>
+                <p>As potências de base 10 ajudam a escrever números grandes e pequenos.</p>
+                <div class="pot-exemplo">10<sup>1</sup> = 10</div>
+                <div class="pot-exemplo">10<sup>2</sup> = 100</div>
+                <div class="pot-exemplo">10<sup>3</sup> = 1 000</div>
+                <p>Para expoentes naturais, 10 elevado a n é 1 seguido de n zeros.</p>
+            </div>`,
+        comparacao: `
+            <div class="pot-aula">
+                <h3>Comparação de potências</h3>
+                <p>Para comparar potências, podemos calcular seus valores ou usar propriedades quando as bases ou os expoentes permitem.</p>
+                <div class="pot-exemplo">2<sup>3</sup> = 8 e 3<sup>2</sup> = 9</div>
+                <p>Logo, 2<sup>3</sup> &lt; 3<sup>2</sup>.</p>
+            </div>`,
+        "area-volume": `
+            <div class="pot-aula">
+                <h3>Potenciação na geometria</h3>
+                <p>A área de um quadrado de lado l é l<sup>2</sup>.</p>
+                <div class="pot-exemplo">A = l × l = l<sup>2</sup></div>
+                <p>O volume de um cubo de aresta a é a<sup>3</sup>.</p>
+                <div class="pot-exemplo">V = a × a × a = a<sup>3</sup></div>
+            </div>`
     };
-  },
 
-  generate(mode, cfg) {
-    if (!filaPotencias.length) filaPotencias = modeQuestions(mode, cfg || {});
-    return filaPotencias.shift();
-  },
-
-  count(mode, cfg) {
-    filaPotencias = modeQuestions(mode, cfg || {});
-    return filaPotencias.length;
-  },
-
-  render(q) {
-    if (q.kind === "pot-lesson") {
-      return {
-        label: "LEITURA E APRENDIZAGEM",
-        question: `<div class="pot-lesson"><h3>${q.title}</h3>${q.html}</div>`,
-        answer: "",
-        button: "Continuar",
-        lesson: true
-      };
+    function aleatorioPot(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
-    if (q.kind === "pot-choice") {
-      return {
-        label: "ESCOLHA A RESPOSTA",
-        question: `<div class="pot-question">${q.title}</div>`,
-        answer: `
-          <div class="pot-options">
-            ${q.values.map(v => `
-              <button type="button" class="pot-option" data-pot-value="${esc(v.replace(/<[^>]*>/g, ""))}">
-                ${v}
-              </button>
-            `).join("")}
-          </div>
-        `,
-        button: "Conferir"
-      };
+    function embaralharPot(lista) {
+        return [...lista].sort(() => Math.random() - 0.5);
     }
 
-    return {
-      label: "RESOLVA A QUESTÃO",
-      question: `<div class="pot-question">${q.title}</div>`,
-      answer: `<input class="pot-input" id="potAnswer" inputmode="text" placeholder="${esc(q.placeholder || "Digite sua resposta")}">`,
-      button: "Conferir"
+    function pergunta(enunciado, resposta, explicacao, opcoes = null) {
+        return { tipo: "potencia", enunciado, resposta: String(resposta), explicacao, opcoes };
+    }
+
+    function gerarQuestoesPotencias(modo, quantidade) {
+        const qs = [];
+        const adicionar = (q) => qs.push(q);
+
+        if (modo === "conceito") {
+            const base = aleatorioPot(2, 9);
+            const expo = aleatorioPot(2, 5);
+            adicionar(pergunta(
+                `Na potência ${base}<sup>${expo}</sup>, qual é a base?`,
+                base, "A base é o número que aparece como fator repetido.",
+                [base, expo, base + expo, base * expo].map(String)
+            ));
+            adicionar(pergunta(
+                `Na potência 4<sup>3</sup>, qual é o expoente?`,
+                3, "O expoente indica quantas vezes a base aparece como fator.",
+                ["4", "3", "7", "12"]
+            ));
+            adicionar(pergunta(
+                `Escreva como multiplicação: 3<sup>4</sup>.`,
+                "3x3x3x3", "A base 3 aparece quatro vezes como fator."
+            ));
+            adicionar(pergunta(
+                `Calcule: 2<sup>3</sup>.`,
+                8, "2 × 2 × 2 = 8."
+            ));
+        }
+
+        if (modo === "naturais") {
+            for (let i = 0; i < quantidade; i++) {
+                const base = aleatorioPot(0, 9);
+                const expo = aleatorioPot(0, 5);
+                const valor = expo === 0 ? (base === 0 ? null : 1) : Math.pow(base, expo);
+                if (valor === null || valor > 100000) { i--; continue; }
+                adicionar(pergunta(
+                    `Calcule: ${base}<sup>${expo}</sup>.`,
+                    valor,
+                    expo === 0 ? "Todo número diferente de zero elevado a zero é igual a 1." :
+                    `${Array(expo).fill(base).join(" × ")} = ${valor}.`
+                ));
+            }
+        }
+
+        if (modo === "sinais" || modo === "pratica-sinais") {
+            const exemplos = [
+                ["(−3)<sup>2</sup>", 9, "Expoente par: o produto de dois fatores negativos é positivo."],
+                ["(−2)<sup>3</sup>", -8, "Expoente ímpar: sobra um fator negativo."],
+                ["−4<sup>2</sup>", -16, "Sem parênteses, calculamos 4² primeiro e mantemos o sinal de menos."],
+                ["−(−3)<sup>2</sup>", -9, "Calculamos (−3)² = 9 e depois aplicamos o sinal de menos."],
+                ["(−2)<sup>4</sup>", 16, "Expoente par produz resultado positivo."],
+                ["(−1)<sup>7</sup>", -1, "A base −1 elevada a expoente ímpar resulta em −1."],
+                ["(−1)<sup>8</sup>", 1, "A base −1 elevada a expoente par resulta em 1."],
+                ["+(−3)<sup>3</sup>", -27, "O sinal positivo não altera o resultado da potência."]
+            ];
+            const lista = modo === "sinais" ? exemplos.slice(0, 4) : exemplos;
+            while (qs.length < quantidade) {
+                const e = lista[aleatorioPot(0, lista.length - 1)];
+                adicionar(pergunta(`Calcule: ${e[0]}.`, e[1], e[2]));
+            }
+        }
+
+        if (modo === "expoentes-negativos") {
+            const exemplos = [
+                [2, -1, "1/2"], [2, -2, "1/4"], [2, -3, "1/8"],
+                [3, -1, "1/3"], [3, -2, "1/9"], [5, -1, "1/5"],
+                [4, -2, "1/16"], [10, -2, "1/100"]
+            ];
+            while (qs.length < quantidade) {
+                const e = exemplos[aleatorioPot(0, exemplos.length - 1)];
+                adicionar(pergunta(
+                    `Calcule ${e[0]}<sup>${e[1]}</sup>. Escreva o resultado como fração.`,
+                    e[2], `Expoente negativo indica o inverso: 1/${e[0]}<sup>${Math.abs(e[1])}</sup>.`
+                ));
+            }
+        }
+
+        if (modo === "bases-iguais") {
+            const tipos = ["mult", "div"];
+            while (qs.length < quantidade) {
+                const tipo = tipos[aleatorioPot(0, 1)];
+                const base = aleatorioPot(2, 5);
+                const m = aleatorioPot(1, 4);
+                const n = aleatorioPot(1, 4);
+                const exp = tipo === "mult" ? m + n : m + n;
+                const resp = tipo === "mult" ? Math.pow(base, exp) : Math.pow(base, m);
+                const texto = tipo === "mult"
+                    ? `${base}<sup>${m}</sup> × ${base}<sup>${n}</sup>`
+                    : `${base}<sup>${m+n}</sup> ÷ ${base}<sup>${n}</sup>`;
+                adicionar(pergunta(
+                    `Simplifique e calcule: ${texto}.`,
+                    resp,
+                    tipo === "mult"
+                        ? `Na multiplicação de potências de mesma base, somamos os expoentes: ${m} + ${n} = ${exp}.`
+                        : `Na divisão, subtraímos os expoentes: ${m+n} − ${n} = ${m}.`
+                ));
+            }
+        }
+
+        if (modo === "expoentes-inteiros") {
+            while (qs.length < quantidade) {
+                const base = aleatorioPot(2, 4);
+                const m = aleatorioPot(1, 3);
+                const n = aleatorioPot(2, 3);
+                const exp = m * n;
+                adicionar(pergunta(
+                    `Calcule: (${base}<sup>${m}</sup>)<sup>${n}</sup>.`,
+                    Math.pow(base, exp),
+                    `Na potência de potência, multiplicamos os expoentes: ${m} × ${n} = ${exp}.`
+                ));
+            }
+        }
+
+        if (modo === "base-dez") {
+            while (qs.length < quantidade) {
+                const expo = aleatorioPot(0, 6);
+                adicionar(pergunta(
+                    `Calcule: 10<sup>${expo}</sup>.`,
+                    Math.pow(10, expo),
+                    `10 elevado a ${expo} é 1 seguido de ${expo} zero(s).`
+                ));
+            }
+        }
+
+        if (modo === "comparacao") {
+            while (qs.length < quantidade) {
+                const pares = [
+                    [2, 3, 3, 2], [2, 4, 4, 2], [3, 2, 2, 3],
+                    [2, 5, 5, 2], [3, 3, 2, 4], [4, 2, 2, 4]
+                ];
+                const p = pares[aleatorioPot(0, pares.length - 1)];
+                const a = Math.pow(p[0], p[1]);
+                const b = Math.pow(p[2], p[3]);
+                const sinal = a > b ? ">" : a < b ? "<" : "=";
+                adicionar(pergunta(
+                    `Complete com &lt;, &gt; ou =: ${p[0]}<sup>${p[1]}</sup> ___ ${p[2]}<sup>${p[3]}</sup>.`,
+                    sinal,
+                    `Os valores são ${a} e ${b}, respectivamente.`
+                ));
+            }
+        }
+
+        if (modo === "area-volume") {
+            while (qs.length < quantidade) {
+                const medida = aleatorioPot(2, 8);
+                if (Math.random() < 0.5) {
+                    adicionar(pergunta(
+                        `Um quadrado tem lado de ${medida} cm. Qual é sua área em cm²?`,
+                        medida * medida,
+                        `A = lado² = ${medida}² = ${medida * medida} cm².`
+                    ));
+                } else {
+                    adicionar(pergunta(
+                        `Um cubo tem aresta de ${medida} cm. Qual é seu volume em cm³?`,
+                        medida ** 3,
+                        `V = aresta³ = ${medida}³ = ${medida ** 3} cm³.`
+                    ));
+                }
+            }
+        }
+
+        return embaralharPot(qs).slice(0, quantidade);
+    }
+
+    function normalizarResposta(valor) {
+        return String(valor ?? "")
+            .trim()
+            .toLowerCase()
+            .replace(/\s+/g, "")
+            .replace(/[−–]/g, "-")
+            .replace(/×/g, "x")
+            .replace(/,/g, ".");
+    }
+
+    function configurarPotencias() {
+        estado.opcoes = {
+            quantidade: 10
+        };
+        estado.ultimaConfiguracao = {
+            operacao: "potencias",
+            modalidade: estado.modalidade,
+            opcoes: { quantidade: 10 }
+        };
+    }
+
+    function mostrarConfiguracaoPotencias(id, botao) {
+        estado.modalidade = id;
+        document.querySelectorAll(".modalidade").forEach(b => b.classList.remove("selecionada"));
+        botao?.classList.add("selecionada");
+
+        const nome = MODOS_POTENCIAS.find(m => m[0] === id)?.[1] || "Potenciação";
+        $("tituloConfiguracao").textContent = nome;
+
+        $("opcoesConfiguracao").innerHTML = `
+            ${explicacoes[id] || ""}
+            <p class="pot-label">Quantidade de questões</p>
+            <select id="quantidade">
+                <option value="10">10 questões</option>
+                <option value="20">20 questões</option>
+                <option value="30">30 questões</option>
+            </select>
+            <p class="pot-observacao">Nas questões de resposta aberta, digite apenas o resultado. Nas frações, use o formato 1/2.</p>
+        `;
+        $("configuracao").classList.remove("escondida");
+    }
+
+    function mostrarQuestaoPotencias() {
+        if (estado.indice >= estado.questoes.length) {
+            finalizarAtividade();
+            return;
+        }
+
+        const q = estado.questoes[estado.indice];
+        estado.errou = false;
+        estado.respostaConferida = false;
+        estado.campoAtivo = null;
+
+        $("feedback").textContent = "";
+        $("numeroQuestao").textContent = `Questão ${estado.indice + 1} de ${estado.questoes.length}`;
+        $("instrucaoQuestao").textContent = "Resolva a questão:";
+        $("barraQuestao").style.width = `${estado.indice / estado.questoes.length * 100}%`;
+
+        $("areaQuestao").innerHTML = `
+            <div class="pot-questao">
+                <div class="pot-enunciado">${q.enunciado}</div>
+                ${q.opcoes ? `
+                    <div class="pot-alternativas">
+                        ${embaralharPot(q.opcoes).map(op => `
+                            <button type="button" class="pot-alternativa" data-pot-opcao="${op}">${op}</button>
+                        `).join("")}
+                    </div>
+                ` : `
+                    <label class="pot-label" for="respostaPotencia">Sua resposta</label>
+                    <input id="respostaPotencia" class="pot-input" autocomplete="off" inputmode="text">
+                `}
+            </div>
+            <div class="area-botao-ok">
+                <button type="button" class="botao-ok-resposta" onclick="confirmarAtividade()">OK ✅</button>
+            </div>
+        `;
+
+        $("acoesQuestao").innerHTML = `
+            <button class="botao-secundario" onclick="pularQuestao()">Pular questão</button>
+        `;
+        $("teclado").innerHTML = "";
+
+        document.querySelectorAll("[data-pot-opcao]").forEach(b => {
+            b.addEventListener("click", () => {
+                document.querySelectorAll("[data-pot-opcao]").forEach(x => x.classList.remove("pot-escolhida"));
+                b.classList.add("pot-escolhida");
+                estado.campoAtivo = b;
+            });
+        });
+
+        const input = $("respostaPotencia");
+        if (input) {
+            input.addEventListener("keydown", e => {
+                if (e.key === "Enter") confirmarAtividade();
+            });
+            input.focus();
+            estado.campoAtivo = input;
+        }
+    }
+
+    function conferirPotencias() {
+        if (estado.respostaConferida) return;
+
+        const q = estado.questoes[estado.indice];
+        const selecionada = document.querySelector(".pot-alternativa.pot-escolhida");
+        const input = $("respostaPotencia");
+        const resposta = selecionada ? selecionada.dataset.potOpcao : input?.value;
+
+        if (!String(resposta ?? "").trim()) {
+            $("feedback").textContent = "Escolha uma alternativa ou digite sua resposta.";
+            return;
+        }
+
+        const correto = normalizarResposta(resposta) === normalizarResposta(q.resposta);
+
+        if (correto) {
+            estado.respostaConferida = true;
+            $("feedback").textContent = `Resposta correta! ✅ ${q.explicacao}`;
+            estado.resultados.push({ correto: true, corrigida: estado.errou });
+            document.querySelectorAll("#areaQuestao input, #areaQuestao button").forEach(c => c.disabled = true);
+            setTimeout(() => {
+                estado.indice++;
+                mostrarQuestaoPotencias();
+            }, 1700);
+        } else {
+            estado.errou = true;
+            $("feedback").textContent = "Ainda não. Revise o conteúdo e tente novamente.";
+            $("acoesQuestao").innerHTML = `
+                <button class="botao-principal" onclick="tentarNovamentePotencias()">Tentar novamente</button>
+                <button class="botao-secundario" onclick="pularQuestao()">Pular questão</button>
+            `;
+        }
+    }
+
+    window.tentarNovamentePotencias = function() {
+        $("feedback").textContent = "";
+        $("acoesQuestao").innerHTML = `<button class="botao-secundario" onclick="pularQuestao()">Pular questão</button>`;
+        $("respostaPotencia")?.focus();
     };
-  },
 
-  check(q) {
-    let value;
+    // Intercepta somente a navegação da nova área.
+    window.abrirOperacao = function(op) {
+        if (op !== "potencias") return abrirOperacaoOriginal(op);
 
-    if (q.kind === "pot-choice") {
-      value = document.querySelector("[data-pot-value].chosen")?.dataset.potValue;
-    } else {
-      value = document.getElementById("potAnswer")?.value.trim();
-    }
-
-    if (value == null || value === "") return { empty: true };
-
-    const norm = s => String(s).replace(/\s/g, "").replace(/^\+/, "");
-
-    return {
-      correct: norm(value) === norm(q.answer),
-      explanation: q.explanation,
-      answer: q.answer
+        pararCronometro();
+        estado.operacao = "potencias";
+        estado.modalidade = "";
+        $("tituloOperacao").textContent = "Potenciação";
+        $("descricaoOperacao").textContent = "Estude a explicação e pratique cada etapa.";
+        $("menuQuatroOperacoes")?.classList.add("escondida");
+        $("listaModalidades").classList.remove("escondida");
+        $("configuracao").classList.add("escondida");
+        $("listaModalidades").innerHTML = MODOS_POTENCIAS.map(([id, nome]) => `
+            <button class="modalidade" onclick="selecionarModalidade('${id}',this)">${nome}</button>
+        `).join("");
+        mostrarTela("operacao");
     };
-  }
-};
+
+    window.selecionarModalidade = function(id, botao) {
+        if (estado.operacao === "potencias") {
+            mostrarConfiguracaoPotencias(id, botao);
+            return;
+        }
+        return selecionarModalidadeOriginal(id, botao);
+    };
+
+    window.iniciarAtividade = function() {
+        if (estado.operacao !== "potencias") return iniciarAtividadeOriginal();
+
+        try {
+            const quantidade = Number($("quantidade")?.value || 10);
+            estado.opcoes = { quantidade };
+            estado.ultimaConfiguracao = {
+                operacao: "potencias",
+                modalidade: estado.modalidade,
+                opcoes: { quantidade }
+            };
+            estado.questoes = gerarQuestoesPotencias(estado.modalidade, quantidade);
+            estado.indice = 0;
+            estado.resultados = [];
+            estado.errou = false;
+            estado.respostaConferida = false;
+            mostrarTela("estudo");
+            iniciarCronometro();
+            mostrarQuestaoPotencias();
+        } catch (e) {
+            alert("Não foi possível iniciar esta atividade: " + e.message);
+        }
+    };
+
+    window.mostrarQuestao = function() {
+        if (estado.operacao === "potencias") return mostrarQuestaoPotencias();
+        return mostrarQuestaoOriginal();
+    };
+
+    window.confirmarAtividade = function() {
+        if (estado.operacao === "potencias") return conferirPotencias();
+        return confirmarAtividadeOriginal();
+    };
+
+    window.revisarAtividade = function() {
+        if (estado.operacao !== "potencias") return revisarAtividadeOriginal();
+
+        if (!estado.ultimaConfiguracao) return novoEstudoOriginal();
+        estado.operacao = "potencias";
+        estado.modalidade = estado.ultimaConfiguracao.modalidade;
+        estado.opcoes = { ...estado.ultimaConfiguracao.opcoes };
+        estado.questoes = gerarQuestoesPotencias(estado.modalidade, estado.opcoes.quantidade);
+        estado.indice = 0;
+        estado.resultados = [];
+        estado.errou = false;
+        estado.respostaConferida = false;
+        mostrarTela("estudo");
+        iniciarCronometro();
+        mostrarQuestaoPotencias();
+    };
+
+    // CSS específico do módulo.
+    const estilo = document.createElement("style");
+    estilo.textContent = `
+        .pot-aula { background:#f4f8ff; border:1px solid #d9e6f7; border-radius:12px; padding:14px; margin:12px 0 18px; line-height:1.55; }
+        .pot-aula h3 { margin-top:0; color:#285da8; }
+        .pot-exemplo { background:#fff; border-radius:9px; padding:10px; margin:9px 0; text-align:center; font-size:1.2rem; font-weight:700; }
+        .pot-label { display:block; font-weight:700; margin:12px 0 7px; }
+        .pot-observacao { color:#64748b; font-size:.9rem; }
+        .pot-questao { padding:18px 12px; background:#f8faff; border:1px solid #dce6f4; border-radius:14px; }
+        .pot-enunciado { font-size:1.25rem; line-height:1.6; text-align:center; font-weight:700; }
+        .pot-input { display:block; width:min(100%,320px); box-sizing:border-box; margin:8px auto; padding:13px; border:2px solid #b8cbe5; border-radius:10px; font-size:1.2rem; text-align:center; }
+        .pot-alternativas { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; margin-top:16px; }
+        .pot-alternativa { padding:13px 8px; border:2px solid #dce6f4; border-radius:10px; background:white; font-size:1.1rem; }
+        .pot-alternativa.pot-escolhida { border-color:#285da8; background:#edf4ff; }
+        .pot-questao sup, .pot-aula sup { font-size:.72em; }
+        @media(max-width:420px){ .pot-enunciado{font-size:1.1rem;} .pot-alternativas{gap:7px;} }
+    `;
+    document.head.appendChild(estilo);
+
+    // Atualiza os textos iniciais, agora considerando as novas modalidades.
+    document.addEventListener("DOMContentLoaded", () => {
+        const total = Object.values(modalidades).reduce((s, lista) => s + lista.length, 0);
+        $("textoProgresso").textContent = `0 de ${total} modalidades dominadas`;
+        $("qtdNaoIniciadas").textContent = total;
+        $("faltam").textContent = `Faltam ${total} modalidades para dominar tudo.`;
+    });
+})();
