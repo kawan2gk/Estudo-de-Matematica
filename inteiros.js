@@ -1,4 +1,3 @@
-
 /* =====================================================
    MATEMÁTICA COM DETALHES
    MÓDULO: NÚMEROS INTEIROS
@@ -81,7 +80,7 @@ estiloReta.textContent = `
 .reta-numerica {
     position: relative;
     display: grid;
-    grid-template-columns: repeat(31, minmax(0, 1fr));
+    grid-template-columns: repeat(25, minmax(0, 1fr));
     align-items: center;
     width: 100%;
     height: 125px;
@@ -92,8 +91,8 @@ estiloReta.textContent = `
 
 .reta-linha {
     position: absolute;
-    left: calc(100% / 62);
-    right: calc(100% / 62);
+    left: calc(100% / 50);
+    right: calc(100% / 50);
     top: 48px;
     height: 3px;
     background: #8794a5;
@@ -273,20 +272,20 @@ const PROCEDIMENTOS = [
     "Os números têm o mesmo valor absoluto e sinais opostos. O resultado é zero."
 ];
 
-function formatar(a,op,b) {
-    if (op === "+") {
-        return `${formatarNumero(a)} + (${formatarNumero(b)})`;
-    }
-
-    if (op === "−" || op === "-") {
-        return `${formatarNumero(a)} − (${formatarNumero(b)})`;
-    }
-
+// Operações simples: sem parênteses.
+function formatarSimples(a,op,b) {
     return `${formatarNumero(a)} ${op} ${formatarNumero(b)}`;
 }
 
+// Soma e subtração de inteiros: números entre parênteses.
+function formatar(a,op,b) {
+    const operador = op === "-" ? "−" : op;
+
+    return `(${formatarNumero(a)}) ${operador} (${formatarNumero(b)})`;
+}
+
 function classificar(a,b,op) {
-    const segundo = op === "−" ? -b : b;
+    const segundo = op === "−" || op === "-" ? -b : b;
 
     if (a === 0 && segundo === 0) {
         return PROCEDIMENTOS[4];
@@ -330,14 +329,14 @@ function gerar(tipo, numeroQuestao = 1) {
 
     switch(tipo) {
 
-        /* RETA NUMÉRICA */
+        /* RETA NUMÉRICA: DE −12 ATÉ +12 */
 
         case "reta": {
-            a = rand(-15,15);
+            a = rand(-12,12);
 
             const destinos = [];
 
-            for (let n=-15; n<=15; n++) {
+            for (let n=-12; n<=12; n++) {
                 if (n !== a) destinos.push(n);
             }
 
@@ -355,9 +354,6 @@ function gerar(tipo, numeroQuestao = 1) {
         /* OPERAÇÕES SIMPLES */
 
         case "simples": {
-            // Os dois números podem ser positivos ou negativos.
-            // Os sinais são sorteados independentemente.
-
             const valorA = rand(1,20);
             const valorB = rand(1,20);
 
@@ -369,11 +365,21 @@ function gerar(tipo, numeroQuestao = 1) {
 
             op = pick(["+","−"]);
 
-            // A cada seis questões, inclui uma subtração
-            // de números iguais, para trabalhar o resultado zero.
+            // A cada seis questões, os valores absolutos são iguais.
+            // Exemplos: −7 + 7 ou 7 − 7.
             if (numeroQuestao % 6 === 0) {
-                b = a;
-                op = "−";
+                const n = rand(1,20);
+                const modelo = pick(["opostos","iguais"]);
+
+                if (modelo === "opostos") {
+                    a = -n;
+                    b = n;
+                    op = "+";
+                } else {
+                    a = n;
+                    b = n;
+                    op = "−";
+                }
             }
 
             r = op === "+" ? a+b : a-b;
@@ -389,12 +395,34 @@ function gerar(tipo, numeroQuestao = 1) {
         case "somaSubtracao":
         case "procedimento":
         case "entendendo": {
-            if (numeroQuestao % 6 === 0) {
+
+            // Na modalidade Soma e Subtração, a cada sete questões,
+            // sorteia uma combinação com valores absolutos iguais.
+            if (tipo === "somaSubtracao" && numeroQuestao % 7 === 0) {
+                const n = rand(1,20);
+
+                const modelos = [
+                    {a:-n,b:-n,op:"−"},
+                    {a:-n,b:n,op:"+"},
+                    {a:n,b:n,op:"−"},
+                    {a:n,b:-n,op:"+"}
+                ];
+
+                ({a,b,op} = pick(modelos));
+
+            } else if (
+                tipo !== "somaSubtracao" &&
+                numeroQuestao % 6 === 0
+            ) {
                 a = rand(1,20);
-                if (Math.random() < 0.5) a = -a;
+
+                if (Math.random() < 0.5) {
+                    a = -a;
+                }
 
                 b = -a;
                 op = "+";
+
             } else {
                 a = nz();
                 b = nz();
@@ -445,7 +473,10 @@ function gerar(tipo, numeroQuestao = 1) {
                 {length:quantidade},
                 () => {
                     const valor = rand(1,5);
-                    return Math.random() < 0.5 ? -valor : valor;
+
+                    return Math.random() < 0.5
+                        ? -valor
+                        : valor;
                 }
             );
 
@@ -530,6 +561,7 @@ function gerar(tipo, numeroQuestao = 1) {
 
             if (op === "×") {
                 a = pick([-10,-9,-8,-7,-6,-5,-4,-3,-2,-1,1,2,3,4,5,6,7,8,9,10]);
+
                 b = pick([-10,-9,-8,-7,-6,-5,-4,-3,-2,-1,1,2,3,4,5,6,7,8,9,10]);
             } else {
                 a = rand(-15,15);
@@ -783,7 +815,7 @@ function retaHTML(q) {
 
                 <div class="reta-linha"></div>
 
-                ${Array.from({length:31},(_,i)=>i-15).map(n=>`
+                ${Array.from({length:25},(_,i)=>i-12).map(n=>`
                     <button type="button"
                         class="reta-ponto ${n===q.a?"origem":""}"
                         data-valor="${n}"
@@ -827,7 +859,7 @@ function retaHTML(q) {
 ===================================================== */
 
 function atualizarReta(n) {
-    destino = Math.max(-15,Math.min(15,n));
+    destino = Math.max(-12,Math.min(12,n));
 
     document.querySelectorAll(".reta-ponto").forEach(p=>
         p.classList.toggle(
@@ -839,10 +871,10 @@ function atualizarReta(n) {
     const marcador = el("marcadorReta");
 
     if (marcador) {
-        const indice = destino + 15;
+        const indice = destino + 12;
 
         marcador.style.left =
-            `${((indice + 0.5) / 31) * 100}%`;
+            `${((indice + 0.5) / 25) * 100}%`;
     }
 
     if (el("destinoReta")) {
@@ -858,8 +890,8 @@ function atualizarReta(n) {
         '.botao-movimento-reta[onclick="moverCoelho(1)"]'
     );
 
-    if (botaoMenos) botaoMenos.disabled = destino <= -15;
-    if (botaoMais) botaoMais.disabled = destino >= 15;
+    if (botaoMenos) botaoMenos.disabled = destino <= -12;
+    if (botaoMais) botaoMais.disabled = destino >= 12;
 }
 
 /* =====================================================
@@ -873,7 +905,7 @@ function moverCoelho(direcao) {
 
     const novaPosicao = posicaoAtual + direcao;
 
-    if (novaPosicao < -15 || novaPosicao > 15) {
+    if (novaPosicao < -12 || novaPosicao > 12) {
         return;
     }
 
@@ -888,6 +920,7 @@ function moverReta(e) {
     if (!arraste) return;
 
     const faixa = el("retaNumerica");
+
     if (!faixa) return;
 
     const r = faixa.getBoundingClientRect();
@@ -897,10 +930,10 @@ function moverReta(e) {
         Math.min(1,(e.clientX-r.left)/r.width)
     );
 
-    const indice = Math.round(proporcao*31-0.5);
+    const indice = Math.round(proporcao*25-0.5);
 
     atualizarReta(
-        Math.max(-15,Math.min(15,indice-15))
+        Math.max(-12,Math.min(12,indice-12))
     );
 }
 
@@ -952,16 +985,21 @@ function opcoesHTML(opcoes) {
 
 function expressaoCorrigir(q) {
     if (q.op === "×") {
-        const a = q.a < 0 ? `(${formatarNumero(q.a)})` : formatarNumero(q.a);
-        const b = q.b < 0 ? `(${formatarNumero(q.b)})` : formatarNumero(q.b);
+        const a = q.a < 0
+            ? `(${formatarNumero(q.a)})`
+            : formatarNumero(q.a);
+
+        const b = q.b < 0
+            ? `(${formatarNumero(q.b)})`
+            : formatarNumero(q.b);
 
         return `${a} × ${b} = ${formatarNumero(q.apresentado)}`;
     }
 
-    // Usa parênteses no segundo número quando negativo.
-    // Exemplo: −4 − (−15) = −19
+    // Exemplo: −4 − (−15) = −19.
+    const operador = q.op === "-" ? "−" : q.op;
 
-    return `${formatar(q.a,q.op,q.b)} = ${formatarNumero(q.apresentado)}`;
+    return `${formatarNumero(q.a)} ${operador} (${formatarNumero(q.b)}) = ${formatarNumero(q.apresentado)}`;
 }
 
 function renderizarInteiro(q) {
@@ -977,7 +1015,7 @@ function renderizarInteiro(q) {
     else if (q.tipo === "simples") {
         html = `
             <div class="expressao-inteiros">
-                ${formatar(q.a,q.op,q.b)}
+                ${formatarSimples(q.a,q.op,q.b)}
             </div>
 
             <input id="respostaInteiro"
@@ -1010,8 +1048,13 @@ function renderizarInteiro(q) {
     }
 
     else if (q.tipo === "multiplicacao") {
-        const a = q.a < 0 ? `(${formatarNumero(q.a)})` : q.a;
-        const b = q.b < 0 ? `(${formatarNumero(q.b)})` : q.b;
+        const a = q.a < 0
+            ? `(${formatarNumero(q.a)})`
+            : q.a;
+
+        const b = q.b < 0
+            ? `(${formatarNumero(q.b)})`
+            : q.b;
 
         html = `
             <div class="expressao-inteiros">
@@ -1435,6 +1478,7 @@ function conferirValor(v) {
         if (!sinal) {
             el("feedback").textContent =
                 "Selecione o sinal de comparação.";
+
             return;
         }
 
@@ -1454,6 +1498,7 @@ function conferirValor(v) {
         if (segundo !== "+" && segundo !== "-") {
             el("feedback").textContent =
                 "Preencha obrigatoriamente o segundo sinal.";
+
             return;
         }
 
@@ -1503,6 +1548,7 @@ function confirmarInteiros() {
         if (!sinal) {
             el("feedback").textContent =
                 "Selecione o sinal de comparação.";
+
             return;
         }
 
