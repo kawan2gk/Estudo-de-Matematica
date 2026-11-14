@@ -850,4 +850,344 @@ footer {
 }
 
 
+/* =====================================================
+   MATEMÁTICA COM DETALHES
+   AJUSTES RESPONSIVOS
+   CELULAR, TABLET E COMPUTADOR
+===================================================== */
+
+/* TABLETS */
+
+@media (min-width: 601px) and (max-width: 1024px) {
+
+    .container {
+        width: min(94%, 900px);
+        margin: 24px auto;
+    }
+
+    .tela {
+        padding: 24px;
+    }
+
+    .expressao-inteiros {
+        font-size: clamp(30px, 4vw, 40px);
+    }
+
+    .opcoes-inteiros {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+    }
+
+    .opcao-inteiro {
+        text-align: center;
+        min-height: 65px;
+    }
+
+    .teclado {
+        max-width: 460px;
+    }
+
+    .reta-container {
+        overflow: hidden !important;
+        padding: 22px 12px !important;
+    }
+
+    .reta-numerica {
+        min-width: 0 !important;
+        width: 100% !important;
+    }
+
+    .reta-ponto {
+        font-size: 12px !important;
+    }
+}
+
+/* COMPUTADORES */
+
+@media (min-width: 1025px) {
+
+    .container {
+        width: min(94%, 1100px);
+        margin: 30px auto;
+    }
+
+    .tela {
+        padding: 30px;
+    }
+
+    .topo {
+        padding: 18px max(24px, calc((100% - 1100px) / 2));
+    }
+
+    .expressao-inteiros {
+        font-size: 40px;
+    }
+
+    .opcoes-inteiros {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+    }
+
+    .opcao-inteiro {
+        text-align: center;
+        min-height: 65px;
+    }
+
+    .teclado {
+        max-width: 440px;
+    }
+
+    .reta-container {
+        overflow: hidden !important;
+        padding: 22px 15px !important;
+    }
+
+    .reta-numerica {
+        min-width: 0 !important;
+        width: 100% !important;
+    }
+
+    .reta-ponto {
+        font-size: 13px !important;
+    }
+
+    .botao-principal,
+    .botao-secundario {
+        max-width: 420px;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+/* CELULARES */
+
+@media (max-width: 600px) {
+
+    body {
+        font-size: 15px;
+    }
+
+    .topo {
+        padding: 12px;
+        gap: 10px;
+    }
+
+    .topo h1 {
+        font-size: 18px;
+    }
+
+    .topo p {
+        font-size: 12px;
+    }
+
+    .container {
+        width: calc(100% - 12px);
+        margin: 10px auto;
+    }
+
+    .tela {
+        padding: 13px;
+        border-radius: 13px;
+    }
+
+    h2 {
+        font-size: 21px;
+    }
+
+    .botoes-operacoes {
+        gap: 8px;
+    }
+
+    .botao-operacao {
+        padding: 15px 7px;
+        font-size: 14px;
+    }
+
+    .cabecalho-estudo {
+        align-items: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .tempo {
+        font-size: 13px;
+        padding: 8px;
+    }
+
+    .expressao-inteiros {
+        font-size: clamp(25px, 7vw, 32px);
+        margin: 18px 0;
+        line-height: 1.5;
+    }
+
+    .resposta-inteiros {
+        max-width: 100%;
+        font-size: 25px;
+        padding: 13px;
+    }
+
+    .opcoes-inteiros {
+        grid-template-columns: 1fr;
+        gap: 9px;
+    }
+
+    .opcao-inteiro {
+        padding: 14px 12px;
+        min-height: 52px;
+        font-size: 14px;
+    }
+
+    .teclado {
+        width: 100%;
+        max-width: 360px;
+        gap: 7px;
+        margin: 18px auto;
+    }
+
+    .teclado button {
+        min-height: 54px;
+        font-size: 21px;
+    }
+
+    .area-botao-ok {
+        margin: 8px 0 10px;
+    }
+
+    .botao-ok-resposta {
+        max-width: 100%;
+        min-height: 48px;
+    }
+
+    .selecao-dupla {
+        grid-template-columns: 1fr 1fr;
+        gap: 7px;
+    }
+
+    .opcao-selecao {
+        font-size: 12px;
+        padding: 10px 5px;
+    }
+
+    .sequence-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .campos-divisao {
+        gap: 8px;
+    }
+
+    .grupo-resposta {
+        width: 48%;
+    }
+
+    .conta-divisao {
+        font-size: 25px;
+    }
+
+    .linha-reserva {
+        gap: 5px;
+    }
+
+    .campo-reserva,
+    .campo-digito,
+    .campo-divisao {
+        font-size: 17px;
+        padding: 9px 2px;
+    }
+
+    .cinco-colunas,
+    .cabecalho-casas,
+    .linha-conta,
+    .linha-resposta,
+    .linha-parcial {
+        gap: 3px;
+    }
+
+    .celula-numero {
+        font-size: 20px;
+    }
+
+    .titulo-conta {
+        font-size: 19px;
+    }
+
+    .percentual-final {
+        font-size: 40px;
+    }
+
+    /* RETA NUMÉRICA NO CELULAR */
+
+    .reta-container {
+        overflow: hidden !important;
+        padding: 18px 5px !important;
+        margin: 20px 0 !important;
+    }
+
+    .reta-numerica {
+        min-width: 0 !important;
+        width: 100% !important;
+        height: 105px !important;
+        display: grid !important;
+        grid-template-columns: repeat(31, minmax(0, 1fr)) !important;
+    }
+
+    .reta-linha {
+        left: calc(100% / 62) !important;
+        right: calc(100% / 62) !important;
+        top: 40px !important;
+    }
+
+    .reta-ponto {
+        width: 100% !important;
+        min-width: 0 !important;
+        top: 31px !important;
+        gap: 10px !important;
+        font-size: clamp(8px, 2.2vw, 11px) !important;
+    }
+
+    .reta-ponto::before {
+        font-size: 12px !important;
+    }
+
+    .reta-ponto.selecionado::before {
+        font-size: 16px !important;
+    }
+
+    .marcador-reta {
+        top: 0 !important;
+        width: 34px !important;
+        height: 38px !important;
+        font-size: 29px !important;
+        line-height: 38px !important;
+    }
+
+    .comparacao-selecao {
+        font-size: 25px;
+        gap: 9px;
+    }
+
+    .comparacao-selecao select {
+        width: 62px;
+        height: 50px;
+        font-size: 24px;
+    }
+
+    .expressao-corrigir {
+        font-size: clamp(19px, 6vw, 27px);
+    }
+}
+
+/* ACESSIBILIDADE: REDUZIR ANIMAÇÕES */
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+    }
+}
+
+
 
