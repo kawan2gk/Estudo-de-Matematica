@@ -1,12 +1,21 @@
 
 /* =========================================================
-   MATEMÁTICA COM DETALHES — POTENCIAÇÃO E RADICAIS
+   MATEMÁTICA COM DETALHES
+   MÓDULO DE POTENCIAÇÃO E RADICAIS
    Arquivo: potencias-radicais.js
-   Carregado depois de script.js e inteiros.js.
+
+   Carregamento:
+   1. script.js
+   2. inteiros.js
+   3. potencias-radicais.js
 ========================================================= */
 
 (() => {
     "use strict";
+
+    // =====================================================
+    // 1. MODALIDADES
+    // =====================================================
 
     const MODOS_POTENCIAS = [
         ["conceito", "1. Conceito de potenciação"],
@@ -21,6 +30,10 @@
         ["area-volume", "10. Potenciação na geometria"]
     ];
 
+    // =====================================================
+    // 2. PRESERVAÇÃO DAS FUNÇÕES ORIGINAIS
+    // =====================================================
+
     const abrirOperacaoOriginal = window.abrirOperacao;
     const selecionarModalidadeOriginal = window.selecionarModalidade;
     const iniciarAtividadeOriginal = window.iniciarAtividade;
@@ -28,6 +41,7 @@
     const confirmarAtividadeOriginal = window.confirmarAtividade;
     const revisarAtividadeOriginal = window.revisarAtividade;
     const novoEstudoOriginal = window.novoEstudo;
+    const voltarOriginal = window.voltar;
 
     const elementoConfiguracaoPot = $("configuracao");
     const paiConfiguracaoPot = elementoConfiguracaoPot?.parentElement;
@@ -35,6 +49,10 @@
 
     let temporizadorSolucaoPot = null;
     let temporizadorAvancoPot = null;
+
+    // =====================================================
+    // 3. REGISTRO NO SISTEMA DO CURSO
+    // =====================================================
 
     modalidades.potencias = MODOS_POTENCIAS;
 
@@ -50,7 +68,7 @@
     premios.potencias_area_volume = "📐";
 
     // =====================================================
-    // EXPLICAÇÕES
+    // 4. EXPLICAÇÕES
     // =====================================================
 
     const explicacoes = {
@@ -58,7 +76,7 @@
             <div class="pot-aula">
                 <h3>Conceito de potenciação</h3>
                 <p>Identifique a base, o expoente e aprenda a escrever uma potência como multiplicação de fatores iguais.</p>
-                <div class="pot-exemplo">Exemplo: a⁵ = a × a × a × a × a</div>
+                <div class="pot-exemplo">a⁵ = a × a × a × a × a</div>
                 <p>A base aparece repetida cinco vezes porque o expoente é 5.</p>
             </div>`,
 
@@ -76,12 +94,15 @@
         sinais: `
             <div class="pot-aula">
                 <h3>Praticando o sinal com números inteiros</h3>
+
                 <p><strong>Expoente par:</strong></p>
                 <div class="pot-exemplo">+(−3)² = +9</div>
                 <div class="pot-exemplo">−(−4)² = −16</div>
+
                 <p><strong>Expoente ímpar:</strong></p>
                 <div class="pot-exemplo">+(−2)³ = −8</div>
                 <div class="pot-exemplo">−(−2)³ = +8</div>
+
                 <p><strong>Potência sem parênteses:</strong> calculamos a potência primeiro e depois aplicamos o sinal.</p>
                 <div class="pot-exemplo">−5² = −(5 × 5) = −25</div>
                 <div class="pot-exemplo">+5² = +(5 × 5) = +25</div>
@@ -140,7 +161,7 @@
     };
 
     // =====================================================
-    // FUNÇÕES AUXILIARES
+    // 5. FUNÇÕES AUXILIARES
     // =====================================================
 
     function aleatorioPot(min, max) {
@@ -186,8 +207,13 @@
     function obterLimiteBase(bases, expo) {
         let limite = expo === 2 ? 12 : 10;
 
-        if (bases.includes(5)) limite = Math.min(limite, 5);
-        if (bases.includes(10)) limite = Math.min(limite, 10);
+        if (bases.includes(5)) {
+            limite = Math.min(limite, 5);
+        }
+
+        if (bases.includes(10)) {
+            limite = Math.min(limite, 10);
+        }
 
         return limite;
     }
@@ -200,8 +226,20 @@
         ];
     }
 
+    function limparTemporizadoresPot() {
+        if (temporizadorSolucaoPot) {
+            clearTimeout(temporizadorSolucaoPot);
+            temporizadorSolucaoPot = null;
+        }
+
+        if (temporizadorAvancoPot) {
+            clearTimeout(temporizadorAvancoPot);
+            temporizadorAvancoPot = null;
+        }
+    }
+
     // =====================================================
-    // GERAÇÃO DAS QUESTÕES
+    // 6. GERAÇÃO DAS QUESTÕES
     // =====================================================
 
     function gerarQuestoesPotencias(modo, quantidade, opcoes = {}) {
@@ -217,6 +255,10 @@
             });
         };
 
+        // -------------------------------------------------
+        // CONCEITO
+        // -------------------------------------------------
+
         if (modo === "conceito") {
             for (let i = 0; i < quantidade; i++) {
                 const base = aleatorioPot(2, 9);
@@ -229,18 +271,23 @@
                         base,
                         `A base é ${base}: é o número que será repetido como fator.`
                     );
-                } else if (tipo === 1) {
+                }
+
+                else if (tipo === 1) {
                     adicionar(
                         `Na potência ${base}<sup>${expo}</sup>, qual é o expoente?`,
                         expo,
                         `O expoente é ${expo}: ele indica quantas vezes a base aparece como fator.`
                     );
-                } else {
-                    const multiplicacao = Array(expo).fill(base).join(" × ");
+                }
+
+                else {
+                    const fatores = Array(expo).fill(base);
+                    const multiplicacao = fatores.join(" × ");
 
                     adicionar(
                         `Escreva como multiplicação: ${base}<sup>${expo}</sup>.`,
-                        Array(expo).fill(base).join("x"),
+                        fatores.join("x"),
                         `A base ${base} aparece ${expo} vezes: ${multiplicacao}.`,
                         {
                             respostaTexto: true,
@@ -250,6 +297,10 @@
                 }
             }
         }
+
+        // -------------------------------------------------
+        // POTÊNCIAS NATURAIS
+        // -------------------------------------------------
 
         else if (modo === "naturais") {
             const expoentes = opcoes.expoentes?.length
@@ -266,20 +317,30 @@
                 );
 
                 const limite = obterLimiteBase(bases, expo);
+
                 let base = aleatorioPot(0, limite);
 
-                if (expo === 0 && base === 0) base = 1;
+                if (expo === 0 && base === 0) {
+                    base = 1;
+                }
 
                 const resultado = base ** expo;
 
                 let explicacao;
 
                 if (expo === 0) {
-                    explicacao = `${base}⁰ = 1. Todo número diferente de zero elevado a zero é igual a 1.`;
-                } else if (expo === 1) {
-                    explicacao = `${base}¹ = ${base}. Todo número elevado a 1 é igual a ele mesmo.`;
-                } else {
-                    explicacao = `${base}⁽${expo}⁾ = ${Array(expo).fill(base).join(" × ")} = ${resultado}.`;
+                    explicacao =
+                        `${base}⁰ = 1. Todo número diferente de zero elevado a zero é igual a 1.`;
+                }
+
+                else if (expo === 1) {
+                    explicacao =
+                        `${base}¹ = ${base}. Todo número elevado a 1 é igual a ele mesmo.`;
+                }
+
+                else {
+                    explicacao =
+                        `${base}⁽${expo}⁾ = ${Array(expo).fill(base).join(" × ")} = ${resultado}.`;
                 }
 
                 adicionar(
@@ -289,6 +350,10 @@
                 );
             }
         }
+
+        // -------------------------------------------------
+        // SINAIS E PRÁTICA COM INTEIROS
+        // -------------------------------------------------
 
         else if (modo === "sinais" || modo === "pratica-sinais") {
             const expoentes = opcoes.expoentes?.length
@@ -309,9 +374,12 @@
                 );
 
                 const limite = obterLimiteBase(bases, expo);
+
                 let base = aleatorioPot(-limite, limite);
 
-                if (expo === 0 && base === 0) base = 1;
+                if (expo === 0 && base === 0) {
+                    base = 1;
+                }
 
                 const formato = formatos[
                     aleatorioPot(0, formatos.length - 1)
@@ -331,7 +399,8 @@
                 }
 
                 else {
-                    expressao = `${base < 0 ? "−" : "+"}${Math.abs(base)}<sup>${expo}</sup>`;
+                    expressao =
+                        `${base < 0 ? "−" : "+"}${Math.abs(base)}<sup>${expo}</sup>`;
 
                     valor = base < 0
                         ? -(Math.abs(base) ** expo)
@@ -342,7 +411,13 @@
                     const sinal = valor < 0 ? "negativo" : "positivo";
 
                     adicionar(
-                        `Observe a expressão:<div class="pot-expressao">${expressao} = [ &nbsp; ] ${Math.abs(valor)}</div><p class="pot-pergunta-sinal">Qual sinal deve ocupar o espaço vazio?</p>`,
+                        `Observe a expressão:
+                        <div class="pot-expressao">
+                            ${expressao} = [ &nbsp; ] ${Math.abs(valor)}
+                        </div>
+                        <p class="pot-pergunta-sinal">
+                            Qual sinal deve ocupar o espaço vazio?
+                        </p>`,
                         sinal,
                         `O resultado da expressão é ${valor}. Portanto, o sinal correto é ${sinal}.`,
                         {
@@ -350,15 +425,22 @@
                             valorAbsoluto: Math.abs(valor)
                         }
                     );
-                } else {
+                }
+
+                else {
                     adicionar(
-                        `Calcule o valor da expressão:<div class="pot-expressao">${expressao}</div>`,
+                        `Calcule o valor da expressão:
+                        <div class="pot-expressao">${expressao}</div>`,
                         valor,
                         `O resultado da expressão é ${valor}.`
                     );
                 }
             }
         }
+
+        // -------------------------------------------------
+        // OUTRAS MODALIDADES
+        // -------------------------------------------------
 
         else {
             for (let i = 0; i < quantidade; i++) {
@@ -430,7 +512,9 @@
                             medida ** 2,
                             `A área do quadrado é lado × lado: ${medida} × ${medida} = ${medida ** 2} cm².`
                         );
-                    } else {
+                    }
+
+                    else {
                         adicionar(
                             `Um cubo tem aresta de ${medida} cm. Qual é seu volume?`,
                             medida ** 3,
@@ -445,7 +529,7 @@
     }
 
     // =====================================================
-    // CONFIGURAÇÕES
+    // 7. LEITURA DAS CONFIGURAÇÕES
     // =====================================================
 
     function lerConfiguracaoPotencias() {
@@ -464,7 +548,9 @@
                 ? expoentes
                 : [0, 1, 2];
 
-            opcoes.bases = bases.length ? bases : [10];
+            opcoes.bases = bases.length
+                ? bases
+                : [10];
         }
 
         if (
@@ -481,10 +567,14 @@
         return opcoes;
     }
 
+    // =====================================================
+    // 8. CONFIGURAÇÃO DAS MODALIDADES
+    // =====================================================
+
     function mostrarConfiguracaoPotencias(id, botao) {
         const config = $("configuracao");
 
-        // Clicar novamente na mesma modalidade fecha a configuração.
+        // Clicar novamente fecha a configuração.
         if (
             estado.modalidade === id &&
             config &&
@@ -617,7 +707,7 @@
     }
 
     // =====================================================
-    // TECLADO VIRTUAL
+    // 9. TECLADO VIRTUAL
     // =====================================================
 
     function montarTecladoPotencias() {
@@ -650,6 +740,7 @@
 
     window.digitarPotencia = function(valor) {
         const input = $("respostaPotencia");
+
         if (!input || input.disabled) return;
 
         if (valor === "⌫") {
@@ -662,7 +753,7 @@
     };
 
     // =====================================================
-    // EXEMPLO ABAIXO DO TECLADO
+    // 10. EXEMPLO ABAIXO DO TECLADO
     // =====================================================
 
     function mostrarExemploAbaixoTeclado(q) {
@@ -674,6 +765,7 @@
         if (!q.respostaTexto || !q.exemplo) return;
 
         const exemplo = document.createElement("div");
+
         exemplo.id = "potExemploQuestao";
         exemplo.className = "pot-exemplo-ajuda";
         exemplo.innerHTML = q.exemplo;
@@ -682,19 +774,11 @@
     }
 
     // =====================================================
-    // MOSTRAR QUESTÃO
+    // 11. MOSTRAR QUESTÃO
     // =====================================================
 
     function mostrarQuestaoPotencias() {
-        if (temporizadorSolucaoPot) {
-            clearTimeout(temporizadorSolucaoPot);
-            temporizadorSolucaoPot = null;
-        }
-
-        if (temporizadorAvancoPot) {
-            clearTimeout(temporizadorAvancoPot);
-            temporizadorAvancoPot = null;
-        }
+        limparTemporizadoresPot();
 
         if (estado.indice >= estado.questoes.length) {
             pararCronometro();
@@ -771,7 +855,9 @@
             const input = $("respostaPotencia");
 
             input.addEventListener("keydown", e => {
-                if (e.key === "Enter") confirmarAtividade();
+                if (e.key === "Enter") {
+                    confirmarAtividade();
+                }
             });
 
             input.focus();
@@ -783,7 +869,7 @@
     }
 
     // =====================================================
-    // NORMALIZAÇÃO E CONFERÊNCIA
+    // 12. NORMALIZAÇÃO
     // =====================================================
 
     function normalizarPot(valor) {
@@ -795,6 +881,10 @@
             .replace(/[×·*]/g, "x")
             .replace(/,/g, ".");
     }
+
+    // =====================================================
+    // 13. CONFERIR RESPOSTA
+    // =====================================================
 
     function conferirPotencias() {
         if (estado.respostaConferida) return;
@@ -813,6 +903,7 @@
             $("feedback").textContent = q.escolhaSinal
                 ? "Escolha o sinal positivo ou negativo."
                 : "Digite sua resposta antes de confirmar.";
+
             return;
         }
 
@@ -829,7 +920,9 @@
 
             document.querySelectorAll(
                 "#areaQuestao input, #areaQuestao button, #acoesQuestao button"
-            ).forEach(c => c.disabled = true);
+            ).forEach(c => {
+                c.disabled = true;
+            });
 
             temporizadorAvancoPot = setTimeout(() => {
                 estado.indice++;
@@ -862,13 +955,14 @@
     }
 
     // =====================================================
-    // ENTENDER A RESPOSTA — AVANÇO MANUAL
+    // 14. ENTENDER A RESPOSTA
     // =====================================================
 
     function entenderRespostaPotencias() {
         if (estado.respostaConferida) return;
 
         const q = estado.questoes[estado.indice];
+
         estado.respostaConferida = true;
 
         $("feedback").innerHTML = `
@@ -888,7 +982,9 @@
 
         document.querySelectorAll(
             "#areaQuestao input, #areaQuestao button"
-        ).forEach(c => c.disabled = true);
+        ).forEach(c => {
+            c.disabled = true;
+        });
     }
 
     window.avancarAposEntenderPotencias = function() {
@@ -901,8 +997,13 @@
         });
 
         estado.indice++;
+
         mostrarQuestaoPotencias();
     };
+
+    // =====================================================
+    // 15. PULAR QUESTÃO
+    // =====================================================
 
     function pularQuestaoPotencias() {
         if (estado.respostaConferida) return;
@@ -914,11 +1015,16 @@
         });
 
         estado.indice++;
+
         mostrarQuestaoPotencias();
     }
 
     window.pularQuestaoPotencias = pularQuestaoPotencias;
     window.entenderRespostaPotencias = entenderRespostaPotencias;
+
+    // =====================================================
+    // 16. TENTAR NOVAMENTE
+    // =====================================================
 
     window.tentarNovamentePotencias = function() {
         $("feedback").textContent = "";
@@ -949,7 +1055,7 @@
     };
 
     // =====================================================
-    // INTEGRAÇÃO COM O CURSO
+    // 17. ABRIR POTENCIAÇÃO
     // =====================================================
 
     window.abrirOperacao = function(op) {
@@ -960,18 +1066,18 @@
         }
 
         pararCronometro();
-
-        if (temporizadorSolucaoPot) clearTimeout(temporizadorSolucaoPot);
-        if (temporizadorAvancoPot) clearTimeout(temporizadorAvancoPot);
+        limparTemporizadoresPot();
 
         estado.operacao = "potencias";
         estado.modalidade = "";
 
         $("tituloOperacao").textContent = "Potenciação";
+
         $("descricaoOperacao").textContent =
             "Estude a explicação e pratique cada etapa.";
 
         $("menuQuatroOperacoes")?.classList.add("escondida");
+
         $("listaModalidades").classList.remove("escondida");
         $("configuracao").classList.add("escondida");
 
@@ -987,6 +1093,10 @@
         mostrarTela("operacao");
     };
 
+    // =====================================================
+    // 18. SELECIONAR MODALIDADE
+    // =====================================================
+
     window.selecionarModalidade = function(id, botao) {
         if (estado.operacao === "potencias") {
             mostrarConfiguracaoPotencias(id, botao);
@@ -995,6 +1105,10 @@
 
         return selecionarModalidadeOriginal(id, botao);
     };
+
+    // =====================================================
+    // 19. INICIAR ATIVIDADE
+    // =====================================================
 
     window.iniciarAtividade = function() {
         if (estado.operacao !== "potencias") {
@@ -1030,14 +1144,23 @@
             document.getElementById("potExemploQuestao")?.remove();
 
             mostrarTela("estudo");
+
             iniciarCronometro();
+
             mostrarQuestaoPotencias();
 
         } catch (e) {
             console.error("Erro ao iniciar potenciação:", e);
-            alert("Não foi possível iniciar esta atividade: " + e.message);
+
+            alert(
+                "Não foi possível iniciar esta atividade: " + e.message
+            );
         }
     };
+
+    // =====================================================
+    // 20. MOSTRAR QUESTÃO
+    // =====================================================
 
     window.mostrarQuestao = function() {
         if (estado.operacao === "potencias") {
@@ -1047,6 +1170,10 @@
         return mostrarQuestaoOriginal();
     };
 
+    // =====================================================
+    // 21. CONFIRMAR ATIVIDADE
+    // =====================================================
+
     window.confirmarAtividade = function() {
         if (estado.operacao === "potencias") {
             return conferirPotencias();
@@ -1055,19 +1182,26 @@
         return confirmarAtividadeOriginal();
     };
 
+    // =====================================================
+    // 22. NOVO ESTUDO
+    // =====================================================
+
     window.novoEstudo = function() {
         if (estado.operacao !== "potencias") {
             return novoEstudoOriginal();
         }
 
         pararCronometro();
-
-        if (temporizadorSolucaoPot) clearTimeout(temporizadorSolucaoPot);
-        if (temporizadorAvancoPot) clearTimeout(temporizadorAvancoPot);
+        limparTemporizadoresPot();
 
         restaurarConfiguracaoPotencias();
+
         window.abrirOperacao("potencias");
     };
+
+    // =====================================================
+    // 23. REVISAR ATIVIDADE
+    // =====================================================
 
     window.revisarAtividade = function() {
         if (estado.operacao !== "potencias") {
@@ -1078,9 +1212,14 @@
             return novoEstudoOriginal();
         }
 
+        limparTemporizadoresPot();
+
         estado.operacao = "potencias";
         estado.modalidade = estado.ultimaConfiguracao.modalidade;
-        estado.opcoes = { ...estado.ultimaConfiguracao.opcoes };
+
+        estado.opcoes = {
+            ...estado.ultimaConfiguracao.opcoes
+        };
 
         estado.questoes = gerarQuestoesPotencias(
             estado.modalidade,
@@ -1094,12 +1233,43 @@
         estado.respostaConferida = false;
 
         mostrarTela("estudo");
+
         iniciarCronometro();
+
         mostrarQuestaoPotencias();
     };
 
     // =====================================================
-    // CSS DO MÓDULO
+    // 24. BOTÃO VOLTAR
+    // =====================================================
+
+    window.voltar = function() {
+        const telaEstudo = $("estudo");
+
+        if (
+            estado.operacao === "potencias" &&
+            telaEstudo &&
+            !telaEstudo.classList.contains("escondida")
+        ) {
+            pararCronometro();
+            limparTemporizadoresPot();
+
+            document.getElementById("potExemploQuestao")?.remove();
+
+            restaurarConfiguracaoPotencias();
+
+            window.abrirOperacao("potencias");
+
+            return;
+        }
+
+        if (typeof voltarOriginal === "function") {
+            return voltarOriginal();
+        }
+    };
+
+    // =====================================================
+    // 25. CSS ESPECÍFICO
     // =====================================================
 
     const estilo = document.createElement("style");
@@ -1298,6 +1468,10 @@
     `;
 
     document.head.appendChild(estilo);
+
+    // =====================================================
+    // 26. ATUALIZAR DESEMPENHO
+    // =====================================================
 
     atualizarDesempenho();
 
