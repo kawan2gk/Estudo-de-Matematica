@@ -1,9 +1,8 @@
 
 /* =========================================================
-   MATEMÁTICA COM DETALHES — MÓDULO DE POTENCIAÇÃO
+   MATEMÁTICA COM DETALHES — POTENCIAÇÃO E RADICAIS
    Arquivo: potencias-radicais.js
    Carregado depois de script.js e inteiros.js.
-   Não altera a chave de armazenamento do curso.
 ========================================================= */
 
 (() => {
@@ -13,7 +12,7 @@
         ["conceito", "1. Conceito de potenciação"],
         ["naturais", "2. Potências com números naturais"],
         ["sinais", "3. Praticando o sinal com números inteiros"],
-        ["pratica-sinais", "4. Prática de Potenciação com inteiros"],
+        ["pratica-sinais", "4. Prática de potenciação com inteiros"],
         ["expoentes-negativos", "5. Expoentes negativos"],
         ["bases-iguais", "6. Propriedades: bases iguais"],
         ["expoentes-inteiros", "7. Propriedades com expoentes inteiros"],
@@ -33,6 +32,9 @@
     const elementoConfiguracaoPot = $("configuracao");
     const paiConfiguracaoPot = elementoConfiguracaoPot?.parentElement;
     const proximoConfiguracaoPot = elementoConfiguracaoPot?.nextElementSibling;
+
+    let temporizadorSolucaoPot = null;
+    let temporizadorAvancoPot = null;
 
     function restaurarConfiguracaoPotencias() {
         if (!elementoConfiguracaoPot || !paiConfiguracaoPot) return;
@@ -69,7 +71,7 @@
         conceito: `
             <div class="pot-aula">
                 <h3>Conceito de potenciação</h3>
-                <p>Identifique a base, o expoente e aprenda a escrever a potência como multiplicação de fatores iguais.</p>
+                <p>Identifique a base, o expoente e aprenda a escrever uma potência como multiplicação de fatores iguais.</p>
                 <div class="pot-exemplo">Exemplo: a⁵ = a × a × a × a × a</div>
                 <p>A base aparece repetida cinco vezes porque o expoente é 5.</p>
             </div>`,
@@ -78,69 +80,65 @@
             <div class="pot-aula">
                 <h3>Potências com números naturais</h3>
                 <p>Para calcular uma potência, repetimos a base como fator tantas vezes quanto indica o expoente.</p>
-                <div class="pot-exemplo">2<sup>4</sup> = 2 × 2 × 2 × 2 = 16</div>
-                <p>Todo número natural diferente de zero elevado a zero é igual a 1.</p>
-                <div class="pot-exemplo">7<sup>0</sup> = 1</div>
+                <div class="pot-exemplo">2⁴ = 2 × 2 × 2 × 2 = 16</div>
+                <p>Todo número diferente de zero elevado a zero é igual a 1.</p>
+                <div class="pot-exemplo">7⁰ = 1</div>
                 <p>Quando a base é 1, qualquer expoente natural produz resultado 1.</p>
+                <div class="pot-exemplo">1⁵ = 1</div>
             </div>`,
 
         sinais: `
             <div class="pot-aula">
                 <h3>Praticando o sinal com números inteiros</h3>
 
-                <p><strong>Etapa 1 — Expoente par:</strong> a potência de uma base negativa entre parênteses fica positiva.</p>
+                <p><strong>1. Sinal positivo fora dos parênteses:</strong></p>
+                <div class="pot-exemplo">+(−3)² = +9</div>
+                <div class="pot-exemplo">+(−2)³ = −8</div>
 
-                <div class="pot-exemplo">+(−3)² = +[(−3) × (−3)] = +9</div>
-                <div class="pot-exemplo">+(+3)² = +[3 × 3] = +9</div>
-                <div class="pot-exemplo">−(−4)² = −[(−4) × (−4)] = −16</div>
-                <div class="pot-exemplo">−(+4)² = −[4 × 4] = −16</div>
+                <p><strong>2. Sinal negativo fora dos parênteses:</strong></p>
+                <div class="pot-exemplo">−(−4)² = −16</div>
+                <div class="pot-exemplo">−(−2)³ = +8</div>
 
-                <p><strong>Etapa 2 — Expoente ímpar:</strong> uma base negativa elevada a expoente ímpar resulta em número negativo. Depois, observe o sinal que está fora dos parênteses.</p>
-
-                <div class="pot-exemplo">+(−2)³ = +[(−2) × (−2) × (−2)] = −8</div>
-                <div class="pot-exemplo">+(+2)³ = +[2 × 2 × 2] = +8</div>
-                <div class="pot-exemplo">−(−2)³ = −[−8] = +8</div>
-                <div class="pot-exemplo">−(+2)³ = −[+8] = −8</div>
-
-                <p><strong>Etapa 3 — Sem parênteses:</strong> calculamos a potência primeiro e só depois aplicamos o sinal de menos.</p>
-
+                <p><strong>3. Potência sem parênteses:</strong> calculamos a potência primeiro e depois aplicamos o sinal.</p>
                 <div class="pot-exemplo">−5² = −(5 × 5) = −25</div>
-                <div class="pot-exemplo">5² = 5 × 5 = 25</div>
+                <div class="pot-exemplo">+5² = +(5 × 5) = +25</div>
+
+                <p>Observe a diferença entre −(−3)² e −3². Os parênteses alteram a base da potência.</p>
             </div>`,
 
         "expoentes-negativos": `
             <div class="pot-aula">
                 <h3>Expoente negativo</h3>
                 <p>Uma potência com expoente negativo corresponde ao inverso da potência com expoente positivo, desde que a base seja diferente de zero.</p>
-                <div class="pot-exemplo">2<sup>−3</sup> = 1 ÷ 2<sup>3</sup> = 1/8</div>
+                <div class="pot-exemplo">2⁻³ = 1 ÷ 2³ = 1/8</div>
                 <p>Para base fracionária, invertemos a fração:</p>
-                <div class="pot-exemplo">(2/3)<sup>−2</sup> = (3/2)<sup>2</sup> = 9/4</div>
+                <div class="pot-exemplo">(2/3)⁻² = (3/2)² = 9/4</div>
             </div>`,
 
         "bases-iguais": `
             <div class="pot-aula">
                 <h3>Multiplicação e divisão de potências de mesma base</h3>
                 <p><strong>Multiplicação:</strong> conservamos a base e somamos os expoentes.</p>
-                <div class="pot-exemplo">a<sup>m</sup> × a<sup>n</sup> = a<sup>m+n</sup></div>
+                <div class="pot-exemplo">aᵐ × aⁿ = aᵐ⁺ⁿ</div>
                 <p><strong>Divisão:</strong> conservamos a base e subtraímos os expoentes (base diferente de zero).</p>
-                <div class="pot-exemplo">a<sup>m</sup> ÷ a<sup>n</sup> = a<sup>m−n</sup></div>
+                <div class="pot-exemplo">aᵐ ÷ aⁿ = aᵐ⁻ⁿ</div>
             </div>`,
 
         "expoentes-inteiros": `
             <div class="pot-aula">
                 <h3>Potência de potência</h3>
                 <p>Conservamos a base e multiplicamos os expoentes.</p>
-                <div class="pot-exemplo">(a<sup>m</sup>)<sup>n</sup> = a<sup>m×n</sup></div>
-                <p>Exemplo: (2<sup>3</sup>)<sup>2</sup> = 2<sup>6</sup> = 64.</p>
+                <div class="pot-exemplo">(aᵐ)ⁿ = aᵐˣⁿ</div>
+                <p>Exemplo: (2³)² = 2⁶ = 64.</p>
             </div>`,
 
         "base-dez": `
             <div class="pot-aula">
                 <h3>Potências de base 10</h3>
                 <p>As potências de base 10 ajudam a escrever números grandes e pequenos.</p>
-                <div class="pot-exemplo">10<sup>1</sup> = 10</div>
-                <div class="pot-exemplo">10<sup>2</sup> = 100</div>
-                <div class="pot-exemplo">10<sup>3</sup> = 1 000</div>
+                <div class="pot-exemplo">10¹ = 10</div>
+                <div class="pot-exemplo">10² = 100</div>
+                <div class="pot-exemplo">10³ = 1 000</div>
                 <p>Para expoentes naturais, 10 elevado a n é 1 seguido de n zeros.</p>
             </div>`,
 
@@ -148,17 +146,17 @@
             <div class="pot-aula">
                 <h3>Comparação de potências</h3>
                 <p>Para comparar potências, podemos calcular seus valores ou usar propriedades quando as bases ou os expoentes permitem.</p>
-                <div class="pot-exemplo">2<sup>3</sup> = 8 e 3<sup>2</sup> = 9</div>
-                <p>Logo, 2<sup>3</sup> &lt; 3<sup>2</sup>.</p>
+                <div class="pot-exemplo">2³ = 8 e 3² = 9</div>
+                <p>Logo, 2³ &lt; 3².</p>
             </div>`,
 
         "area-volume": `
             <div class="pot-aula">
                 <h3>Potenciação na geometria</h3>
-                <p>A área de um quadrado de lado l é l<sup>2</sup>.</p>
-                <div class="pot-exemplo">A = l × l = l<sup>2</sup></div>
-                <p>O volume de um cubo de aresta a é a<sup>3</sup>.</p>
-                <div class="pot-exemplo">V = a × a × a = a<sup>3</sup></div>
+                <p>A área de um quadrado de lado l é l².</p>
+                <div class="pot-exemplo">A = l × l = l²</div>
+                <p>O volume de um cubo de aresta a é a³.</p>
+                <div class="pot-exemplo">V = a × a × a = a³</div>
             </div>`
     };
 
@@ -184,6 +182,48 @@
         ].map(c => c.value);
     }
 
+    // =====================================================
+    // CONFIGURAÇÕES PADRÃO
+    // =====================================================
+
+    function obterExpoentesPadrao() {
+        return [0, 1, 2];
+    }
+
+    function obterFormatosPadrao(modo) {
+        if (modo === "sinais") {
+            return [
+                "mais-parenteses",
+                "menos-parenteses",
+                "sem-sinal"
+            ];
+        }
+
+        return [
+            "mais-parenteses",
+            "menos-parenteses",
+            "sem-sinal"
+        ];
+    }
+
+    function obterLimiteBase(opcoes, expo) {
+        let limite = expo === 2 ? 12 : 10;
+
+        if (opcoes.includes(5)) {
+            limite = Math.min(limite, 5);
+        }
+
+        if (opcoes.includes(10)) {
+            limite = Math.min(limite, 10);
+        }
+
+        return limite;
+    }
+
+    // =====================================================
+    // GERAÇÃO DAS QUESTÕES
+    // =====================================================
+
     function gerarQuestoesPotencias(modo, quantidade, opcoes = {}) {
         const qs = [];
 
@@ -197,6 +237,7 @@
             });
         };
 
+        // 1. CONCEITO DE POTENCIAÇÃO
         if (modo === "conceito") {
             for (let i = 0; i < quantidade; i++) {
                 const base = aleatorioPot(2, 9);
@@ -207,19 +248,13 @@
                     adicionar(
                         `Na potência ${base}<sup>${expo}</sup>, qual é a base?`,
                         base,
-                        `A base é ${base}: é o número que será repetido como fator.`,
-                        {
-                            exemplo: "Exemplo: a⁵ = a × a × a × a × a"
-                        }
+                        `A base é ${base}: é o número que será repetido como fator.`
                     );
                 } else if (tipo === 1) {
                     adicionar(
                         `Na potência ${base}<sup>${expo}</sup>, qual é o expoente?`,
                         expo,
-                        `O expoente é ${expo}: ele indica quantas vezes a base aparece como fator.`,
-                        {
-                            exemplo: "Exemplo: a⁵ = a × a × a × a × a"
-                        }
+                        `O expoente é ${expo}: ele indica quantas vezes a base aparece como fator.`
                     );
                 } else {
                     adicionar(
@@ -227,18 +262,19 @@
                         Array(expo).fill(base).join("×"),
                         `A base ${base} aparece ${expo} vezes: ${Array(expo).fill(base).join(" × ")}.`,
                         {
-                            exemplo: "Exemplo de como escrever: a⁵ = a × a × a × a × a",
-                            respostaTexto: true
+                            respostaTexto: true,
+                            exemplo: `${base}<sup>${expo}</sup> = ${Array(expo).fill(base).join(" × ")}`
                         }
                     );
                 }
             }
         }
 
+        // 2. POTÊNCIAS COM NÚMEROS NATURAIS
         else if (modo === "naturais") {
             const expoentes = opcoes.expoentes?.length
                 ? opcoes.expoentes
-                : [3];
+                : obterExpoentesPadrao();
 
             const bases = opcoes.bases?.length
                 ? opcoes.bases
@@ -249,31 +285,34 @@
                     expoentes[aleatorioPot(0, expoentes.length - 1)]
                 );
 
-                let maxBase = expo === 2 ? 12 : 10;
+                const maxBase = obterLimiteBase(bases, expo);
 
-                if (bases.includes(5)) {
-                    maxBase = Math.min(maxBase, 5);
+                let base = aleatorioPot(0, maxBase);
+
+                // Evita 0 elevado a zero.
+                if (expo === 0 && base === 0) {
+                    base = aleatorioPot(1, maxBase);
                 }
 
-                if (bases.includes(10)) {
-                    maxBase = Math.min(maxBase, 10);
-                }
-
-                const base = aleatorioPot(0, maxBase);
                 const resultado = base ** expo;
 
                 adicionar(
                     `Calcule: ${base}<sup>${expo}</sup>.`,
                     resultado,
-                    `${base}<sup>${expo}</sup> = ${Array(expo).fill(base).join(" × ")} = ${resultado}.`
+                    expo === 0
+                        ? `${base}<sup>0</sup> = 1. Todo número diferente de zero elevado a zero é igual a 1.`
+                        : expo === 1
+                            ? `${base}<sup>1</sup> = ${base}. Todo número elevado a 1 é igual a ele mesmo.`
+                            : `${base}<sup>${expo}</sup> = ${Array(expo).fill(base).join(" × ")} = ${resultado}.`
                 );
             }
         }
 
+        // 3 E 4. POTENCIAÇÃO COM INTEIROS
         else if (modo === "sinais" || modo === "pratica-sinais") {
             const expoentes = opcoes.expoentes?.length
                 ? opcoes.expoentes
-                : [3];
+                : obterExpoentesPadrao();
 
             const bases = opcoes.bases?.length
                 ? opcoes.bases
@@ -281,26 +320,14 @@
 
             const formatos = opcoes.formatos?.length
                 ? opcoes.formatos
-                : (
-                    modo === "sinais"
-                        ? ["mais-parenteses", "menos-parenteses", "menos-sem-parenteses"]
-                        : ["mais-parenteses", "menos-parenteses", "sem-sinal"]
-                );
+                : obterFormatosPadrao(modo);
 
             for (let i = 0; i < quantidade; i++) {
                 const expo = Number(
                     expoentes[aleatorioPot(0, expoentes.length - 1)]
                 );
 
-                let maxBase = expo === 2 ? 12 : 10;
-
-                if (bases.includes(5)) {
-                    maxBase = Math.min(maxBase, 5);
-                }
-
-                if (bases.includes(10)) {
-                    maxBase = Math.min(maxBase, 10);
-                }
+                const maxBase = obterLimiteBase(bases, expo);
 
                 let base = aleatorioPot(-maxBase, maxBase);
 
@@ -320,59 +347,49 @@
                     expressao = `+${formatarBasePot(base)}<sup>${expo}</sup>`;
                     valor = base ** expo;
 
-                    const fatores = Array(expo)
-                        .fill(formatarBasePot(base))
-                        .join(" × ");
-
                     explicacao =
-                        `Primeiro calculamos a potência: ${fatores || "1"} = ${valor}. O sinal de + que está fora dos parênteses mantém o resultado: +${valor}.`;
+                        `Primeiro calculamos ${formatarBasePot(base)}<sup>${expo}</sup> = ${valor}. O sinal positivo que está fora dos parênteses mantém o resultado: ${valor >= 0 ? "+" : ""}${valor}.`;
                 }
 
                 else if (formato === "menos-parenteses") {
                     expressao = `−${formatarBasePot(base)}<sup>${expo}</sup>`;
                     valor = -(base ** expo);
 
-                    const fatores = Array(expo)
-                        .fill(formatarBasePot(base))
-                        .join(" × ");
-
                     explicacao =
-                        `Primeiro calculamos a potência: ${fatores || "1"} = ${base ** expo}. Depois aplicamos o sinal de menos que está fora dos parênteses: ${valor}.`;
-                }
-
-                else if (formato === "menos-sem-parenteses") {
-                    expressao = `−${Math.abs(base)}<sup>${expo}</sup>`;
-                    valor = -(Math.abs(base) ** expo);
-
-                    explicacao =
-                        `Sem parênteses, calculamos primeiro ${Math.abs(base)}<sup>${expo}</sup> = ${Math.abs(base) ** expo}. Depois aplicamos o sinal de menos: ${valor}.`;
+                        `Primeiro calculamos ${formatarBasePot(base)}<sup>${expo}</sup> = ${base ** expo}. Depois aplicamos o sinal de menos que está fora dos parênteses. Resultado: ${valor}.`;
                 }
 
                 else {
-                    expressao = base < 0
-                        ? `(−${Math.abs(base)})<sup>${expo}</sup>`
-                        : `${base}<sup>${expo}</sup>`;
+                    // Sem parênteses:
+                    // Base negativa: −a^b
+                    // Base positiva: +a^b
+                    expressao = `${base < 0 ? "−" : "+"}${Math.abs(base)}<sup>${expo}</sup>`;
 
-                    valor = base ** expo;
-
-                    const fatores = Array(expo)
-                        .fill(formatarBasePot(base))
-                        .join(" × ");
+                    valor = base < 0
+                        ? -(Math.abs(base) ** expo)
+                        : Math.abs(base) ** expo;
 
                     explicacao =
-                        `Calculamos a potência: ${fatores || "1"} = ${valor}.`;
+                        `Sem parênteses, calculamos primeiro ${Math.abs(base)}<sup>${expo}</sup> = ${Math.abs(base) ** expo}. Depois consideramos o sinal que acompanha a base. Resultado: ${valor}.`;
                 }
 
                 if (modo === "sinais") {
+                    const sinalCorreto = valor < 0
+                        ? "negativo"
+                        : "positivo";
+
                     adicionar(
-                        `Observe a expressão <strong>${expressao}</strong>. O resultado será positivo ou negativo?`,
-                        valor < 0 ? "negativo" : "positivo",
-                        `${explicacao} Portanto, o resultado é ${valor < 0 ? "negativo" : "positivo"}.`,
-                        { escolhaSinal: true }
+                        `Observe a expressão:<div class="pot-expressao">${expressao} = [ &nbsp; ] ${Math.abs(valor)}</div><p class="pot-pergunta-sinal">Qual sinal deve ocupar o espaço vazio?</p>`,
+                        sinalCorreto,
+                        `${explicacao} Portanto, o sinal correto é ${sinalCorreto}.`,
+                        {
+                            escolhaSinal: true,
+                            valorAbsoluto: Math.abs(valor)
+                        }
                     );
                 } else {
                     adicionar(
-                        `Calcule o valor da expressão: <strong>${expressao}</strong>.`,
+                        `Calcule o valor da expressão:<div class="pot-expressao">${expressao}</div>`,
                         valor,
                         explicacao
                     );
@@ -380,6 +397,7 @@
             }
         }
 
+        // DEMAIS MODALIDADES
         else {
             for (let i = 0; i < quantidade; i++) {
                 const base = aleatorioPot(2, 6);
@@ -442,9 +460,8 @@
 
                 else if (modo === "area-volume") {
                     const medida = aleatorioPot(2, 10);
-                    const tipo = i % 2;
 
-                    if (tipo === 0) {
+                    if (i % 2 === 0) {
                         adicionar(
                             `Um quadrado tem lado de ${medida} cm. Qual é sua área?`,
                             `${medida ** 2}`,
@@ -464,40 +481,46 @@
         return embaralharPot(qs).slice(0, quantidade);
     }
 
-    let temporizadorSolucaoPot = null;
+    // =====================================================
+    // LEITURA DAS CONFIGURAÇÕES
+    // =====================================================
 
     function lerConfiguracaoPotencias() {
         const quantidade = Number($("quantidadeQuestoes")?.value || 10);
         const o = { quantidade };
 
-        if (estado.modalidade === "naturais") {
-            const exp = marcadosPot("expoente").map(Number);
-            const bas = marcadosPot("base").map(Number);
-
-            o.expoentes = exp.length ? exp : [3];
-            o.bases = bas.length ? bas : (exp.length ? [12] : [10]);
-        }
-
         if (
+            estado.modalidade === "naturais" ||
             estado.modalidade === "sinais" ||
             estado.modalidade === "pratica-sinais"
         ) {
             const exp = marcadosPot("expoente").map(Number);
             const bas = marcadosPot("base").map(Number);
 
-            o.expoentes = exp.length ? exp : [3];
-            o.bases = bas.length ? bas : (exp.length ? [12] : [10]);
-            o.formatos = marcadosPot("formato");
+            // Sem seleção: expoentes 0, 1 e 2.
+            o.expoentes = exp.length ? exp : obterExpoentesPadrao();
 
-            if (!o.formatos.length) {
-                o.formatos = estado.modalidade === "sinais"
-                    ? ["mais-parenteses", "menos-parenteses", "menos-sem-parenteses"]
-                    : ["mais-parenteses", "menos-parenteses", "sem-sinal"];
-            }
+            // Sem seleção de limite: bases até 10.
+            o.bases = bas.length ? bas : [10];
+        }
+
+        if (
+            estado.modalidade === "sinais" ||
+            estado.modalidade === "pratica-sinais"
+        ) {
+            const formatos = marcadosPot("formato");
+
+            o.formatos = formatos.length
+                ? formatos
+                : obterFormatosPadrao(estado.modalidade);
         }
 
         return o;
     }
+
+    // =====================================================
+    // CONFIGURAÇÃO VISUAL DE CADA MODALIDADE
+    // =====================================================
 
     function mostrarConfiguracaoPotencias(id, botao) {
         estado.modalidade = id;
@@ -509,28 +532,28 @@
 
         const explicacao = explicacoes[id] || "";
 
-        const opcoes = id === "naturais" ? `
+        const opcoesNaturais = id === "naturais" ? `
             <div class="pot-grupo">
                 <strong>Escolha os expoentes que deseja praticar:</strong>
 
                 <label class="pot-check">
                     <input type="checkbox" name="expoente" value="0">
-                    Potência de 0
+                    Expoente 0
                 </label>
 
                 <label class="pot-check">
                     <input type="checkbox" name="expoente" value="1">
-                    Potência de 1
+                    Expoente 1
                 </label>
 
                 <label class="pot-check">
                     <input type="checkbox" name="expoente" value="2">
-                    Potência de 2
+                    Expoente 2
                 </label>
 
                 <label class="pot-check">
                     <input type="checkbox" name="expoente" value="3">
-                    Potência de 3
+                    Expoente 3
                 </label>
             </div>
 
@@ -548,9 +571,8 @@
                 </label>
 
                 <p class="pot-observacao">
-                    Sem seleção, serão usadas potências de expoente 3 e bases até 10.
-                    Para expoente 2, a base poderá chegar a 12 quando não houver
-                    limite menor selecionado.
+                    Sem seleção, serão utilizados os expoentes 0, 1 e 2,
+                    com bases até 10.
                 </p>
             </div>` : "";
 
@@ -598,47 +620,32 @@
             <div class="pot-grupo">
                 <strong>Escolha os formatos das expressões:</strong>
 
-                ${id === "sinais" ? `
-                    <label class="pot-check">
-                        <input type="checkbox" name="formato" value="mais-parenteses">
-                        +(a)<sup>b</sup>
-                    </label>
+                <label class="pot-check">
+                    <input type="checkbox" name="formato" value="mais-parenteses">
+                    +(a)<sup>b</sup>
+                </label>
 
-                    <label class="pot-check">
-                        <input type="checkbox" name="formato" value="menos-parenteses">
-                        −(a)<sup>b</sup>
-                    </label>
+                <label class="pot-check">
+                    <input type="checkbox" name="formato" value="menos-parenteses">
+                    −(a)<sup>b</sup>
+                </label>
 
-                    <label class="pot-check">
-                        <input type="checkbox" name="formato" value="menos-sem-parenteses">
-                        −a<sup>b</sup>
-                    </label>
-                ` : `
-                    <label class="pot-check">
-                        <input type="checkbox" name="formato" value="menos-parenteses">
-                        −(a)<sup>b</sup>
-                    </label>
-
-                    <label class="pot-check">
-                        <input type="checkbox" name="formato" value="mais-parenteses">
-                        +(a)<sup>b</sup>
-                    </label>
-
-                    <label class="pot-check">
-                        <input type="checkbox" name="formato" value="sem-sinal">
-                        a<sup>b</sup>
-                    </label>
-                `}
+                <label class="pot-check">
+                    <input type="checkbox" name="formato" value="sem-sinal">
+                    a<sup>b</sup>
+                </label>
             </div>
 
             <p class="pot-observacao">
-                Sem seleção, serão usados expoente 3, bases de −10 a +10
-                e todos os formatos disponíveis nesta atividade.
+                Sem seleção, serão utilizados expoentes 0, 1 e 2,
+                bases de −10 até +10 e os três formatos.
+                No formato sem parênteses, base negativa será representada
+                por −a<sup>b</sup> e base positiva por +a<sup>b</sup>.
             </p>` : "";
 
         $("opcoesConfiguracao").innerHTML = `
             ${explicacao}
-            ${opcoes}
+            ${opcoesNaturais}
             ${opcoesInteiros}
 
             <label class="pot-label" for="quantidadeQuestoes">
@@ -651,10 +658,6 @@
                 <option value="15">15 questões</option>
                 <option value="20">20 questões</option>
             </select>
-
-            <button class="botao-principal" onclick="iniciarAtividade()">
-                Começar atividade
-            </button>
         `;
 
         const config = $("configuracao");
@@ -669,21 +672,29 @@
         lista?.classList.remove("escondida");
     }
 
+    // =====================================================
+    // TECLADO VIRTUAL
+    // =====================================================
+
     function montarTecladoPotencias() {
         const teclado = $("teclado");
         if (!teclado) return;
 
         const teclas = [
-            "7", "8", "9",
-            "4", "5", "6",
             "1", "2", "3",
-            "0", "-", "×",
-            "C", "⌫"
+            "4", "5", "6",
+            "7", "8", "9",
+            "C", "×", "⌫"
         ];
 
-        teclado.innerHTML = teclas.map(t =>
-            `<button type="button" class="pot-tecla" onclick="digitarPotencia('${t}')">${t}</button>`
-        ).join("");
+        teclado.innerHTML = teclas.map(t => `
+            <button
+                type="button"
+                class="pot-tecla"
+                onclick="digitarPotencia('${t}')">
+                ${t}
+            </button>
+        `).join("");
 
         teclado.classList.remove("escondida");
     }
@@ -705,13 +716,38 @@
     };
 
     // =====================================================
-    // EXIBIR QUESTÃO — IDENTIFICADORES CORRIGIDOS
+    // EXEMPLO ABAIXO DO TECLADO
+    // =====================================================
+
+    function mostrarExemploAbaixoTeclado(q) {
+        const teclado = $("teclado");
+        if (!teclado) return;
+
+        document.getElementById("potExemploQuestao")?.remove();
+
+        if (!q.respostaTexto || !q.exemplo) return;
+
+        const exemplo = document.createElement("div");
+        exemplo.id = "potExemploQuestao";
+        exemplo.className = "pot-exemplo-ajuda";
+        exemplo.innerHTML = q.exemplo;
+
+        teclado.insertAdjacentElement("afterend", exemplo);
+    }
+
+    // =====================================================
+    // MOSTRAR QUESTÃO
     // =====================================================
 
     function mostrarQuestaoPotencias() {
         if (temporizadorSolucaoPot) {
             clearTimeout(temporizadorSolucaoPot);
             temporizadorSolucaoPot = null;
+        }
+
+        if (temporizadorAvancoPot) {
+            clearTimeout(temporizadorAvancoPot);
+            temporizadorAvancoPot = null;
         }
 
         if (estado.indice >= estado.questoes.length) {
@@ -726,14 +762,11 @@
         estado.respostaConferida = false;
         estado.errou = false;
 
-        // IDs existentes no index.html
         const numeroQuestao = $("numeroQuestao");
         const instrucaoQuestao = $("instrucaoQuestao");
 
         if (!numeroQuestao || !instrucaoQuestao) {
-            console.error(
-                "Não foram encontrados os elementos numeroQuestao e instrucaoQuestao no HTML."
-            );
+            console.error("Elementos da questão não encontrados no HTML.");
             return;
         }
 
@@ -746,24 +779,16 @@
         $("areaQuestao").innerHTML = `
             <div class="pot-questao">
 
-                ${q.exemplo ? `
-                    <div class="pot-exemplo-ajuda">
-                        ${q.exemplo}
-                    </div>
-                ` : ""}
-
                 ${q.escolhaSinal ? `
-                    <div class="pot-valor-absoluto">
-                        Escolha o sinal do resultado:
-                    </div>
-
                     <div class="pot-sinais-resposta">
-                        <button type="button" class="pot-alternativa"
+                        <button type="button"
+                            class="pot-alternativa"
                             data-pot-sinal="positivo">
                             Positivo (+)
                         </button>
 
-                        <button type="button" class="pot-alternativa"
+                        <button type="button"
+                            class="pot-alternativa"
                             data-pot-sinal="negativo">
                             Negativo (−)
                         </button>
@@ -786,6 +811,11 @@
         `;
 
         $("acoesQuestao").innerHTML = `
+            <button class="botao-principal pot-confirmar"
+                onclick="confirmarAtividade()">
+                Confirmar resposta
+            </button>
+
             <button class="botao-secundario"
                 onclick="pularQuestaoPotencias()">
                 Pular questão
@@ -816,7 +846,12 @@
         }
 
         montarTecladoPotencias();
+        mostrarExemploAbaixoTeclado(q);
     }
+
+    // =====================================================
+    // CONFERÊNCIA DAS RESPOSTAS
+    // =====================================================
 
     function normalizarPot(valor) {
         return String(valor ?? "")
@@ -843,15 +878,17 @@
 
         if (!String(resposta ?? "").trim()) {
             $("feedback").textContent =
-                "Escolha uma opção ou digite sua resposta.";
+                q.escolhaSinal
+                    ? "Escolha o sinal positivo ou negativo."
+                    : "Digite sua resposta antes de confirmar.";
             return;
         }
 
         if (normalizarPot(resposta) === normalizarPot(q.resposta)) {
             estado.respostaConferida = true;
 
-            $("feedback").textContent =
-                `Resposta correta! ✅ ${q.explicacao}`;
+            $("feedback").innerHTML =
+                `Resposta correta! ✅<br>${q.explicacao}`;
 
             estado.resultados.push({
                 correto: true,
@@ -859,15 +896,16 @@
             });
 
             document.querySelectorAll(
-                "#areaQuestao input, #areaQuestao button"
+                "#areaQuestao input, #areaQuestao button, #acoesQuestao button"
             ).forEach(c => {
                 c.disabled = true;
             });
 
-            setTimeout(() => {
+            temporizadorAvancoPot = setTimeout(() => {
                 estado.indice++;
                 mostrarQuestaoPotencias();
-            }, 1500);
+            }, 1800);
+
         } else {
             estado.errou = true;
 
@@ -892,6 +930,10 @@
             `;
         }
     }
+
+    // =====================================================
+    // ENTENDER A RESPOSTA
+    // =====================================================
 
     function entenderRespostaPotencias() {
         if (estado.respostaConferida) return;
@@ -947,6 +989,11 @@
         $("feedback").textContent = "";
 
         $("acoesQuestao").innerHTML = `
+            <button class="botao-principal pot-confirmar"
+                onclick="confirmarAtividade()">
+                Confirmar resposta
+            </button>
+
             <button class="botao-secundario"
                 onclick="pularQuestaoPotencias()">
                 Pular questão
@@ -987,6 +1034,11 @@
             temporizadorSolucaoPot = null;
         }
 
+        if (temporizadorAvancoPot) {
+            clearTimeout(temporizadorAvancoPot);
+            temporizadorAvancoPot = null;
+        }
+
         estado.operacao = "potencias";
         estado.modalidade = "";
 
@@ -1004,6 +1056,8 @@
                 ${nome}
             </button>
         `).join("");
+
+        document.getElementById("potExemploQuestao")?.remove();
 
         mostrarTela("operacao");
     };
@@ -1024,7 +1078,6 @@
 
         try {
             const opcoes = lerConfiguracaoPotencias();
-            const quantidade = opcoes.quantidade;
 
             estado.opcoes = opcoes;
 
@@ -1036,7 +1089,7 @@
 
             estado.questoes = gerarQuestoesPotencias(
                 estado.modalidade,
-                quantidade,
+                opcoes.quantidade,
                 opcoes
             );
 
@@ -1044,6 +1097,12 @@
             estado.resultados = [];
             estado.errou = false;
             estado.respostaConferida = false;
+
+            if (!estado.questoes.length) {
+                throw new Error("Não foram geradas questões para esta modalidade.");
+            }
+
+            document.getElementById("potExemploQuestao")?.remove();
 
             mostrarTela("estudo");
             iniciarCronometro();
@@ -1083,6 +1142,11 @@
             temporizadorSolucaoPot = null;
         }
 
+        if (temporizadorAvancoPot) {
+            clearTimeout(temporizadorAvancoPot);
+            temporizadorAvancoPot = null;
+        }
+
         restaurarConfiguracaoPotencias();
         window.abrirOperacao("potencias");
     };
@@ -1117,7 +1181,7 @@
     };
 
     // =====================================================
-    // CSS ESPECÍFICO DO MÓDULO
+    // ESTILOS DO MÓDULO
     // =====================================================
 
     const estilo = document.createElement("style");
@@ -1156,6 +1220,16 @@
         .pot-observacao {
             color: #64748b;
             font-size: .9rem;
+            line-height: 1.5;
+        }
+
+        #instrucaoQuestao {
+            font-size: 1.45rem;
+            line-height: 1.6;
+            text-align: center;
+            font-weight: 700;
+            max-width: 720px;
+            margin: 18px auto 24px;
         }
 
         .pot-questao {
@@ -1163,13 +1237,23 @@
             background: #f8faff;
             border: 1px solid #dce6f4;
             border-radius: 14px;
+            max-width: 650px;
+            margin: 0 auto;
         }
 
-        .pot-enunciado {
-            font-size: 1.25rem;
-            line-height: 1.6;
+        .pot-expressao {
             text-align: center;
+            font-size: 1.7rem;
             font-weight: 700;
+            margin: 14px 0;
+            line-height: 1.8;
+        }
+
+        .pot-pergunta-sinal {
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-top: 12px;
         }
 
         .pot-input {
@@ -1184,19 +1268,13 @@
             text-align: center;
         }
 
-        .pot-alternativas {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 10px;
-            margin-top: 16px;
-        }
-
         .pot-alternativa {
-            padding: 13px 8px;
+            padding: 14px 8px;
             border: 2px solid #dce6f4;
             border-radius: 10px;
             background: white;
             font-size: 1.1rem;
+            font-weight: 600;
         }
 
         .pot-alternativa.pot-escolhida {
@@ -1204,9 +1282,12 @@
             background: #edf4ff;
         }
 
-        .pot-questao sup,
-        .pot-aula sup {
-            font-size: .72em;
+        .pot-sinais-resposta {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 18px auto;
+            max-width: 420px;
         }
 
         .pot-grupo {
@@ -1230,60 +1311,70 @@
             accent-color: #285da8;
         }
 
-        .pot-exemplo-ajuda {
-            margin: 12px 0;
-            padding: 12px;
-            border-radius: 10px;
-            background: #fff3ce;
-            text-align: center;
-            line-height: 1.6;
-        }
-
-        .pot-valor-absoluto {
-            margin: 12px auto;
-            padding: 10px;
-            background: #fff;
-            border-radius: 9px;
-        }
-
-        .pot-sinais-resposta {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .pot-solucao {
-            padding: 10px;
-            background: #fff3ce;
-            border-radius: 10px;
-            line-height: 1.5;
-        }
-
-        .pot-tecla {
-            min-height: 48px;
-            border: 1px solid #d9e0e8;
-            border-radius: 10px;
-            background: white;
-            font-size: 19px;
-            font-weight: bold;
-        }
-
         #teclado:has(.pot-tecla) {
             display: grid;
-            grid-template-columns: repeat(4, minmax(0, 1fr));
-            gap: 8px;
-            max-width: 420px;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 9px;
+            width: min(100%, 360px);
             margin: 18px auto;
         }
 
+        .pot-tecla {
+            min-height: 54px;
+            border: 1px solid #d9e0e8;
+            border-radius: 10px;
+            background: white;
+            font-size: 21px;
+            font-weight: bold;
+        }
+
+        .pot-tecla:active {
+            background: #edf4ff;
+            border-color: #285da8;
+        }
+
+        #potExemploQuestao {
+            width: min(100%, 520px);
+            box-sizing: border-box;
+            margin: 16px auto;
+            padding: 13px;
+            border-radius: 10px;
+            background: #fff3ce;
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: 600;
+            line-height: 1.7;
+        }
+
+        .pot-confirmar {
+            margin-bottom: 9px;
+        }
+
+        .pot-solucao {
+            padding: 12px;
+            background: #fff3ce;
+            border-radius: 10px;
+            line-height: 1.6;
+        }
+
+        .pot-questao sup,
+        .pot-aula sup,
+        .pot-expressao sup {
+            font-size: .7em;
+        }
+
         @media (max-width: 420px) {
-            .pot-enunciado {
-                font-size: 1.1rem;
+            #instrucaoQuestao {
+                font-size: 1.25rem;
+                padding: 0 8px;
             }
 
-            .pot-alternativas {
-                gap: 7px;
+            .pot-expressao {
+                font-size: 1.45rem;
+            }
+
+            .pot-tecla {
+                min-height: 50px;
             }
         }
     `;
