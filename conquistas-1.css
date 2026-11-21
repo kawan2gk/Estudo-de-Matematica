@@ -1,0 +1,46 @@
+/* ÁRVORE DO CONHECIMENTO E GALERIA DE CONQUISTAS */
+.arvore-card{overflow:hidden}
+#arvoreVisual{display:flex;align-items:center;justify-content:center;width:min(100%,260px);min-height:190px;margin:8px auto 0;border:0;border-radius:18px;background:transparent;cursor:pointer;transition:transform .2s,filter .2s}
+#arvoreVisual:hover{transform:translateY(-3px);filter:drop-shadow(0 7px 8px #285da822)}
+#arvoreVisual:focus-visible{outline:3px solid #285da8;outline-offset:5px}
+.arvore-svg{display:block;width:100%;max-width:230px;height:auto;overflow:visible}
+.arvore-svg .folhas{transform-origin:50% 85%;animation:balanco-arvore 4s ease-in-out infinite}
+@keyframes balanco-arvore{0%,100%{transform:rotate(0)}50%{transform:rotate(1.3deg)}}
+.contador-conquistas{display:block;color:#285da8;font-weight:800;font-size:15px}
+.texto-arvore-extra{display:block;margin-top:5px;color:#697587;font-size:12px}
+.aviso-conquista{position:fixed;z-index:10001;right:16px;bottom:18px;display:flex;align-items:center;gap:13px;width:min(420px,calc(100% - 32px));padding:15px 42px 15px 15px;border:1px solid #d9e0e8;border-radius:16px;background:#fff;color:#283548;box-shadow:0 12px 35px #17243a30;animation:entrar-aviso .35s ease-out both}
+.aviso-conquista strong{display:block;color:#247a45;margin-bottom:4px}
+.aviso-conquista small{display:block;margin-top:3px;color:#697587}
+.aviso-conquista>button{position:absolute;top:7px;right:10px;border:0;background:transparent;color:#697587;font-size:24px}
+@keyframes entrar-aviso{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+.galeria-overlay{position:fixed;z-index:10000;inset:0;display:flex;align-items:center;justify-content:center;padding:16px;background:#142033a8;overflow-y:auto}
+.galeria-overlay.escondida{display:none!important}
+.galeria-painel{width:min(900px,100%);max-height:90vh;overflow-y:auto;padding:22px;border-radius:20px;background:#fff;color:#283548;box-shadow:0 18px 60px #0003}
+.galeria-cabecalho{display:flex;justify-content:space-between;align-items:flex-start;gap:15px}
+.galeria-sobretitulo{color:#285da8;font-size:11px;font-weight:800;letter-spacing:1.5px}
+.galeria-cabecalho h2{margin:5px 0;font-size:25px}
+.galeria-cabecalho p{margin:0;color:#697587;font-size:14px}
+.fechar-galeria{flex:0 0 auto;width:40px;height:40px;border:1px solid #d9e0e8;border-radius:50%;background:#f7f9fc;color:#283548;font-size:27px;line-height:1}
+.abas-conquistas{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:20px 0;padding-bottom:13px;border-bottom:1px solid #e4e9f0}
+.aba-conquista{padding:11px 8px;border:1px solid #d9e0e8;border-radius:10px;background:#fff;color:#596579;font-size:13px;font-weight:700}
+.aba-conquista.ativa{border-color:#285da8;background:#edf3fc;color:#285da8}
+.grade-conquistas{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.cartao-conquista{display:flex;align-items:flex-start;gap:12px;min-width:0;padding:14px;border:1px solid #dce3ec;border-radius:14px;background:#fff}
+.cartao-conquista.bloqueada{background:#f7f8fa}
+.cartao-selo{flex:0 0 54px;display:flex;justify-content:center;align-items:center;min-height:54px}
+.selo-conquista,.selo-bloqueado{display:inline-flex;align-items:center;justify-content:center;width:52px;height:52px;border:3px solid currentColor;border-radius:17px 17px 21px 21px;font-size:25px;font-weight:900;box-shadow:inset 0 0 0 3px #ffffffa8;transform:rotate(-3deg)}
+.selo-ouro{color:#986b08;background:#fff0b8}.selo-azul{color:#285da8;background:#dceaff}.selo-verde{color:#247a45;background:#d9f3df}.selo-roxo{color:#7147a5;background:#eee1ff}.selo-vermelho{color:#b33d3d;background:#ffe0e0}
+.selo-bloqueado{border-color:#aab3c0;background:#e9edf2;color:#7a8595;font-size:28px}
+.cartao-corpo{min-width:0}
+.status-conquista{color:#247a45;font-size:9px;font-weight:900;letter-spacing:1px}
+.bloqueada .status-conquista{color:#7a8595}
+.cartao-corpo h3{margin:4px 0 6px;font-size:15px;line-height:1.25;overflow-wrap:anywhere}
+.cartao-corpo p{margin:0 0 8px;color:#596579;font-size:12px;line-height:1.45}
+.cartao-corpo small{display:block;color:#7a8595;font-size:11px;line-height:1.4}
+.atividade-conquista{display:inline-block;margin-top:8px;padding:4px 7px;border-radius:6px;background:#edf3fc;color:#285da8;font-size:10px;font-weight:700}
+.galeria-vazia{grid-column:1/-1;padding:35px 15px;text-align:center;color:#697587}
+.galeria-vazia span{display:block;color:#285da8;font-size:40px;margin-bottom:8px}
+.galeria-vazia strong{color:#283548;font-size:17px}
+.galeria-vazia p{margin-bottom:0;font-size:13px}
+@media(max-width:620px){.galeria-overlay{align-items:flex-end;padding:0}.galeria-painel{width:100%;max-height:92vh;padding:18px 13px calc(18px + env(safe-area-inset-bottom));border-radius:20px 20px 0 0}.galeria-cabecalho h2{font-size:21px}.abas-conquistas{gap:5px;margin:15px 0}.aba-conquista{padding:10px 4px;font-size:11px}.grade-conquistas{grid-template-columns:1fr;gap:9px}.cartao-conquista{padding:12px}.aviso-conquista{right:10px;bottom:10px;width:calc(100% - 20px)}}
+@media(prefers-reduced-motion:reduce){.arvore-svg .folhas,.aviso-conquista{animation:none!important}}
